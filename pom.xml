@@ -4,10 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.sherlock.gmail</groupId>
-    <artifactId>gmail</artifactId>
+    <groupId>com.sherlock.gmall</groupId>
+    <artifactId>gmall</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <description>gmail谷粒商城</description>
+    <description>gmall谷粒商城</description>
+    <modules>
+        <module>gmall-product</module>
+        <module>gmall-ware</module>
+        <module>gmall-order</module>
+        <module>gmall-member</module>
+        <module>gmall-coupon</module>
+    </modules>
     <packaging>pom</packaging>
 
     <name>Maven</name>
