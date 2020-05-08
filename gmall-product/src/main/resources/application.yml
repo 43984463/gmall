@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    username: root
+    password: sherlock
+    url: jdbc:mysql://120.76.60.77:2061/gmall_pms?characterEncoding=utf-8&useSSL=false
+    driver-class-name: com.mysql.jdbc.Driver
+
+
+
+mybatis-plus:
+  config-location: classpath:/mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: auto
