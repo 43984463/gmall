@@ -54,7 +54,7 @@
         <mybatis-spring-boot-starter.version>2.1.1</mybatis-spring-boot-starter.version>
         <httpcore.version>4.4.12</httpcore.version>
         <servlet-api.version>2.5</servlet-api.version>
-        <mybatis-plus-spring-boot-starter.version>3.3.1</mybatis-plus-spring-boot-starter.version>
+        <mybatis-plus-spring-boot-starter.version>3.2.0</mybatis-plus-spring-boot-starter.version>
         <hutool-all.version>5.1.0</hutool-all.version>
     </properties>
 
@@ -89,12 +89,6 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus-spring-boot-starter.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.baomidou</groupId>
-                        <artifactId>mybatis-plus-generator</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
@@ -141,11 +135,6 @@
             <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-            </dependency>
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>druid</artifactId>
-                <version>${druid.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>

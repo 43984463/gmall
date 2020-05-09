@@ -59,7 +59,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  *  2）、使用@ExceptionHandler标注方法可以处理的异常。
  */
 //@EnableFeignClients(basePackages = "com.atguigu.gulimall.product.feign")
-@EnableDiscoveryClient
+//@EnableDiscoveryClient
 @MapperScan("com.sherlock.gmall.product.dao")
 @SpringBootApplication
 public class GmallProductApplication {
