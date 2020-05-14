@@ -3,6 +3,7 @@ package com.sherlock.gmall.member.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.sherlock.gmall.member.feign.CouponFeignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,8 +28,22 @@ import com.sherlock.common.utils.R;
 @RestController
 @RequestMapping("member/member")
 public class MemberController {
+
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private CouponFeignService couponFeignService;
+
+    @RequestMapping("/callCoupon")
+    public R callCoupon(){
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setNickname("Sherlock")
+                .setCity("xi'an");
+        return R.ok().put("member",memberEntity)
+                .put("remoteCoupons",couponFeignService.couponList().get("coupons"));
+    }
+
 
     /**
      * 列表

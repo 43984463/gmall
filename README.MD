@@ -5,3 +5,5 @@ org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating
 处理方法: 在application.yml中将mybatis-plus.config-location修改成为mybatis-plus.config-locations。
 
 Durid配置参考Url：https://github.com/alibaba/druid/tree/master/druid-spring-boot-starter
+
+alibaba的config配置中心结合@RefreshScope使用动态读取Nacos配置中的信息。

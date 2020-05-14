@@ -1,0 +1,18 @@
+#\u9879\u76EE\u7684\u914D\u7F6E\u4E2D\u5FC3
+spring:
+  application:
+    name: gmall-coupon
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 120.76.60.77:9848 #Nacos\u670D\u52A1\u6CE8\u518C\u4E2D\u5FC3\u5730\u5740
+      config:
+        server-addr: 120.76.60.77:9848 #Nacos\u4F5C\u4E3A\u914D\u7F6E\u4E2D\u5FC3\u5730\u5740
+        file-extension: properties #\u6307\u5B9Aproperties\u683C\u5F0F\u7684\u914D\u7F6E
+        namespace: 8ec3c7b8-75ca-4549-838e-ea7ec3507ea7  #\u547D\u540D\u7A7A\u95F4
+        # group: DEFAULT_GROUP  \u9ED8\u8BA4\u7EC4
+
+# ${spring.application.name}-${spring.profile.active}.${spring.cloud.nacos.config.file-extension}
+# nacos-config-client-dev.yml
+
+# nacos-config-client-test.yml   ----> config.info
