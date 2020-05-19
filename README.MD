@@ -79,3 +79,9 @@ mybatis-plus:
       id-type: auto
 
 ```
+在创建gateway时一直报错说servlet问题，修改方法为修改
+<dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>servlet-api</artifactId>
+    <scope>provided</scope>  --->  <scope>compile</scope>
+</dependency>

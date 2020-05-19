@@ -17,6 +17,7 @@
         <module>gmall-common</module>
         <module>renren-fast</module>
         <module>renren-generator</module>
+        <module>gmall-gateway</module>
     </modules>
     <packaging>pom</packaging>
 
