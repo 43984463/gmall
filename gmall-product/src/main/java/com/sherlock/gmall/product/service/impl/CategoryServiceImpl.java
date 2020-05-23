@@ -1,7 +1,11 @@
 package com.sherlock.gmall.product.service.impl;
 
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -26,4 +30,35 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         return new PageUtils(page);
     }
 
+    /**
+     * 获取菜单以及子菜单
+     * @return
+     */
+    @Override
+    public List<CategoryEntity> listWithTree() {
+
+        List<CategoryEntity> entities = baseMapper.selectList(null);
+
+        List<CategoryEntity> Menus = entities.stream()
+                .filter(categoryEntity -> categoryEntity.getParentCid() == 0)
+                .peek(menu -> menu.setChildren(getChildren(menu, entities)))
+                .sorted((menu1, menu2) -> (menu1.getSort() == null ? 0 : menu1.getSort()) - (menu2.getSort() == null ? 0 : menu2.getSort()))
+                .collect(Collectors.toList());
+        return Menus;
+    }
+
+    /**
+     * 递归获取子菜单
+     * @param root
+     * @param entities
+     * @return
+     */
+    private List<CategoryEntity> getChildren(CategoryEntity root, List<CategoryEntity> entities) {
+        List<CategoryEntity> childrenMenu = entities.stream()
+                .filter(categoryEntity -> categoryEntity.getParentCid() == root.getCatId())
+                .peek(menu -> menu.setChildren(getChildren(menu, entities)))
+                .sorted((menu1, menu2) -> (menu1.getSort() == null ? 0 : menu1.getSort()) - (menu2.getSort() == null ? 0 : menu2.getSort()))
+                .collect(Collectors.toList());
+        return childrenMenu;
+    }
 }
