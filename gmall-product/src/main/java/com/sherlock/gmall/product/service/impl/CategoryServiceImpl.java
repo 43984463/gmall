@@ -2,6 +2,7 @@ package com.sherlock.gmall.product.service.impl;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -42,7 +43,10 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         List<CategoryEntity> Menus = entities.stream()
                 .filter(categoryEntity -> categoryEntity.getParentCid() == 0)
                 .peek(menu -> menu.setChildren(getChildren(menu, entities)))
-                .sorted((menu1, menu2) -> (menu1.getSort() == null ? 0 : menu1.getSort()) - (menu2.getSort() == null ? 0 : menu2.getSort()))
+                // 正序排列或者倒叙排列
+                .sorted(Comparator.comparingInt(CategoryEntity::getSort))
+                //.sorted(Comparator.comparingInt(CategoryEntity::getSort).reversed())
+                //.sorted((menu1, menu2) -> (menu1.getSort() == null ? 0 : menu1.getSort()) - (menu2.getSort() == null ? 0 : menu2.getSort()))
                 .collect(Collectors.toList());
         return Menus;
     }
@@ -58,7 +62,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
                 // 此处应该使用.equal方法而不是 ==
                 .filter(categoryEntity -> categoryEntity.getParentCid().equals(root.getCatId()))
                 .peek(menu -> menu.setChildren(getChildren(menu, entities)))
-                .sorted((menu1, menu2) -> (menu1.getSort() == null ? 0 : menu1.getSort()) - (menu2.getSort() == null ? 0 : menu2.getSort()))
+                .sorted(Comparator.comparingInt(CategoryEntity::getSort))
+                //.sorted((menu1, menu2) -> (menu1.getSort() == null ? 0 : menu1.getSort()) - (menu2.getSort() == null ? 0 : menu2.getSort()))
                 .collect(Collectors.toList());
         return childrenMenu;
     }
