@@ -55,7 +55,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      */
     private List<CategoryEntity> getChildren(CategoryEntity root, List<CategoryEntity> entities) {
         List<CategoryEntity> childrenMenu = entities.stream()
-                .filter(categoryEntity -> categoryEntity.getParentCid() == root.getCatId())
+                // 此处应该使用.equal方法而不是 ==
+                .filter(categoryEntity -> categoryEntity.getParentCid().equals(root.getCatId()))
                 .peek(menu -> menu.setChildren(getChildren(menu, entities)))
                 .sorted((menu1, menu2) -> (menu1.getSort() == null ? 0 : menu1.getSort()) - (menu2.getSort() == null ? 0 : menu2.getSort()))
                 .collect(Collectors.toList());
