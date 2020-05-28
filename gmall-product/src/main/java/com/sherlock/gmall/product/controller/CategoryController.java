@@ -51,7 +51,6 @@ public class CategoryController {
     //@RequiresPermissions("product:category:info")
     public R info(@PathVariable("catId") Long catId) {
         CategoryEntity category = categoryService.getById(catId);
-
         return R.ok().put("data", category);
     }
 
@@ -77,6 +76,14 @@ public class CategoryController {
         return R.ok();
     }
 
+
+    @RequestMapping("/updateBatch")
+    //@RequiresPermissions("product:category:update")
+    public R updateBatch(@RequestBody CategoryEntity[] category) {
+        categoryService.updateBatchById(Arrays.asList(category));
+        return R.ok();
+    }
+
     /**
      * localhost:88/api/product/category/delete
      * 删除
@@ -84,7 +91,6 @@ public class CategoryController {
     @RequestMapping("/delete")
     //@RequiresPermissions("product:category:delete")
     public R delete(@RequestBody Long[] catIds) {
-
         int count = categoryService.deleteMenusByIds(Arrays.asList(catIds));
         return R.ok().put("count", count);
     }
