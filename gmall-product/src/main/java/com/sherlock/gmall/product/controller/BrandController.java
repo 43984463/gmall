@@ -1,10 +1,12 @@
 package com.sherlock.gmall.product.controller;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +18,7 @@ import com.sherlock.gmall.product.service.BrandService;
 import com.sherlock.common.utils.PageUtils;
 import com.sherlock.common.utils.R;
 
+import javax.validation.Valid;
 
 
 /**
@@ -56,10 +59,16 @@ public class BrandController {
 
     /**
      * 保存
+     * localhost:88/api/product/brand/save
      */
     @RequestMapping("/save")
     //@RequiresPermissions("product:brand:save")
-    public R save(@RequestBody BrandEntity brand){
+    public R save(@Valid @RequestBody BrandEntity brand){
+       /* Map errorMaps = new HashMap();
+        if (result.hasErrors()) {
+            result.getFieldErrors().stream().forEach(item -> errorMaps.put(item.getField(), item.getDefaultMessage()));
+            return R.error(400,  "数据校验不通过").put("errors", errorMaps);
+        }*/
 		brandService.save(brand);
 
         return R.ok();
@@ -70,7 +79,7 @@ public class BrandController {
      */
     @RequestMapping("/update")
     //@RequiresPermissions("product:brand:update")
-    public R update(@RequestBody BrandEntity brand){
+    public R update(@Valid @RequestBody BrandEntity brand){
 		brandService.updateById(brand);
 
         return R.ok();

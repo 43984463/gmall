@@ -85,3 +85,12 @@ mybatis-plus:
     <artifactId>servlet-api</artifactId>
     <scope>provided</scope>  --->  <scope>compile</scope>
 </dependency>
+
+使用阿里云的OSS之后需要把在gmall-common中的
+```xml
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alicloud-oss</artifactId>
+        </dependency>
+```
+依赖转移到gmall-third-party中,否则会在启动时报找不到endpoint错误。

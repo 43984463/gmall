@@ -52,7 +52,6 @@ spring:
       discovery:
         server-addr: 120.76.60.77:9848
 
-
 mybatis-plus:
   # 虽然我不知道为啥在源码和自动提示都是config-location，但是这样就报错，需要修改成config-locations(带s)
   config-locations: classpath:/mapper/**/*.xml

@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: gmall-third-party
+
+  cloud:
+    nacos:
+      config:
+        server-addr: 120.76.60.77:9848
+        namespace: dc5e24ef-6de0-4fc8-ae27-d9b10ed99207
+        file-extension: yaml
+        group: dev
+        extension-configs[0]:
+          data-id: oss.yaml
+          group: dev
+          refresh: true
+
