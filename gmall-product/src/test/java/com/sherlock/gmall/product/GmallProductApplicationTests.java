@@ -23,8 +23,19 @@ public class GmallProductApplicationTests {
     @Autowired
     private BrandService brandService;
 
+   /* @Autowired
+    private OSS ossClient;
+
     @Test
-    public void contextLoads(){
+    public void uploadFileToAliOSS() throws FileNotFoundException {
+
+        InputStream is = new FileInputStream("C:\\Users\\Administrator\\Desktop\\redis.conf");
+        ossClient.putObject("gmall-sherlock", "redisConfigFile", is);
+        System.out.println("上传成功");
+    }*/
+
+    @Test
+    public void contextLoads() {
 
         BrandEntity brandEntity = new BrandEntity();
         brandEntity.setName("华为");
