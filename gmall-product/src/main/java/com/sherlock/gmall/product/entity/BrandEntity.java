@@ -68,7 +68,7 @@ public class BrandEntity implements Serializable {
 	 * 排序
 	 */
 	@NotNull(message = "请输入排序", groups = AddGroup.class)
-	@Min(value = 0, message = "请输入大于或者等于0的整数", groups = {AddGroup.class, UpdateGroup.class})
+	@Min(value = 0, groups = {AddGroup.class, UpdateGroup.class})
 	private Integer sort;
 
 }
