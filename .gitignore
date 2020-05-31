@@ -33,5 +33,5 @@ gen
 hs_err_pid*
 
 #屏蔽任意目录下的target文件夹及其子文件夹
-#**/target/
-#**/test/
+**/target/
+**/test/
