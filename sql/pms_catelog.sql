@@ -1440,5 +1440,5 @@ values
 (1421,'跑车（二手）',164,3,1,0,NULL,NULL,0),
 (1422,'皮卡（二手）',164,3,1,0,NULL,NULL,0),
 (1423,'面包车（二手）',164,3,1,0,NULL,NULL,0),
-(1431,'dsa323',1,2,1,NULL,NULL,NULL,0),
-(1432,'fdsffdsadddd大萨达',1431,3,1,NULL,NULL,NULL,0);
+(1431,'dsa323',1,2,1,0,NULL,NULL,0),
+(1432,'fdsffdsadddd大萨达',1431,3,1,0,NULL,NULL,0);

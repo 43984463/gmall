@@ -6,10 +6,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sherlock.common.utils.PageUtils;
 import com.sherlock.common.utils.Query;
 import com.sherlock.gmall.product.dao.CategoryDao;
-import com.sherlock.gmall.product.entity.AttrGroupEntity;
 import com.sherlock.gmall.product.entity.CategoryEntity;
+import com.sherlock.gmall.product.service.CategoryBrandRelationService;
 import com.sherlock.gmall.product.service.CategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,6 +23,9 @@ import java.util.stream.Collectors;
 
 @Service("categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
+
+    @Autowired
+    private CategoryBrandRelationService categoryBrandRelationService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -93,6 +98,13 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         path = findParentPath(catelogId, path);
         Collections.reverse(path);
         return path.toArray(new Long[0]);
+    }
+
+    @Transactional
+    @Override
+    public void updateCascade(CategoryEntity category) {
+        updateById(category);
+        categoryBrandRelationService.updateCategory(category.getCatId(), category.getName());
     }
 
 
