@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE,ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@RequestMapping(method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.OPTIONS})
+@RequestMapping(method = {RequestMethod.GET,RequestMethod.POST})
 public @interface GmallMapping {
 
     /**

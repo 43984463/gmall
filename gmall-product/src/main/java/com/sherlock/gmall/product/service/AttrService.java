@@ -3,6 +3,7 @@ package com.sherlock.gmall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sherlock.common.utils.PageUtils;
 import com.sherlock.gmall.product.entity.AttrEntity;
+import com.sherlock.gmall.product.vo.AttrResVo;
 import com.sherlock.gmall.product.vo.AttrVo;
 
 import java.util.Map;
@@ -21,5 +22,9 @@ public interface AttrService extends IService<AttrEntity> {
     void saveAttr(AttrVo attr);
 
     PageUtils queryBaseAttrPage(Map<String, Object> params, Long catelogId);
+
+    AttrResVo getAttrInfo(Long attrId);
+
+    void updateAttr(AttrResVo attr);
 }
 

@@ -1,6 +1,7 @@
 package com.sherlock.gmall.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sherlock.common.utils.PageUtils;
@@ -83,9 +84,9 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
             AttrResVo attrResVo = new AttrResVo();
             BeanUtils.copyProperties(attrEntity, attrResVo);
 
-            AttrAttrgroupRelationEntity attrId = attrAttrgroupRelationService.getOne(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", attrEntity.getAttrId()));
-            if (attrId != null) {
-                AttrGroupEntity attrGroupEntity = attrGroupService.getById(attrId.getAttrGroupId());
+            AttrAttrgroupRelationEntity relationEntity = attrAttrgroupRelationService.getOne(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", attrEntity.getAttrId()));
+            if (relationEntity != null) {
+                AttrGroupEntity attrGroupEntity = attrGroupService.getById(relationEntity.getAttrGroupId());
                 attrResVo.setGroupName(attrGroupEntity.getAttrGroupName());
             }
             CategoryEntity categoryEntity = categoryService.getById(attrEntity.getCatelogId());
@@ -97,6 +98,48 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         })).collect(Collectors.toList());
         pageUtils.setList(attrResVos);
         return pageUtils;
+    }
+
+    @Override
+    public AttrResVo getAttrInfo(Long attrId) {
+        AttrEntity attrEntity = getById(attrId);
+        AttrResVo attrResVo = new AttrResVo();
+        BeanUtils.copyProperties(attrEntity,attrResVo);
+
+        AttrAttrgroupRelationEntity relationEntity = attrAttrgroupRelationService.getOne(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", attrEntity.getAttrId()));
+        if (relationEntity != null) {
+            AttrGroupEntity attrGroupEntity = attrGroupService.getById(relationEntity.getAttrGroupId());
+            if (null != attrGroupEntity) {
+                attrResVo.setGroupName(attrGroupEntity.getAttrGroupName());
+            }
+        }
+        Long[] categoryPath = categoryService.getCategoryPath(attrEntity.getCatelogId());
+        attrResVo.setCatelogPath(categoryPath);
+        CategoryEntity categoryEntity = categoryService.getById(attrEntity.getCatelogId());
+        if (categoryEntity != null) {
+            attrResVo.setCatelogName(categoryEntity.getName());
+        }
+        return attrResVo;
+    }
+
+
+    @Transactional
+    @Override
+    public void updateAttr(AttrResVo attr) {
+        AttrEntity attrEntity = new AttrEntity();
+        BeanUtils.copyProperties(attr, attrEntity);
+        updateById(attrEntity);
+
+        AttrAttrgroupRelationEntity relationEntity = new AttrAttrgroupRelationEntity();
+        relationEntity.setAttrGroupId(attr.getAttrGroupId());
+        relationEntity.setAttrId(attr.getAttrId());
+
+        int count = attrAttrgroupRelationService.count(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", attr.getAttrId()));
+        if (count > 0){
+            attrAttrgroupRelationService.update(relationEntity, new UpdateWrapper<AttrAttrgroupRelationEntity>().eq("attr_id",attr.getAttrId()));
+        } else {
+
+        }attrAttrgroupRelationService.save(relationEntity);
     }
 
 }

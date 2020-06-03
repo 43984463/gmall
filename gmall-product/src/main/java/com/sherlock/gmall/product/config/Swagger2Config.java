@@ -1,6 +1,7 @@
 package com.sherlock.gmall.product.config;
 
 import com.sherlock.common.constants.GmallConstant;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +34,7 @@ public class Swagger2Config {
                 .apiInfo(apiInfo())
                 .select()
                 //加了ApiOperation注解的类，才生成接口文档
+                //.apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
                 //.apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
                 //包下的类，才生成接口文档
                 .apis(RequestHandlerSelectors.basePackage(GmallConstant.GMALL_PRODUCT_CONTROLLER_BASEPATH))
