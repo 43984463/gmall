@@ -1,5 +1,7 @@
 package com.sherlock.common.exception;
 
+import org.apache.http.HttpStatus;
+
 /***
  * 错误码和错误信息定义类
  * 1. 错误码定义规则为5为数字
@@ -16,8 +18,9 @@ package com.sherlock.common.exception;
  *
  */
 public enum BizCodeEnume {
-    UNKNOW_EXCEPTION(10000,"系统未知异常"),
-    VALID_EXCEPTION(10001,"参数格式校验失败");
+    UNKNOW_EXCEPTION(GmallHttpStatus.UNKNOW_EXCEPTION,"系统未知异常"),
+    VALID_EXCEPTION(GmallHttpStatus.VALID_EXCEPTION,"参数格式校验失败"),
+    NOT_FOUND_EXCEPTION(HttpStatus.SC_NOT_FOUND,"404 Not Found");
 
     private int code;
     private String msg;

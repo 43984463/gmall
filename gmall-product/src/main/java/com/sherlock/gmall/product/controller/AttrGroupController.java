@@ -3,6 +3,7 @@ package com.sherlock.gmall.product.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.sherlock.common.Annotation.GmallMapping;
 import com.sherlock.gmall.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +26,7 @@ import com.sherlock.common.utils.R;
  * @date 2020-05-09 00:31:16
  */
 @RestController
-@RequestMapping("product/attrgroup")
+@GmallMapping("product/attrgroup")
 public class AttrGroupController {
     @Autowired
     private AttrGroupService attrGroupService;
@@ -39,7 +40,7 @@ public class AttrGroupController {
     //@RequiresPermissions("product:attrgroup:list")
     public R list(@RequestParam Map<String, Object> params, @PathVariable("catelogId") Long catelogId) {
         /*PageUtils page = attrGroupService.queryPage(params);*/
-        PageUtils page = attrGroupService.queryPageAndCatelogId(params,catelogId);
+        PageUtils page = attrGroupService.queryPageByCatelogId(params,catelogId);
         return R.ok().put("page", page);
     }
 

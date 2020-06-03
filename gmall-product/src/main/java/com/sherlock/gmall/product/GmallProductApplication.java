@@ -61,7 +61,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  */
 //@EnableFeignClients(basePackages = "com.sherlock.gmall.product.feign")
 @EnableDiscoveryClient
-@MapperScan("com.sherlock.gmall.product.dao")
+//@MapperScan("com.sherlock.gmall.product.dao")
 @SpringBootApplication
 public class GmallProductApplication {
 

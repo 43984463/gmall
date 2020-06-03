@@ -1,5 +1,6 @@
 package com.sherlock.gmall.product.exception;
 
+import com.sherlock.common.constants.GmallConstant;
 import com.sherlock.common.exception.BizCodeEnume;
 import com.sherlock.common.utils.R;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,7 @@ import java.util.Map;
  * @Description:
  */
 @Slf4j
-@RestControllerAdvice(basePackages = "com.sherlock.gmall.product.controller")
+@RestControllerAdvice(basePackages = GmallConstant.GMALL_PRODUCT_CONTROLLER_BASEPATH)
 public class GmallProductExceptionHandler {
 
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})

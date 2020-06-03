@@ -3,7 +3,10 @@ package com.sherlock.gmall.product.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.sherlock.common.Annotation.GmallMapping;
+import com.sherlock.gmall.product.vo.AttrVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,10 +28,20 @@ import com.sherlock.common.utils.R;
  * @date 2020-05-09 00:31:16
  */
 @RestController
-@RequestMapping("product/attr")
+@GmallMapping("product/attr")
 public class AttrController {
     @Autowired
     private AttrService attrService;
+
+    /**
+     * 列表
+     */
+    @GetMapping("/base/list/{catelogId}")
+    //@RequiresPermissions("product:attr:list")
+    public R baseAttrList(@RequestParam Map<String, Object> params, @PathVariable Long catelogId){
+        PageUtils page = attrService.queryBaseAttrPage(params, catelogId);
+        return R.ok().put("page", page);
+    }
 
     /**
      * 列表
@@ -58,8 +71,8 @@ public class AttrController {
      */
     @RequestMapping("/save")
     //@RequiresPermissions("product:attr:save")
-    public R save(@RequestBody AttrEntity attr){
-		attrService.save(attr);
+    public R save(@RequestBody AttrVo attr){
+		attrService.saveAttr(attr);
 
         return R.ok();
     }

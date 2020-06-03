@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -25,7 +26,7 @@ import java.util.Map;
 @RequestMapping("oss")
 public class OssController {
 
-    @Autowired
+    @Resource
     private OSS ossClient;
 
     @Value("${spring.cloud.alicloud.access-key}")

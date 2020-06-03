@@ -1,13 +1,11 @@
 package com.sherlock.gmall.product.controller;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.segments.MergeSegments;
+import com.sherlock.common.Annotation.GmallMapping;
+import com.sherlock.common.utils.PageUtils;
+import com.sherlock.common.utils.R;
+import com.sherlock.gmall.product.entity.CategoryBrandRelationEntity;
+import com.sherlock.gmall.product.service.CategoryBrandRelationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,10 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sherlock.gmall.product.entity.CategoryBrandRelationEntity;
-import com.sherlock.gmall.product.service.CategoryBrandRelationService;
-import com.sherlock.common.utils.PageUtils;
-import com.sherlock.common.utils.R;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 
 
@@ -31,7 +28,7 @@ import com.sherlock.common.utils.R;
  * @date 2020-05-09 00:31:16
  */
 @RestController
-@RequestMapping("product/categorybrandrelation")
+@GmallMapping("product/categorybrandrelation")
 public class CategoryBrandRelationController {
     @Autowired
     private CategoryBrandRelationService categoryBrandRelationService;

@@ -1,21 +1,19 @@
 package com.sherlock.gmall.product.controller;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-
+import com.sherlock.common.Annotation.GmallMapping;
+import com.sherlock.common.utils.R;
+import com.sherlock.gmall.product.entity.CategoryEntity;
+import com.sherlock.gmall.product.service.CategoryService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sherlock.gmall.product.entity.CategoryEntity;
-import com.sherlock.gmall.product.service.CategoryService;
-import com.sherlock.common.utils.PageUtils;
-import com.sherlock.common.utils.R;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -25,8 +23,9 @@ import com.sherlock.common.utils.R;
  * @email xuesherlock@gmail.com
  * @date 2020-05-09 00:31:17
  */
+@Api(tags = "CategoryController", description = "商品三层分类接口/商品模块")
 @RestController
-@RequestMapping("product/category")
+@GmallMapping(value = "product/category")
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;
@@ -36,6 +35,7 @@ public class CategoryController {
      * 列表
      */
     @RequestMapping("/list/tree")
+    @ApiOperation(value = "显示所有列表")
     //@RequiresPermissions("product:category:list")
     public R list() {
         List<CategoryEntity> categoryEntities = categoryService.listWithTree();
@@ -48,6 +48,7 @@ public class CategoryController {
      * 信息
      */
     @RequestMapping("/info/{catId}")
+    @ApiOperation(value = "查询catId等于传入参数的信息")
     //@RequiresPermissions("product:category:info")
     public R info(@PathVariable("catId") Long catId) {
         CategoryEntity category = categoryService.getById(catId);
@@ -58,6 +59,7 @@ public class CategoryController {
      * 保存
      */
     @RequestMapping("/save")
+    @ApiOperation(value="保存商品")
     //@RequiresPermissions("product:category:save")
     public R save(@RequestBody CategoryEntity category) {
         categoryService.save(category);

@@ -1,15 +1,14 @@
 package com.sherlock.gmall.product.controller;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
-
+import com.sherlock.common.Annotation.GmallMapping;
+import com.sherlock.common.utils.PageUtils;
+import com.sherlock.common.utils.R;
 import com.sherlock.common.valid.AddGroup;
 import com.sherlock.common.valid.UpdateGroup;
 import com.sherlock.common.valid.UpdateStatusGroup;
+import com.sherlock.gmall.product.entity.BrandEntity;
+import com.sherlock.gmall.product.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,12 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sherlock.gmall.product.entity.BrandEntity;
-import com.sherlock.gmall.product.service.BrandService;
-import com.sherlock.common.utils.PageUtils;
-import com.sherlock.common.utils.R;
-
-import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.Map;
 
 
 /**
@@ -33,7 +28,7 @@ import javax.validation.Valid;
  * @date 2020-05-09 00:31:17
  */
 @RestController
-@RequestMapping("product/brand")
+@GmallMapping("product/brand")
 public class BrandController {
     @Autowired
     private BrandService brandService;

@@ -3,6 +3,7 @@ package com.sherlock.gmall.product.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.sherlock.common.Annotation.GmallMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +26,7 @@ import com.sherlock.common.utils.R;
  * @date 2020-05-09 00:31:16
  */
 @RestController
-@RequestMapping("product/attrattrgrouprelation")
+@GmallMapping("product/attrattrgrouprelation")
 public class AttrAttrgroupRelationController {
 
     @Autowired

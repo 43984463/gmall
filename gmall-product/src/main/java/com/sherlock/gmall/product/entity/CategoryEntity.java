@@ -13,6 +13,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 商品三级分类
  *
@@ -38,10 +40,12 @@ public class CategoryEntity implements Serializable {
     /**
      * 父分类id
      */
+    @NotNull
     private Long parentCid;
     /**
      * 层级
      */
+    @NotNull
     private Integer catLevel;
     /**
      * 是否显示[0-不显示，1显示]
@@ -51,6 +55,7 @@ public class CategoryEntity implements Serializable {
     /**
      * 排序
      */
+    @NotNull
     private Integer sort;
     /**
      * 图标地址
