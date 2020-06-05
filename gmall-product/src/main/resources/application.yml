@@ -60,7 +60,7 @@ mybatis-plus:
     db-config:
       id-type: auto
       logic-delete-value: 0 #逻辑已经删除
-      logic-not-delete-value: 1 #逻辑未删除(1表示已经逻辑删除)
+      logic-not-delete-value: 1 #逻辑未删除(1表示已经逻辑未删除)
 logging:
   level:
     com.sherlock.gmall: debug
