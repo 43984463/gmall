@@ -5,6 +5,9 @@ import com.sherlock.gmall.product.service.CategoryBrandRelationService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -43,6 +46,17 @@ public class BrandServiceImpl extends ServiceImpl<BrandDao, BrandEntity> impleme
         if (StringUtils.isNotEmpty(brand.getName())) {
             categoryBrandRelationService.UpdateBrand(brand.getBrandId(), brand.getName());
         }
+    }
+
+    @Transactional
+    @Override
+    public void removeCascade(List<Long> BrandIds) {
+        BrandIds.forEach(brandId -> {
+            removeById(brandId);
+            Map columnMap = new HashMap();
+            columnMap.put("brand_id", brandId);
+            categoryBrandRelationService.removeByMap(columnMap);
+        });
     }
 
 }

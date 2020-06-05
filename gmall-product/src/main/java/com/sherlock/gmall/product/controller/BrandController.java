@@ -9,6 +9,7 @@ import com.sherlock.common.valid.UpdateStatusGroup;
 import com.sherlock.gmall.product.entity.BrandEntity;
 import com.sherlock.gmall.product.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,7 +64,7 @@ public class BrandController {
     public R save(@Validated(AddGroup.class) @RequestBody BrandEntity brand){
        /* Map errorMaps = new HashMap();
         if (result.hasErrors()) {
-            result.getFieldErrors().stream().forEach(item -> errorMaps.put(item.getField(), item.getDefaultMessage()));
+            (BindingResult) result.getFieldErrors().stream().forEach(item -> errorMaps.put(item.getField(), item.getDefaultMessage()));
             return R.error(400,  "数据校验不通过").put("errors", errorMaps);
         }*/
 		brandService.save(brand);
@@ -96,7 +97,8 @@ public class BrandController {
     @RequestMapping("/delete")
     //@RequiresPermissions("product:brand:delete")
     public R delete(@RequestBody Long[] brandIds){
-		brandService.removeByIds(Arrays.asList(brandIds));
+        brandService.removeCascade(Arrays.asList(brandIds));
+		//brandService.removeByIds(Arrays.asList(brandIds));
         return R.ok();
     }
 

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.sherlock.common.utils.PageUtils;
 import com.sherlock.gmall.product.entity.BrandEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,5 +19,7 @@ public interface BrandService extends IService<BrandEntity> {
     PageUtils queryPage(Map<String, Object> params);
 
     void updateCascade(BrandEntity brand);
+
+    void removeCascade(List<Long> BrandIds);
 }
 
