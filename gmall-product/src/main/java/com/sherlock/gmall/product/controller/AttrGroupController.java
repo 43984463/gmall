@@ -6,9 +6,11 @@ import java.util.Map;
 
 import com.sherlock.common.Annotation.GmallMapping;
 import com.sherlock.gmall.product.entity.AttrEntity;
+import com.sherlock.gmall.product.service.AttrAttrgroupRelationService;
 import com.sherlock.gmall.product.service.AttrService;
 import com.sherlock.gmall.product.service.CategoryService;
 import com.sherlock.gmall.product.vo.AttrGroupRelationVo;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,6 +44,21 @@ public class AttrGroupController {
 
     @Autowired
     private AttrService attrService;
+
+    @Autowired
+    private AttrAttrgroupRelationService relationService;
+
+    @ApiOperation(value = "增加关联关系")
+    @PostMapping("/attr/relation")
+    //@RequiresPermissions("product:attrgroup:list")
+    public R addRelation(@RequestBody List<AttrGroupRelationVo> vos) {
+        /*PageUtils page = attrGroupService.queryPage(params);*/
+        relationService.saveBatch(vos);
+        return R.ok();
+    }
+
+
+
     /**
      * 列表
      */
@@ -57,6 +74,12 @@ public class AttrGroupController {
     public R attrRelation(@PathVariable("attrgroupId") Long attrgroupId) {
         List<AttrEntity> entities = attrService.getRelationAttr(attrgroupId);
         return R.ok().put("data", entities);
+    }
+
+    @GetMapping("/{attrgroupId}/noattr/relation")
+    public R attrNoRelation(@PathVariable("attrgroupId") Long attrgroupId, @RequestParam Map<String, Object> params) {
+        PageUtils page = attrService.getNoRelationAttr(attrgroupId, params);
+        return R.ok().put("page", page);
     }
 
     /**
