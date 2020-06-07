@@ -21,6 +21,13 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}  #请求地址经过网关进行转换
 
+        - id: member_route
+          uri: lb://gmall-member  #转到哪个服务
+          predicates:
+            - Path=/api/member/**  #拦截path包含/api的请求
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}  #请求地址经过网关进行转换
+
         - id: third_party_route
           uri: lb://gmall-third-party  #转到哪个服务
           predicates:

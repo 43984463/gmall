@@ -10,6 +10,7 @@ import com.sherlock.gmall.product.service.AttrAttrgroupRelationService;
 import com.sherlock.gmall.product.service.AttrService;
 import com.sherlock.gmall.product.service.CategoryService;
 import com.sherlock.gmall.product.vo.AttrGroupRelationVo;
+import com.sherlock.gmall.product.vo.AttrGroupWithAttrsVo;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,6 +59,13 @@ public class AttrGroupController {
     }
 
 
+    @RequestMapping("/{catelogId}/withattr")
+    //@RequiresPermissions("product:attrgroup:list")
+    public R getAttrGroupWithAttrs(@PathVariable("catelogId") Long catelogId) {
+        /*PageUtils page = attrGroupService.queryPage(params);*/
+        List<AttrGroupWithAttrsVo> vos= attrGroupService.getAttrGroupWithAttrsByCatelogId(catelogId);
+        return R.ok().put("data", vos);
+    }
 
     /**
      * 列表
@@ -101,7 +109,6 @@ public class AttrGroupController {
     //@RequiresPermissions("product:attrgroup:save")
     public R save(@RequestBody AttrGroupEntity attrGroup) {
         attrGroupService.save(attrGroup);
-
         return R.ok();
     }
 
@@ -111,7 +118,7 @@ public class AttrGroupController {
     @RequestMapping("/update")
     //@RequiresPermissions("product:attrgroup:update")
     public R update(@RequestBody AttrGroupEntity attrGroup) {
-        attrGroupService.updateById(attrGroup);
+        attrGroupService.updateAttrAndRelation(attrGroup);
 
         return R.ok();
     }

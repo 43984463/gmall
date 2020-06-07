@@ -3,6 +3,7 @@ package com.sherlock.gmall.product.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sherlock.common.utils.PageUtils;
+import com.sherlock.gmall.product.entity.BrandEntity;
 import com.sherlock.gmall.product.entity.CategoryBrandRelationEntity;
 
 import java.util.List;
@@ -24,5 +25,7 @@ public interface CategoryBrandRelationService extends IService<CategoryBrandRela
     void UpdateBrand(Long brandId, String name);
 
     void updateCategory(Long catId, String name);
+
+    List<BrandEntity> getBrandsBycatId(Long catId);
 }
 

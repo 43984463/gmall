@@ -1,26 +1,21 @@
 package com.sherlock.gmall.product.controller;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
 import com.sherlock.common.Annotation.GmallMapping;
-import com.sherlock.gmall.product.vo.AttrGroupRelationVo;
+import com.sherlock.common.utils.PageUtils;
+import com.sherlock.common.utils.R;
+import com.sherlock.gmall.product.service.AttrService;
 import com.sherlock.gmall.product.vo.AttrResVo;
 import com.sherlock.gmall.product.vo.AttrVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sherlock.gmall.product.entity.AttrEntity;
-import com.sherlock.gmall.product.service.AttrService;
-import com.sherlock.common.utils.PageUtils;
-import com.sherlock.common.utils.R;
+import java.util.Arrays;
+import java.util.Map;
 
 
 
@@ -86,7 +81,7 @@ public class AttrController {
      */
     @RequestMapping("/update")
     //@RequiresPermissions("product:attr:update")
-    public R update(@RequestBody AttrResVo attr){
+    public R update(@RequestBody AttrVo attr){
 		attrService.updateAttr(attr);
         return R.ok();
     }
