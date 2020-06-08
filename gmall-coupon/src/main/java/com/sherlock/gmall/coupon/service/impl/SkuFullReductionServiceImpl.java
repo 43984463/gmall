@@ -1,5 +1,6 @@
 package com.sherlock.gmall.coupon.service.impl;
 
+import com.sherlock.common.to.SkuReductionTo;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -24,6 +25,12 @@ public class SkuFullReductionServiceImpl extends ServiceImpl<SkuFullReductionDao
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public void saveSkuReduction(SkuReductionTo skuReductionTo) {
+
+
     }
 
 }

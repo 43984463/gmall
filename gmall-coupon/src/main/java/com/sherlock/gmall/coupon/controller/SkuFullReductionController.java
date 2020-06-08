@@ -3,8 +3,10 @@ package com.sherlock.gmall.coupon.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.sherlock.common.to.SkuReductionTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,6 +41,16 @@ public class SkuFullReductionController {
         PageUtils page = skuFullReductionService.queryPage(params);
 
         return R.ok().put("page", page);
+    }
+
+
+
+    @PostMapping("/saveinfo")
+    //@RequiresPermissions("coupon:skufullreduction:list")
+    public R list(@RequestBody SkuReductionTo skuReductionTo){
+        skuFullReductionService.saveSkuReduction(skuReductionTo);
+
+        return R.ok().put("page", "");
     }
 
 

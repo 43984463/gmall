@@ -5,6 +5,7 @@ import java.util.Map;
 
 
 import com.sherlock.common.Annotation.GmallMapping;
+import com.sherlock.gmall.product.vo.SpuSaveVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,8 +61,8 @@ public class SpuInfoController {
      */
     @RequestMapping("/save")
     //@RequiresPermissions("product:spuinfo:save")
-    public R save(@RequestBody SpuInfoEntity spuInfo){
-		spuInfoService.save(spuInfo);
+    public R save(@RequestBody SpuSaveVo spuInfo){
+		spuInfoService.saveSpuInfo(spuInfo);
 
         return R.ok();
     }
