@@ -49,8 +49,7 @@ public class SkuFullReductionController {
     //@RequiresPermissions("coupon:skufullreduction:list")
     public R list(@RequestBody SkuReductionTo skuReductionTo){
         skuFullReductionService.saveSkuReduction(skuReductionTo);
-
-        return R.ok().put("page", "");
+        return R.ok();
     }
 
 

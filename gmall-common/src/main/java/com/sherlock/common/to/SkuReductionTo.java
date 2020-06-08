@@ -3,6 +3,7 @@ package com.sherlock.common.to;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @Author xueshuai
@@ -19,5 +20,7 @@ public class SkuReductionTo {
     private BigDecimal fullPrice;
     private BigDecimal reducePrice;
     private int priceStatus;
+
+    private List<MemberPrice> memberPrice;
 
 }

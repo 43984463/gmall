@@ -31,6 +31,7 @@ import com.sherlock.gmall.product.vo.Bounds;
 import com.sherlock.gmall.product.vo.Images;
 import com.sherlock.gmall.product.vo.Skus;
 import com.sherlock.gmall.product.vo.SpuSaveVo;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -104,7 +106,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
         // 4、保存spu的规格参数;pms_product_attr_value
         List<BaseAttrs> baseAttrs = spuInfoVo.getBaseAttrs();
-        List<ProductAttrValueEntity> collect = baseAttrs.stream().map(attr -> {
+        List<ProductAttrValueEntity> valueEntities = baseAttrs.stream().map(attr -> {
             ProductAttrValueEntity valueEntity = new ProductAttrValueEntity();
             valueEntity.setAttrId(attr.getAttrId());
             AttrEntity id = attrService.getById(attr.getAttrId());
@@ -115,7 +117,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
             return valueEntity;
         }).collect(Collectors.toList());
-        productAttrValueService.saveProductAttr(collect);
+        productAttrValueService.saveProductAttr(valueEntities);
 
 
         // 5、保存spu的积分信息；gulimall_sms->sms_spu_bounds
@@ -160,7 +162,8 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
                     skuImagesEntity.setDefaultImg(image.getDefaultImg());
                     skuImagesEntity.setImgUrl(image.getImgUrl());
                     return skuImagesEntity;
-                }).collect(Collectors.toList());
+                }).filter(skuImagesEntity -> StringUtils.isNotEmpty(skuImagesEntity.getImgUrl()))
+                        .collect(Collectors.toList());
 
                 skuImagesService.saveBatch(skuImagesEntities);
 
@@ -179,7 +182,9 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
                 SkuReductionTo skuReductionTo = new SkuReductionTo();
                 BeanUtils.copyProperties(sku, skuReductionTo);
                 skuReductionTo.setSkuId(skuId);
-                couponFeignService.saveSkuReduction(skuReductionTo);
+                if (skuReductionTo.getFullCount() > 0 || skuReductionTo.getFullPrice().compareTo(BigDecimal.ZERO) > 0) {
+                    couponFeignService.saveSkuReduction(skuReductionTo);
+                }
 
             });
         }
