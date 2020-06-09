@@ -10,8 +10,8 @@ alibaba的config配置中心结合@RefreshScope使用动态读取Nacos配置中�
 
 ```properties
 springcloud读取Nacos配置中心配置
-spring.cloud.nacos.config.server-addr=120.76.60.77:9848    #Nacos配置文件地址
 spring.cloud.nacos.discovery.server-addr=120.76.60.77:9848  #Nacos服务器地址
+spring.cloud.nacos.config.server-addr=120.76.60.77:9848    #Nacos配置文件地址
 spring.cloud.nacos.config.extension-configs[0].data-id=data_source.yaml  #Nacos配置文件名称(数组形式)
 spring.cloud.nacos.config.extension-configs[0].group=dev    #Nacos配置文件所属组
 # Nacos配置文件是否动态刷新

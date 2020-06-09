@@ -60,3 +60,7 @@ mybatis-plus:
     db-config:
       id-type: auto
 
+logging:
+  level:
+    com.sherlock.gmall: debug
+    com.alibaba.nacos.client.naming: error
