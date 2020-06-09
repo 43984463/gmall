@@ -6,6 +6,7 @@ package com.sherlock.gmall.product;
  * @Description:
  */
 
+import com.sherlock.common.constants.GmallConstant;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -59,7 +60,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  *  1）、编写异常处理类，使用@ControllerAdvice。
  *  2）、使用@ExceptionHandler标注方法可以处理的异常。
  */
-@EnableFeignClients(basePackages = "com.sherlock.gmall.product.feign")
+@EnableFeignClients(basePackages = GmallConstant.GMALL_PRODUCT_BASEPATH + GmallConstant.FEIGN)
 @EnableDiscoveryClient
 @SpringBootApplication
 public class GmallProductApplication {

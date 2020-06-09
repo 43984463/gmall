@@ -17,7 +17,7 @@ import java.util.Map;
  * @Description:
  */
 @Slf4j
-@RestControllerAdvice(basePackages = GmallConstant.GMALL_PRODUCT_CONTROLLER_BASEPATH)
+@RestControllerAdvice(basePackages = GmallConstant.GMALL_PRODUCT_BASEPATH + GmallConstant.CONTROLLER)
 public class GmallProductExceptionHandler {
 
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})

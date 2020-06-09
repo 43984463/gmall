@@ -209,15 +209,15 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
             queryWrapper.eq("publish_status", status);
         }
         String brandId = (String) params.get("brandId");
-        if (StringUtils.isNotEmpty(brandId)) {
+        if (StringUtils.isNotEmpty(brandId) && !("0").equals(brandId)) {
             queryWrapper.eq("brand_id", brandId);
         }
         String catelogId = (String) params.get("catelogId");
-        if (StringUtils.isNotEmpty(catelogId)) {
-            queryWrapper.eq("catelog_id", catelogId);
+        if (StringUtils.isNotEmpty(catelogId) && !("0").equals(brandId)) {
+            queryWrapper.eq("catalog_id", catelogId);
         }
 
-        IPage<SpuInfoEntity> page = this.page( new Query<SpuInfoEntity>().getPage(params), queryWrapper );
+        IPage<SpuInfoEntity> page = this.page(new Query<SpuInfoEntity>().getPage(params), queryWrapper);
 
         return new PageUtils(page);
     }

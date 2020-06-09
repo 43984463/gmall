@@ -1,4 +1,4 @@
-package com.sherlock.gmall.product.config;
+package com.sherlock.gmall.order.config;
 
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.pagination.optimize.JsqlParserCountOptimize;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@MapperScan(GmallConstant.GMALL_PRODUCT_BASEPATH + GmallConstant.DAO)
+@MapperScan(GmallConstant.GMALL_ORDER_BASEPATH + GmallConstant.DAO)
 public class MybatisConfig {
 
     @Bean
