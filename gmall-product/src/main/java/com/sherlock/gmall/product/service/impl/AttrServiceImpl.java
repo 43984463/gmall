@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sherlock.common.constants.GmallConstant;
+import com.sherlock.common.constants.GmallProductConstant;
 import com.sherlock.common.utils.PageUtils;
 import com.sherlock.common.utils.Query;
 import com.sherlock.gmall.product.dao.AttrAttrgroupRelationDao;
@@ -69,7 +70,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         BeanUtils.copyProperties(attr, attrEntity);
         save(attrEntity);
 
-        if (attr.getAttrType() == GmallConstant.Product_Attr_Enum.ATTR_TYPE_BASE.getCode() && attr.getAttrGroupId() != null) {
+        if (attr.getAttrType() == GmallProductConstant.Product_Attr_Enum.ATTR_TYPE_BASE.getCode() && attr.getAttrGroupId() != null) {
             AttrAttrgroupRelationEntity relationEntity = new AttrAttrgroupRelationEntity();
             relationEntity.setAttrGroupId(attr.getAttrGroupId());
             relationEntity.setAttrId(attrEntity.getAttrId());
@@ -79,7 +80,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 
     @Override
     public PageUtils queryBaseAttrPage(Map<String, Object> params, Long catelogId, String type) {
-        QueryWrapper<AttrEntity> queryWrapper = new QueryWrapper<AttrEntity>().eq("attr_type", "base".equalsIgnoreCase(type) ? GmallConstant.Product_Attr_Enum.ATTR_TYPE_BASE.getCode() : GmallConstant.Product_Attr_Enum.ATTR_TYPE_SALE.getCode());
+        QueryWrapper<AttrEntity> queryWrapper = new QueryWrapper<AttrEntity>().eq("attr_type", "base".equalsIgnoreCase(type) ? GmallProductConstant.Product_Attr_Enum.ATTR_TYPE_BASE.getCode() : GmallProductConstant.Product_Attr_Enum.ATTR_TYPE_SALE.getCode());
         if (catelogId != 0) {
             queryWrapper.eq("catelog_id", catelogId);
         }
@@ -121,7 +122,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         AttrResVo attrResVo = new AttrResVo();
         BeanUtils.copyProperties(attrEntity, attrResVo);
 
-        if (attrEntity.getAttrType() == GmallConstant.Product_Attr_Enum.ATTR_TYPE_BASE.getCode()) {
+        if (attrEntity.getAttrType() == GmallProductConstant.Product_Attr_Enum.ATTR_TYPE_BASE.getCode()) {
             AttrAttrgroupRelationEntity relationEntity = attrAttrgroupRelationService.getOne(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", attrEntity.getAttrId()));
             if (relationEntity != null) {
                 AttrGroupEntity attrGroupEntity = attrGroupService.getById(relationEntity.getAttrGroupId());
@@ -149,7 +150,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         updateById(attrEntity);
 
 
-        if (attrEntity.getAttrType() == GmallConstant.Product_Attr_Enum.ATTR_TYPE_BASE.getCode()) {
+        if (attrEntity.getAttrType() == GmallProductConstant.Product_Attr_Enum.ATTR_TYPE_BASE.getCode()) {
             AttrAttrgroupRelationEntity relationEntity = new AttrAttrgroupRelationEntity();
             relationEntity.setAttrGroupId(attr.getAttrGroupId());
             relationEntity.setAttrId(attr.getAttrId());
@@ -219,7 +220,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
             attrIds.addAll(relationEntities.stream().map(relation -> relation.getAttrId()).collect(Collectors.toList()));
         }
         // 找出所有等于当前组但是不在上面属性集合里面的属性(并且是规格参数而不是销售属性)
-        QueryWrapper<AttrEntity> queryWrapper = new QueryWrapper<AttrEntity>().eq("catelog_id", catelogId).eq("attr_type", GmallConstant.Product_Attr_Enum.ATTR_TYPE_BASE.getCode());
+        QueryWrapper<AttrEntity> queryWrapper = new QueryWrapper<AttrEntity>().eq("catelog_id", catelogId).eq("attr_type", GmallProductConstant.Product_Attr_Enum.ATTR_TYPE_BASE.getCode());
         if (!CollectionUtils.isEmpty(attrIds)) {
             queryWrapper.notIn("attr_id", attrIds);
         }
