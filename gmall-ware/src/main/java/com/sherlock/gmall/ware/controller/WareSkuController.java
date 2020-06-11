@@ -28,6 +28,7 @@ import com.sherlock.common.utils.R;
 @RestController
 @GmallMapping("ware/waresku")
 public class WareSkuController {
+
     @Autowired
     private WareSkuService wareSkuService;
 

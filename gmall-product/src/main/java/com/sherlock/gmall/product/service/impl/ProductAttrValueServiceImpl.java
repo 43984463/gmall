@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -13,6 +15,7 @@ import com.sherlock.common.utils.Query;
 import com.sherlock.gmall.product.dao.ProductAttrValueDao;
 import com.sherlock.gmall.product.entity.ProductAttrValueEntity;
 import com.sherlock.gmall.product.service.ProductAttrValueService;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service("productAttrValueService")
@@ -30,6 +33,20 @@ public class ProductAttrValueServiceImpl extends ServiceImpl<ProductAttrValueDao
 
     @Override
     public void saveProductAttr(List<ProductAttrValueEntity> collect) {
+        saveBatch(collect);
+    }
+
+    @Override
+    public List<ProductAttrValueEntity> baseAttrListForSpu(Long spuId) {
+        List<ProductAttrValueEntity> list = list(new QueryWrapper<ProductAttrValueEntity>().eq("spu_id", spuId));
+        return list;
+    }
+
+    @Transactional
+    @Override
+    public void updateSpuAttrs(Long spuId, List<ProductAttrValueEntity> entities) {
+        remove(new QueryWrapper<ProductAttrValueEntity>().eq("spu_id", spuId));
+        List<ProductAttrValueEntity> collect = entities.stream().map(entity -> entity.setSpuId(spuId)).collect(Collectors.toList());
         saveBatch(collect);
     }
 

@@ -7,9 +7,11 @@ import java.util.Map;
 
 import com.sherlock.common.Annotation.GmallMapping;
 import com.sherlock.gmall.ware.vo.MergeVo;
+import com.sherlock.gmall.ware.vo.PurchaseDoneVo;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,11 +45,19 @@ public class PurchaseController {
         return R.ok();
     }
 
-    @ApiOperation(value = "合并采购单")
-    @RequestMapping("/merge")
+    @ApiOperation(value = "领取采购单")
+    @PostMapping("/received")
     //@RequiresPermissions("ware:purchase:list")
     public R received(@RequestBody List<Long> ids){
         purchaseService.receivePurchase(ids);
+        return R.ok();
+    }
+
+    @ApiOperation(value = "完成采购单")
+    @PostMapping("/done")
+    //@RequiresPermissions("ware:purchase:list")
+    public R finish(@RequestBody PurchaseDoneVo vo){
+        purchaseService.purchaseDone(vo);
         return R.ok();
     }
 

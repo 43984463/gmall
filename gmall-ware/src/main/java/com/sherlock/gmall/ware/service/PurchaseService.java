@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.sherlock.common.utils.PageUtils;
 import com.sherlock.gmall.ware.entity.PurchaseEntity;
 import com.sherlock.gmall.ware.vo.MergeVo;
+import com.sherlock.gmall.ware.vo.PurchaseDoneVo;
 
 import java.util.List;
 import java.util.Map;
@@ -24,5 +25,7 @@ public interface PurchaseService extends IService<PurchaseEntity> {
     void mergePurchase(MergeVo mergeVo);
 
     void receivePurchase(List<Long> ids);
+
+    void purchaseDone(PurchaseDoneVo vos);
 }
 

@@ -3,6 +3,7 @@ package com.sherlock.gmall.coupon.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.sherlock.common.Annotation.GmallMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -26,7 +27,7 @@ import com.sherlock.common.utils.R;
  * @date 2020-05-10 00:56:06
  */
 @RestController
-@RequestMapping("coupon/coupon")
+@GmallMapping("coupon/coupon")
 @RefreshScope
 public class CouponController {
 

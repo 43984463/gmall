@@ -2,11 +2,17 @@ package com.sherlock.gmall.ware.service.impl;
 
 import com.sherlock.common.constants.GmallWareConstant;
 import com.sherlock.gmall.ware.entity.PurchaseDetailEntity;
+import com.sherlock.gmall.ware.entity.WareSkuEntity;
 import com.sherlock.gmall.ware.service.PurchaseDetailService;
+import com.sherlock.gmall.ware.service.WareSkuService;
 import com.sherlock.gmall.ware.vo.MergeVo;
+import com.sherlock.gmall.ware.vo.PurchaseDoneVo;
+import com.sherlock.gmall.ware.vo.PurchaseItemDoneVo;
+import com.sun.xml.internal.bind.v2.TODO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +35,9 @@ public class PurchaseServiceImpl extends ServiceImpl<PurchaseDao, PurchaseEntity
 
     @Autowired
     private PurchaseDetailService purchaseDetailService;
+
+    @Autowired
+    private WareSkuService wareSkuService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -65,12 +74,18 @@ public class PurchaseServiceImpl extends ServiceImpl<PurchaseDao, PurchaseEntity
         List<Long> items = mergeVo.getItems();
         Long finalPurchaseId = purchaseId;
         List<PurchaseDetailEntity> detailEntities = items.stream().map(item -> {
-            PurchaseDetailEntity detailEntity = new PurchaseDetailEntity();
-            detailEntity.setId(item);
-            detailEntity.setPurchaseId(finalPurchaseId);
-            detailEntity.setStatus(GmallWareConstant.Purchase_Detail_Status_Enum.ASSIGNED.getCode());
+            PurchaseDetailEntity detailEntity = purchaseDetailService.getById(item);
+            if (detailEntity.getStatus() == GmallWareConstant.Purchase_Detail_Status_Enum.CREATED.getCode()
+                    || detailEntity.getStatus() == GmallWareConstant.Purchase_Detail_Status_Enum.ASSIGNED.getCode()) {
+                detailEntity.setId(item);
+                detailEntity.setPurchaseId(finalPurchaseId);
+                detailEntity.setStatus(GmallWareConstant.Purchase_Detail_Status_Enum.ASSIGNED.getCode());
+            }
             return detailEntity;
-        }).collect(Collectors.toList());
+            // 过滤掉提交过来的已完成或者正在采购或者采购失败的采购单 只修改新建或者已分配的采购单
+        }).filter(item -> item.getStatus() == GmallWareConstant.Purchase_Detail_Status_Enum.CREATED.getCode()
+                || item.getStatus() == GmallWareConstant.Purchase_Detail_Status_Enum.ASSIGNED.getCode())
+                .collect(Collectors.toList());
 
         purchaseDetailService.updateBatchById(detailEntities);
 
@@ -109,6 +124,46 @@ public class PurchaseServiceImpl extends ServiceImpl<PurchaseDao, PurchaseEntity
             }).collect(Collectors.toList());
             purchaseDetailService.updateBatchById(detailEntities);
         });
+    }
+
+    @Transactional
+    @Override
+    public void purchaseDone(PurchaseDoneVo vo) {
+        boolean haveError = false;
+        // 改变采购单状态
+        Long id = vo.getId();
+
+        // 改变所有采购项的状态
+        List<PurchaseItemDoneVo> items = vo.getItems();
+        List<PurchaseDetailEntity> needUpdatePurchaseDetail = new ArrayList<>();
+        for (PurchaseItemDoneVo item : items) {
+            PurchaseDetailEntity detailEntity = new PurchaseDetailEntity();
+            if (item.getStatus() == GmallWareConstant.Purchase_Detail_Status_Enum.HAS_ERROR.getCode()) {
+                haveError = true;
+                detailEntity.setStatus(item.getStatus());
+            } else {
+                detailEntity.setStatus(GmallWareConstant.Purchase_Detail_Status_Enum.FINISH.getCode());
+                // 将采购成功的入库
+                PurchaseDetailEntity detailServiceById = purchaseDetailService.getById(item.getItemId());
+                wareSkuService.updateStock(detailServiceById.getSkuId(), detailServiceById.getWareId(), detailServiceById.getSkuNum());
+            }
+            detailEntity.setId(item.getItemId());
+            needUpdatePurchaseDetail.add(detailEntity);
+        }
+
+        purchaseDetailService.updateBatchById(needUpdatePurchaseDetail);
+
+        // 改变采购单的状态
+        PurchaseEntity purchaseEntity = new PurchaseEntity();
+        purchaseEntity.setId(id);
+        if (haveError) {
+            purchaseEntity.setStatus(GmallWareConstant.Purchase_Status_Enum.HAS_ERROR.getCode());
+        } else {
+            purchaseEntity.setStatus(GmallWareConstant.Purchase_Status_Enum.FINISH.getCode());
+        }
+        purchaseEntity.setUpdateTime(new Date());
+        updateById(purchaseEntity);
+
     }
 
 }

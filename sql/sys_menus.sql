@@ -106,7 +106,8 @@ insert  into `sys_menu`(`menu_id`,`parent_id`,`name`,`url`,`perms`,`type`,`icon`
 (72,70,'采购单','ware/purchase','',1,'menu',0),
 (73,41,'商品管理','product/manager','',1,'zonghe',0),
 (74,42,'会员价格','coupon/memberprice','',1,'admin',0),
-(75,42,'每日秒杀','coupon/seckillsession','',1,'job',0);
+(75,42,'每日秒杀','coupon/seckillsession','',1,'job',0),
+(76, 37, '规格维护', 'product/attrupdate', '', 2, 'log', 0);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

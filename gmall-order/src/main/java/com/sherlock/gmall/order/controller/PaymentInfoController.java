@@ -3,6 +3,7 @@ package com.sherlock.gmall.order.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.sherlock.common.Annotation.GmallMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +26,7 @@ import com.sherlock.common.utils.R;
  * @date 2020-05-10 01:13:41
  */
 @RestController
-@RequestMapping("order/paymentinfo")
+@GmallMapping("order/paymentinfo")
 public class PaymentInfoController {
     @Autowired
     private PaymentInfoService paymentInfoService;

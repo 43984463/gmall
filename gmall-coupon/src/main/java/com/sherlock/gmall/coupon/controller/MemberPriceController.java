@@ -3,6 +3,7 @@ package com.sherlock.gmall.coupon.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.sherlock.common.Annotation.GmallMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +26,7 @@ import com.sherlock.common.utils.R;
  * @date 2020-05-10 00:56:06
  */
 @RestController
-@RequestMapping("coupon/memberprice")
+@GmallMapping("coupon/memberprice")
 public class MemberPriceController {
     @Autowired
     private MemberPriceService memberPriceService;
