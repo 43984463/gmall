@@ -1,0 +1,9 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 120.76.60.77:9848
+  application:
+    name: gmall-search
+server:
+  port: 1600
