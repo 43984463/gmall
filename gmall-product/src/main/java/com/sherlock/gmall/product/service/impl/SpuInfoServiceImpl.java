@@ -5,11 +5,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sherlock.common.to.SkuReductionTo;
 import com.sherlock.common.to.SpuBoundTo;
+import com.sherlock.common.to.es.SkuEsModel;
 import com.sherlock.common.utils.PageUtils;
 import com.sherlock.common.utils.Query;
 import com.sherlock.common.utils.R;
 import com.sherlock.gmall.product.dao.SpuInfoDao;
 import com.sherlock.gmall.product.entity.AttrEntity;
+import com.sherlock.gmall.product.entity.BrandEntity;
+import com.sherlock.gmall.product.entity.CategoryEntity;
 import com.sherlock.gmall.product.entity.ProductAttrValueEntity;
 import com.sherlock.gmall.product.entity.SkuImagesEntity;
 import com.sherlock.gmall.product.entity.SkuInfoEntity;
@@ -17,14 +20,7 @@ import com.sherlock.gmall.product.entity.SkuSaleAttrValueEntity;
 import com.sherlock.gmall.product.entity.SpuInfoDescEntity;
 import com.sherlock.gmall.product.entity.SpuInfoEntity;
 import com.sherlock.gmall.product.feign.CouponFeignService;
-import com.sherlock.gmall.product.service.AttrService;
-import com.sherlock.gmall.product.service.ProductAttrValueService;
-import com.sherlock.gmall.product.service.SkuImagesService;
-import com.sherlock.gmall.product.service.SkuInfoService;
-import com.sherlock.gmall.product.service.SkuSaleAttrValueService;
-import com.sherlock.gmall.product.service.SpuImagesService;
-import com.sherlock.gmall.product.service.SpuInfoDescService;
-import com.sherlock.gmall.product.service.SpuInfoService;
+import com.sherlock.gmall.product.service.*;
 import com.sherlock.gmall.product.vo.Attr;
 import com.sherlock.gmall.product.vo.BaseAttrs;
 import com.sherlock.gmall.product.vo.Bounds;
@@ -40,6 +36,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -69,6 +66,12 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
     @Autowired
     private SkuSaleAttrValueService skuSaleAttrValueService;
+
+    @Autowired
+    private BrandService brandService;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @Resource
     private CouponFeignService couponFeignService;
@@ -220,6 +223,28 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         IPage<SpuInfoEntity> page = this.page(new Query<SpuInfoEntity>().getPage(params), queryWrapper);
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public void up(Long spuId) {
+        List<SkuEsModel> upProducts = new ArrayList<>();
+
+        List<SkuInfoEntity> entities = skuInfoService.getSkuBySpuId(spuId);
+        entities.stream().map(sku -> {
+            SkuEsModel model = new SkuEsModel();
+            BeanUtils.copyProperties(sku, model);
+            model.setSkuPrice(sku.getPrice());
+            model.setSkuImg(sku.getSkuDefaultImg());
+
+            BrandEntity brandEntity = brandService.getById(model.getBrandId());
+            model.setBrandName(brandEntity.getName());
+            model.setBrandImg(brandEntity.getLogo());
+
+            CategoryEntity categoryEntity = categoryService.getById(model.getCatalogId());
+            model.setCatalogName(categoryEntity.getName());
+
+            return model;
+        }).collect(Collectors.toList());
     }
 
 }
