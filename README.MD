@@ -94,3 +94,44 @@ mybatis-plus:
         </dependency>
 ```
 依赖转移到gmall-third-party中,否则会在启动时报找不到endpoint错误。
+
+#解决远程调用时需要强制转换返回值类型
+* 在设计公共返回对象R时应该加上泛型限制，可以在远程调用获取结果时不需要强制转换。
+```java
+public class R<T> extends HashMap<String, Object> {
+    private T data;
+    
+    public T getData() {
+        return data;
+    }
+
+    public R<T> setData(T data) {
+        this.data = data;
+        return this;
+    }
+}
+```
+* 返回时直接返回需要的对象而不是R类型，在远程调用接口也是使用需要的对象。
+```java
+@FeignClient("gmall-ware")
+public interface WareFeignService {
+
+    @PostMapping("/ware/waresku/hasstock")
+    List<SkuHasStockVo> getSkuHasStock(@RequestBody List<Long> skuIds);
+};
+
+
+@RestController
+@GmallMapping("ware/waresku")
+public class WareSkuController {
+
+    @Autowired
+    private WareSkuService wareSkuService;
+
+    @PostMapping("/hasstock")
+    public List<SkuHasStockVo> getSkuHasStock(@RequestBody List<Long> skuIds) {
+        return wareSkuService.getSkuHasStock(skuIds);
+    }
+}
+```
+* <b>或者直接返回org.springframework.http.ResponseEntity(这个对象封装了数据和状态码)<b>
