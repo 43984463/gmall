@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.sherlock.common.Annotation.GmallMapping;
 import com.sherlock.gmall.product.vo.SpuSaveVo;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +35,7 @@ public class SpuInfoController {
     @Autowired
     private SpuInfoService spuInfoService;
 
+    @ApiOperation("商品上架")
     @PostMapping("/{spuId}/up")
     //@RequiresPermissions("product:spuinfo:list")
     public R spuUp(@PathVariable("spuId") Long spuId){

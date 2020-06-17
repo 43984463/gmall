@@ -5,7 +5,7 @@ package com.sherlock.common.constants;
  * @Description: Gmall常量类
  * @Date 2020/6/3
  **/
-public interface GmallConstant {
+public abstract class GmallConstant {
     public static final String GMALL_COUPON_BASEPATH = "com.sherlock.gmall.coupon";
     public static final String GMALL_MEMBER_BASEPATH = "com.sherlock.gmall.member";
     public static final String GMALL_ORDER_BASEPATH = "com.sherlock.gmall.order";

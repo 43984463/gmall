@@ -20,7 +20,8 @@ import org.apache.http.HttpStatus;
 public enum BizCodeEnume {
     UNKNOW_EXCEPTION(GmallHttpStatus.UNKNOW_EXCEPTION,"系统未知异常"),
     VALID_EXCEPTION(GmallHttpStatus.VALID_EXCEPTION,"参数格式校验失败"),
-    NOT_FOUND_EXCEPTION(HttpStatus.SC_NOT_FOUND,"404 Not Found");
+    NOT_FOUND_EXCEPTION(HttpStatus.SC_NOT_FOUND,"404 Not Found"),
+    PRODUCT_UP_EXCEPTION(GmallHttpStatus.PRODUCT_UP_EXCEPTION,"商品上架异常");
 
     private int code;
     private String msg;

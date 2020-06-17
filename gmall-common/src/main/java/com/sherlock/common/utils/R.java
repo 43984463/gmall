@@ -11,19 +11,32 @@ import java.util.Map;
  * @author sherlockXue
  * @email xuesherlock@gmail.com
  * @date 2020-05-08 23:38:30
+ *
+ * R在初始设计时应该加上返回值的泛型规定
+ *
  */
-public class R extends HashMap<String, Object> {
+public class R<T> extends HashMap<String, Object> {
 	private static final long serialVersionUID = 1L;
-	
 	public R() {
 		put("code", 0);
 		put("msg", "success");
 	}
-	
+
+	private T data;
+
+	public T getData() {
+		return data;
+	}
+
+	public R<T> setData(T data) {
+		this.data = data;
+		return this;
+	}
+
 	public static R error() {
 		return error(HttpStatus.SC_INTERNAL_SERVER_ERROR, "未知异常，请联系管理员");
 	}
-	
+
 	public static R error(String msg) {
 		return error(HttpStatus.SC_INTERNAL_SERVER_ERROR, msg);
 	}

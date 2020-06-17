@@ -10,12 +10,15 @@ import com.sherlock.gmall.ware.dao.WareSkuDao;
 import com.sherlock.gmall.ware.entity.WareSkuEntity;
 import com.sherlock.gmall.ware.feign.ProductFeignService;
 import com.sherlock.gmall.ware.service.WareSkuService;
+import com.sherlock.common.to.SkuHasStockVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service("wareSkuService")
@@ -62,11 +65,24 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
                     Map<String, Object> skuInfo = (Map<String, Object>) info.get("skuInfo");
                     wareSkuEntity.setSkuName((String) skuInfo.get("skuName"));
                 }
-            }catch (Exception e){log.warn("远程获取商品信息失败");}
+            } catch (Exception e) {
+                log.warn("远程获取商品信息失败");
+            }
             save(wareSkuEntity);
         } else {
             wareSkuDao.updateStock(skuId, wareId, skuNum);
         }
+    }
+
+    @Override
+    public List<SkuHasStockVo> getSkuHasStock(List<Long> skuIds) {
+        return skuIds.stream().map(skuId -> {
+            SkuHasStockVo vo = new SkuHasStockVo();
+            long count = wareSkuDao.getSkuSotck(skuId);
+            vo.setSkuId(skuId);
+            vo.setHasStock(count > 0);
+            return vo;
+        }).collect(Collectors.toList());
     }
 
 }
