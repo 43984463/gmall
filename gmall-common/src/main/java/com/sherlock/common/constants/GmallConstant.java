@@ -17,4 +17,6 @@ public abstract class GmallConstant {
     public static final String DAO = ".dao";
     public static final String FEIGN = ".feign";
 
+
+
 }

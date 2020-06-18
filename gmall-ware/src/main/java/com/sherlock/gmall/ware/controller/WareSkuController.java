@@ -7,6 +7,8 @@ import java.util.Map;
 import com.sherlock.common.Annotation.GmallMapping;
 import com.sherlock.common.to.SkuHasStockVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,10 +36,24 @@ public class WareSkuController {
     @Autowired
     private WareSkuService wareSkuService;
 
-    @PostMapping("/hasstock")
+    /**
+     * 使用R封装的类型返回
+     */
+    /*@PostMapping("/hasstock")
     public R<List<SkuHasStockVo>> getSkuHasStock(@RequestBody List<Long> skuIds) {
         List<SkuHasStockVo> vos = wareSkuService.getSkuHasStock(skuIds);
-        return R.ok().setData(vos);
+        R ok = R.ok();
+        ok.setData(vos);
+        return ok;
+    }*/
+
+    /**
+     * 使用ResponseEntity封装的类型返回
+     */
+    @PostMapping("/hasstock")
+    public ResponseEntity<List<SkuHasStockVo>> getSkuHasStock(@RequestBody List<Long> skuIds) {
+        List<SkuHasStockVo> vos = wareSkuService.getSkuHasStock(skuIds);
+        return new ResponseEntity<>(vos, HttpStatus.OK);
     }
 
     /**

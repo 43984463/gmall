@@ -31,6 +31,12 @@ public class ProductSaveServiceImpl implements ProductSaveService {
     @Resource
     private RestHighLevelClient highLevelClient;
 
+    /**
+     * 在ES中使用 GET product/_search进行数据查询
+     * @param models
+     * @return
+     * @throws IOException
+     */
     @Override
     public Boolean productStatusUp(List<SkuEsModel> models) throws IOException {
 
@@ -56,6 +62,6 @@ public class ProductSaveServiceImpl implements ProductSaveService {
         List<String> collect = Arrays.stream(bulk.getItems()).map(item -> item.getId()).collect(Collectors.toList());
         log.info("ProductSaveServiceImpl.productStstusUp 上架成功商品：{} ,返回的数据：{}",collect,bulk.toString());
 
-        return hasFailures;
+        return !hasFailures;
     }
 }

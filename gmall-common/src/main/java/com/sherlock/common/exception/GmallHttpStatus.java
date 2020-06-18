@@ -12,4 +12,7 @@ public interface GmallHttpStatus extends HttpStatus {
 
     /** {@code 11000 Valid fail Exception}*/
     public static final int PRODUCT_UP_EXCEPTION = 11000;
+
+    /** {@code 0 ok}*/
+    public static final int RESPONSE_OK = 0;
 }

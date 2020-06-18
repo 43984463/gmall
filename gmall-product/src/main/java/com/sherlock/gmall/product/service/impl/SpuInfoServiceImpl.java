@@ -1,5 +1,6 @@
 package com.sherlock.gmall.product.service.impl;
 
+import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -35,11 +36,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -266,9 +267,20 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
         Map<Long, Boolean> hasStockMap = null;
         try {
-            R<List<SkuHasStockVo>> skuHasStock = wareFeignService.getSkuHasStock(skuIds);
+            /**
+             * 方式1 使用泛型R接收
+             */
+            /*R<List<SkuHasStockVo>> skuHasStock = wareFeignService.getSkuHasStock(skuIds);
             //转换为是否key为skuId，value为是否含有库存的boolean值
-            hasStockMap = skuHasStock.getData().stream().collect(Collectors.toMap(SkuHasStockVo::getSkuId, item -> item.getHasStock()));
+            TypeReference<List<SkuHasStockVo>> listTypeReference = new TypeReference<List<SkuHasStockVo>>() {};
+            hasStockMap = skuHasStock.getData(listTypeReference).stream().collect(Collectors.toMap(SkuHasStockVo::getSkuId, item -> item.getHasStock()));*/
+
+            /**
+             * 使用带泛型的ResponseEntity接收
+             */
+            ResponseEntity<List<SkuHasStockVo>> skuHasStock = wareFeignService.getSkuHasStock(skuIds);
+            //转换为是否key为skuId，value为是否含有库存的boolean值
+            hasStockMap = skuHasStock.getBody().stream().collect(Collectors.toMap(SkuHasStockVo::getSkuId, item -> item.getHasStock()));
         } catch (Exception e) {
             log.error("库存查询异常");
             e.printStackTrace();
@@ -301,16 +313,14 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
             return model;
         }).collect(Collectors.toList());
 
-        if (true) {
-            throw new RuntimeException();
-        }
-
         // 把sku信息发送给gmall-search进行保存到ES
         R booleanR = searchFeignService.productStatusUp(skuEsModels);
         if (booleanR.getCode() == 0) {
             // 远程调用成功， 修改上架状态
+            log.info("远程调用成功");
             baseMapper.updateSpuStatus(spuId, GmallProductConstant.ProductStatusEnum.SPU_UP.getCode());
         } else {
+            throw new RuntimeException();
             // TODO 远程调用失败，重新调用，保持幂等性， 重试机制
         }
     }
