@@ -239,6 +239,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         return new PageUtils(page);
     }
 
+    @Transactional
     @Override
     public void up(Long spuId) {
         List<SkuEsModel> upProducts = new ArrayList<>();
@@ -270,6 +271,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
             hasStockMap = skuHasStock.getData().stream().collect(Collectors.toMap(SkuHasStockVo::getSkuId, item -> item.getHasStock()));
         } catch (Exception e) {
             log.error("库存查询异常");
+            e.printStackTrace();
         }
 
         // 封装每个sku信息
@@ -298,6 +300,10 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
             return model;
         }).collect(Collectors.toList());
+
+        if (true) {
+            throw new RuntimeException();
+        }
 
         // 把sku信息发送给gmall-search进行保存到ES
         R booleanR = searchFeignService.productStatusUp(skuEsModels);
