@@ -14,6 +14,7 @@ public abstract class GmallConstant {
 
 
     public static final String CONTROLLER = ".controller";
+    public static final String WEB = ".web";
     public static final String DAO = ".dao";
     public static final String FEIGN = ".feign";
 

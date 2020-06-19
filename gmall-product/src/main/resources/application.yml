@@ -53,6 +53,8 @@ spring:
         server-addr: 120.76.60.77:9848
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+  thymeleaf:
+    cache: false
 
 mybatis-plus:
   # 虽然我不知道为啥在源码和自动提示都是config-location，但是这样就报错，需要修改成config-locations(带s)
@@ -67,4 +69,3 @@ logging:
   level:
     com.sherlock.gmall: debug
     com.alibaba.nacos.client.naming: error
-
