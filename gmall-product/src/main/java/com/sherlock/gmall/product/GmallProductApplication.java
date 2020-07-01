@@ -69,6 +69,11 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  *       1）、引入dev-tools
  *       2)、修改完之后重新编译启动(需要关闭thymeleaf缓存)
  *
+ *  6、整合redis
+ *  1）、引入data-redis-starter
+ *  2）、简单配置redis信息
+ *  3）、使用springboot自动配置好的StringRedisTemplate来操作redis
+ *
  */
 @EnableFeignClients(basePackages = GmallConstant.GMALL_PRODUCT_BASEPATH + GmallConstant.FEIGN)
 @EnableDiscoveryClient

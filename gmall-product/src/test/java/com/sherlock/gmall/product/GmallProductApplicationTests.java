@@ -7,7 +7,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.UUID;
 
 /**
  * @auther Sherlock
@@ -22,6 +26,9 @@ public class GmallProductApplicationTests {
 
     @Autowired
     private BrandService brandService;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
    /* @Autowired
     private OSS ossClient;
@@ -43,4 +50,13 @@ public class GmallProductApplicationTests {
         log.info("保存成功");
     }
 
+
+    @Test
+    public void testRedis() {
+
+        ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
+        ops.set("hello", "world" + UUID.randomUUID().toString());
+
+        System.out.println("hello的值是" + ops.get("hello"));
+    }
 }

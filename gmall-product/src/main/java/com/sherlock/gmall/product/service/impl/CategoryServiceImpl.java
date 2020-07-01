@@ -1,5 +1,7 @@
 package com.sherlock.gmall.product.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -9,7 +11,10 @@ import com.sherlock.gmall.product.dao.CategoryDao;
 import com.sherlock.gmall.product.entity.CategoryEntity;
 import com.sherlock.gmall.product.service.CategoryBrandRelationService;
 import com.sherlock.gmall.product.service.CategoryService;
+import com.sherlock.gmall.product.vo.Catelog2Vo;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +23,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -26,6 +32,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     @Autowired
     private CategoryBrandRelationService categoryBrandRelationService;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -110,6 +119,83 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     @Override
     public List<CategoryEntity> getLevel1Categorys() {
       return list(new QueryWrapper<CategoryEntity>().eq("parent_cid", 0));
+    }
+
+    /**
+     * 请求经过缓存
+     * @return
+     *
+     * TODO
+     * 使用压力测试工具测试时会产生异常
+     * //  产生了堆外存泄漏：OutDirceMemoryError
+     *       1、springboot2.0以后默认使用lettuce作为操作redis的客户端。它使用netty进行网络通信
+     *       2、lettuce的bug导致netty的堆内存溢出 （-Xmx300m  如果没有指定堆外存， 默认使用 -Xmx300）
+     *            -Dio.netty.maxDirectMemory进行设置
+     *       解决方案： 不能单独-Dio.netty.maxDirectMemory进行设置 调大堆外内存
+     *                ① 升级lettuce客户端      ② 切换使用jedis
+     *
+     *         优化一：将数据库的多次查询变为一次
+     *         优化二：将查到的数据放入redis缓存
+     *
+     *         优化：
+     *              缓存穿透： 设置空结果缓存
+     *
+     *              缓存雪崩： 设置缓存随机的过期时间
+     *
+     *              缓存击穿： 加锁
+     *
+     */
+    @Override
+    public Map<String, List<Catelog2Vo>> getCatelogJson() {
+        // 1.先从缓存中获取
+        String catelogJson = stringRedisTemplate.opsForValue().get("catelogJson");
+        // 2.缓存中没有就查询数据库并放入缓存
+        if (StringUtils.isEmpty(catelogJson)) {
+            // 查询数据库
+            Map<String, List<Catelog2Vo>> catelogJsonFromDb = getCatelogJsonFromDb();
+
+            String jsonString = JSON.toJSONString(catelogJsonFromDb);
+            stringRedisTemplate.opsForValue().set("catelogJson", jsonString);
+            return catelogJsonFromDb;
+        }
+
+        Map<String, List<Catelog2Vo>> stringListMap = JSON.parseObject(catelogJson, new TypeReference<Map<String, List<Catelog2Vo>>>() {
+        });
+        return stringListMap;
+    }
+
+    public Map<String, List<Catelog2Vo>> getCatelogJsonFromDb() {
+        List<CategoryEntity> categoryEntityList = list();
+
+        List<CategoryEntity> level1Categorys = getParent_cid(categoryEntityList, 0L);
+        Map<String, List<Catelog2Vo>> resultMap = level1Categorys.stream().collect(Collectors.toMap(key -> key.getCatId().toString(), value -> {
+            //1. 找到1及分类的所有2级分类
+            List<CategoryEntity> level2Entities = getParent_cid(categoryEntityList, value.getCatId());
+            List<Catelog2Vo> catelog2Vos = null;
+            if (level2Entities != null) {
+                catelog2Vos = level2Entities.stream().map(level2 -> {
+                    List<Catelog2Vo.Catelog3Vo> catelog3Vos = null;
+                    if (level2 != null) {
+                        List<CategoryEntity> level3Entities = getParent_cid(categoryEntityList, level2.getCatId());
+                        if (level3Entities != null) {
+                            catelog3Vos = level3Entities.stream().map(level3 -> {
+                                Catelog2Vo.Catelog3Vo catelog3Vo = new Catelog2Vo.Catelog3Vo(level2.getCatId().toString(),level3.getCatId().toString(),level3.getName());
+                                return catelog3Vo;
+                            }).collect(Collectors.toList());
+                        }
+                    }
+                    Catelog2Vo catelog2Vo = new Catelog2Vo(value.getCatId().toString(), catelog3Vos, level2.getCatId().toString(), level2.getName());
+                    return catelog2Vo;
+                }).collect(Collectors.toList());
+            }
+
+            return catelog2Vos;
+        }));
+        return resultMap;
+    }
+
+    private List<CategoryEntity> getParent_cid(List<CategoryEntity> categoryEntityList, Long parent_id) {
+        return categoryEntityList.stream().filter(categoryEntity -> categoryEntity.getParentCid() == parent_id).collect(Collectors.toList());
     }
 
 

@@ -37,8 +37,8 @@ public class Swagger2Config {
                 //.apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
                 //.apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
                 //包下的类，才生成接口文档
-                .apis(RequestHandlerSelectors.basePackage(GmallConstant.GMALL_PRODUCT_BASEPATH + GmallConstant.CONTROLLER))
-                .apis(RequestHandlerSelectors.basePackage(GmallConstant.GMALL_PRODUCT_BASEPATH + GmallConstant.WEB))
+                .apis(RequestHandlerSelectors.basePackage(GmallConstant.GMALL_PRODUCT_BASEPATH))
+                //.apis(RequestHandlerSelectors.basePackage(GmallConstant.GMALL_PRODUCT_BASEPATH + GmallConstant.WEB))
                 .paths(PathSelectors.any())
                 .build();
     }
