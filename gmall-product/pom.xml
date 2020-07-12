@@ -50,6 +50,12 @@
             <artifactId>jedis</artifactId>
         </dependency>
 
+        <!--分布式缓存-->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>

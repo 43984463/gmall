@@ -3,6 +3,7 @@ package com.sherlock.gmall.product.config;
 import com.sherlock.common.constants.GmallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -28,6 +29,9 @@ import java.util.List;
 @EnableSwagger2
 public class Swagger2Config {
 
+    @Value("${swagger.enabled}")
+    private Boolean enabled;
+
     @Bean
     public Docket createRestApi(){
         return new Docket(DocumentationType.SWAGGER_2)
@@ -36,11 +40,12 @@ public class Swagger2Config {
                 //加了ApiOperation注解的类，才生成接口文档
                 //.apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
                 //.apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
-                //包下的类，才生成接口文档
+                //包下的类，才生成接口文档  好像只能选择一个满足的条件
                 .apis(RequestHandlerSelectors.basePackage(GmallConstant.GMALL_PRODUCT_BASEPATH))
                 //.apis(RequestHandlerSelectors.basePackage(GmallConstant.GMALL_PRODUCT_BASEPATH + GmallConstant.WEB))
                 .paths(PathSelectors.any())
-                .build();
+                .build()
+                .enable(enabled);
     }
 
     private ApiInfo apiInfo() {
