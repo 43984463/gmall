@@ -12,7 +12,11 @@ import com.sherlock.gmall.product.entity.CategoryEntity;
 import com.sherlock.gmall.product.service.CategoryBrandRelationService;
 import com.sherlock.gmall.product.service.CategoryService;
 import com.sherlock.gmall.product.vo.Catelog2Vo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.redisson.Redisson;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -24,10 +28,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 
 @Service("categoryService")
+@Slf4j
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
 
     @Autowired
@@ -35,6 +41,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    private RedissonClient redissonClient;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -151,17 +160,79 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         String catelogJson = stringRedisTemplate.opsForValue().get("catelogJson");
         // 2.缓存中没有就查询数据库并放入缓存
         if (StringUtils.isEmpty(catelogJson)) {
-            // 查询数据库
-            Map<String, List<Catelog2Vo>> catelogJsonFromDb = getCatelogJsonFromDb();
+            // 加分布式锁的情况下查询数据库
+            Map<String, List<Catelog2Vo>> catelogJsonFromDb = getCatalogJsonFromDBWithRedissonLockAndSetToRedis();
 
-            String jsonString = JSON.toJSONString(catelogJsonFromDb);
-            stringRedisTemplate.opsForValue().set("catelogJson", jsonString);
+            // 我觉得这段也应该放在锁的环境下
+            /*String jsonString = JSON.toJSONString(catelogJsonFromDb);
+            // 设置自动失效时间，保证数据的最终一致性
+            stringRedisTemplate.opsForValue().setIfAbsent("catelogJson", jsonString, 5, TimeUnit.MINUTES);*/
             return catelogJsonFromDb;
         }
 
+        log.info("查询catelogJson命中缓存");
         Map<String, List<Catelog2Vo>> stringListMap = JSON.parseObject(catelogJson, new TypeReference<Map<String, List<Catelog2Vo>>>() {
         });
         return stringListMap;
+    }
+
+    /**
+     * 查询前台需要显示的分类数据 - 本地锁(本地单机可以锁住)
+     *
+     * @return
+     */
+    public Map<String, List<Catelog2Vo>> getCatalogJsonFromDBWithLocalLock() {
+
+        /**
+         *
+         * 本地锁 synchronized 进程锁 锁不住分布式的服务
+         * 只要是同一把锁，就可以锁住需要这个锁的所有线程
+         * 1、synchronized (this) springboot所有的组件在容器中都是单例的
+         *
+         */
+
+        synchronized (this) {
+            return getCatelogJsonFromDb();
+        }
+
+
+    }
+
+    /**
+     *
+     * 查询前台需要显示的分类数据 - redisson分布式锁(分布式也可以锁住)
+     * @see com.sherlock.gmall.product.service.impl.CategoryServiceImpl#updateCascade(com.sherlock.gmall.product.entity.CategoryEntity) 更新列表
+     *
+     *
+     *
+     * 缓存数据如何与数据库保持一致
+     * 缓存数据的一致性
+     *
+     *  1）、双写模式
+     *  2）、失效模式
+     *
+     *（1、可能产生脏数据，并发写加锁，而且给数据根据业务加过期时间()所以最终会数据库和缓存一致）分布式读写锁
+     *（2、使用阿里的canal订阅binlog日志，根据日志最终更新缓存，类似于数据库的主从数据库）
+     * @return
+     */
+    public Map<String, List<Catelog2Vo>> getCatalogJsonFromDBWithRedissonLockAndSetToRedis() {
+
+        // 锁的名字相同代表是同一把锁，所以锁的名字影响锁的粒度
+        // 具体商品加具体的锁
+        RLock lock = redissonClient.getLock("CatelogJson-lock");
+        lock.lock();
+
+        Map<String, List<Catelog2Vo>> dataFromDb = null;
+        try {
+            dataFromDb = getCatelogJsonFromDb();
+
+            String jsonString = JSON.toJSONString(dataFromDb);
+            // 设置自动失效时间，保证数据的最终一致性
+            stringRedisTemplate.opsForValue().setIfAbsent("catelogJson", jsonString, 5, TimeUnit.MINUTES);
+        }finally {
+            lock.unlock();
+        }
+        return dataFromDb;
     }
 
     public Map<String, List<Catelog2Vo>> getCatelogJsonFromDb() {
