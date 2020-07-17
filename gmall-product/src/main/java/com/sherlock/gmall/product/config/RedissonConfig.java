@@ -19,7 +19,7 @@ import java.io.IOException;
  * https://github.com/redisson/redisson/wiki/%E7%9B%AE%E5%BD%95  redisson github百科
  */
 @Configuration
-public class MyRedissonConfig {
+public class RedissonConfig {
 
     @Value("${spring.redis.password}")
     private String redisPassword;

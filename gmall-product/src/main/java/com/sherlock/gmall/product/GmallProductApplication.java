@@ -7,9 +7,12 @@ package com.sherlock.gmall.product;
  */
 
 import com.sherlock.common.constants.GmallConstant;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
@@ -85,7 +88,40 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  *      ②配置redisson MyRedissonConfig
  *      https://github.com/redisson/redisson/wiki/%E7%9B%AE%E5%BD%95  redisson github百科
  *
+ *  8、 整合springCache简化缓存开发
+ *      ① 引入依赖 cache + redis
+ *      <dependency>
+ *             <groupId>org.springframework.boot</groupId>
+ *             <artifactId>spring-boot-starter-cache</artifactId>
+ *         </dependency>
+ *      依赖中的自动配置
+ *      @see CacheAutoConfiguration  自动配置类
+ *      @link org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration.CacheConfigurationImportSelector
+ *      添加org.springframework.boot.autoconfigure.cache.CacheConfigurations#MAPPINGS 导入
+ *      @see org.springframework.boot.autoconfigure.cache.RedisCacheConfiguration 配置类
+ *      RedisCacheConfiguration 会通过@bean添加 RedisCacheManager( implements CacheManager )
+ *
+ *      ② 配置文件中添加 spring.cache.type = redis 使用redis作为缓存
+ *      springcache文档地址
+ *      @see <a href="https://docs.spring.io/spring/docs/5.2.2.RELEASE/spring-framework-reference/integration.html#cache">springCache文档</>
+ *      @Cacheable: Triggers cache population.
+ *      触发将数据保存到缓存的操作
+ *      @CacheEvict: Triggers cache eviction.
+ *      触发将数据从缓存删除的操作
+ *      @CachePut: Updates the cache without interfering with the method execution.
+ *      不影响方法执行更新缓存
+ *      @Caching: Regroups multiple cache operations to be applied on a method.
+ *      组合以上多个操作
+ *      @CacheConfig: Shares some common cache-related settings at class-level.
+ *      在类级别共享缓存的相同配置
+ *
+ *      ③开启缓存功能
+ *      @EnableCaching
+ *
+ *      @see CacheProperties   关于cache的可配置属性
+ *
  */
+@EnableCaching
 @EnableFeignClients(basePackages = GmallConstant.GMALL_PRODUCT_BASEPATH + GmallConstant.FEIGN)
 @EnableDiscoveryClient
 @SpringBootApplication

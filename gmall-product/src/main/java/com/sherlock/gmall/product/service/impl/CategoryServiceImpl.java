@@ -14,10 +14,10 @@ import com.sherlock.gmall.product.service.CategoryService;
 import com.sherlock.gmall.product.vo.Catelog2Vo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -125,6 +124,31 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         categoryBrandRelationService.updateCategory(category.getCatId(), category.getName());
     }
 
+    /**
+     *1、每一个需要缓存的数据我们都来指定放到哪个名字的缓存 【缓存的分区（按照业务类型分）】 @Cacheable的value属性 value为数组类型
+     *2、@Cacheable({"category"}) // 代表当前方法的结果需要缓存，如果缓存中有，方法不用调用，直接从缓存中获取。如果缓存中没有，会调用方法，并将方法的结果放入缓存
+     *3、默认行为
+     *      1）、如果缓存中有，方法不用调用
+     *      2）、key是默认生成的，格式为：   缓存的名字::SimpleKey[]   (category::SimpleKey [])
+     *      3）、缓存的value的值。默认使用jdk序列化机制，将序列化后的数据放到redis
+     *      4）、默认过期时间为-1 （即永不过期）
+     *
+     *    所以需要修改并自定义：
+     *
+     *       1）、指定key的格式
+     *          @see Cacheable#key()  可以接收一个SpEL表达式
+     *          key = "'level1Categorys'"  代表在缓存中的名称就是level1Categorys
+     *          key = "#root.method.name"  代表在缓存中的名称就是方法的名字getLevel1Categorys
+     *          SpEL 参考
+     *          @see <a href="https://docs.spring.io/spring/docs/5.2.2.RELEASE/spring-framework-reference/integration.html#cache-annotations-cacheable-default-key">springCache文档8.2.1 Available Caching SpEL Evaluation Context</>
+     *       2）、指定缓存数据的过期时间
+     *       3）、将数据value保存为json格式
+     *
+     *
+     *
+     */
+    //
+    @Cacheable(value = {"category"}, key = "#root.method.name")
     @Override
     public List<CategoryEntity> getLevel1Categorys() {
       return list(new QueryWrapper<CategoryEntity>().eq("parent_cid", 0));

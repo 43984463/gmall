@@ -59,6 +59,11 @@ spring:
     host: 120.76.60.77
     password: sherlock
     port: 7379
+  # springCache与redis结合的相关配置
+  cache:
+    type: redis
+    redis:
+      time-to-live: 360000
 
 mybatis-plus:
   # 虽然我不知道为啥在源码和自动提示都是config-location，但是这样就报错，需要修改成config-locations(带s)
@@ -77,4 +82,4 @@ logging:
 #是否开启 swagger-ui
 #暂时先关闭了，不然每次启动的时候会比较慢
 swagger:
-  enabled: true
+  enabled: false
