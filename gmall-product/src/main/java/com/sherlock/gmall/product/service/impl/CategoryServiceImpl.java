@@ -17,7 +17,11 @@ import org.apache.commons.lang.StringUtils;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -117,6 +121,41 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         return path.toArray(new Long[0]);
     }
 
+    /**
+     *
+     * 缓存失效模式
+     *
+     * value 与 {@link CategoryServiceImpl#getLevel1Categorys()}方法中的
+     * @Cacheable(value = {"category"}, key = "#root.method.name")
+     * 的value和缓存的key相同
+     *
+     * key为常量时需要用''包住
+     *
+     *
+     * CacheEvict只能清除缓存中的1个值
+     *
+     * 缓存多个 方法①
+     *@Caching(evict = {
+     *             @CacheEvict(value = {"category"}, key = "'getCatelogJson'"),
+     *             @CacheEvict(value = {"category"}, key = "'getLevel1Categorys'")
+     *     })
+     *  可以组合多个缓存操作(添加，删除，更新)
+     *
+     * 方法② @CacheEvict(value = {"category"}, allEntries = true)
+     * 相同类型或者需要一起删除的数据可以放在同一个分区下，删除时allEntries = true一次删除全部
+     *
+     *
+     * @CachePut 双写模式  方法的返回值需要在缓存中更新
+     * @CacheEvict 失效模式
+     *
+     * @param category
+     */
+    //@CacheEvict(value = {"category"}, key = "'getCatelogJson'")
+    //@CacheEvict(value = {"category"}, allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = {"category"}, key = "'getCatelogJson'"),
+            @CacheEvict(value = {"category"}, key = "'getLevel1Categorys'")
+    })
     @Transactional
     @Override
     public void updateCascade(CategoryEntity category) {
@@ -143,15 +182,39 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      *          @see <a href="https://docs.spring.io/spring/docs/5.2.2.RELEASE/spring-framework-reference/integration.html#cache-annotations-cacheable-default-key">springCache文档8.2.1 Available Caching SpEL Evaluation Context</>
      *       2）、指定缓存数据的过期时间
      *       3）、将数据value保存为json格式
+     *          @see CacheAutoConfiguration -> 通过方法
+     *             @see CacheAutoConfiguration.CacheConfigurationImportSelector 调用导入 ->
+     *               @see org.springframework.boot.autoconfigure.cache.CacheConfigurations#getConfigurationClass(org.springframework.boot.autoconfigure.cache.CacheType)  导入
+     *                 @see org.springframework.boot.autoconfigure.cache.CacheConfigurations#MAPPINGS 加入
+     *                  @see org.springframework.boot.autoconfigure.cache.RedisCacheConfiguration
+     *                     @see org.springframework.boot.autoconfigure.cache.RedisCacheConfiguration#cacheManager(org.springframework.boot.autoconfigure.cache.CacheProperties, org.springframework.boot.autoconfigure.cache.CacheManagerCustomizers, org.springframework.beans.factory.ObjectProvider, org.springframework.beans.factory.ObjectProvider, org.springframework.data.redis.connection.RedisConnectionFactory, org.springframework.core.io.ResourceLoader)
+     *                       @see org.springframework.boot.autoconfigure.cache.RedisCacheConfiguration#determineConfiguration(org.springframework.boot.autoconfigure.cache.CacheProperties, org.springframework.beans.factory.ObjectProvider, java.lang.ClassLoader)
      *
      *
+     *
+     *  @see org.springframework.data.redis.cache.RedisCacheConfiguration#defaultCacheConfig() 默认配置
+     *  @see org.springframework.data.redis.cache.RedisCacheConfiguration#keySerializationPair  默认key的序列化
+     *  @see org.springframework.data.redis.cache.RedisCacheConfiguration#valueSerializationPair  默认value的序列化
+     *
+     *
+     *
+     *  缓存失效
+     * @see CategoryServiceImpl#updateCascade(CategoryEntity) 的注解
+     * @CacheEvict(value = {"category"}, key = "'getLevel1Categorys'")
      *
      */
     //
-    @Cacheable(value = {"category"}, key = "#root.method.name")
+    @Cacheable(value = {"category"}, key = "#root.method.name", sync = true)
     @Override
     public List<CategoryEntity> getLevel1Categorys() {
       return list(new QueryWrapper<CategoryEntity>().eq("parent_cid", 0));
+    }
+
+
+    @Cacheable(value = "category" , key = "#root.methodName")
+    @Override
+    public Map<String, List<Catelog2Vo>> getCatelogJson() {
+        return getCatelogJsonFromDb();
     }
 
     /**
@@ -178,8 +241,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      *              缓存击穿： 加锁
      *
      */
-    @Override
-    public Map<String, List<Catelog2Vo>> getCatelogJson() {
+    public Map<String, List<Catelog2Vo>> getCatelogJson2() {
         // 1.先从缓存中获取
         String catelogJson = stringRedisTemplate.opsForValue().get("catelogJson");
         // 2.缓存中没有就查询数据库并放入缓存
@@ -259,6 +321,10 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         return dataFromDb;
     }
 
+    /**
+     * 从数据库中查询菜单
+     * @return
+     */
     public Map<String, List<Catelog2Vo>> getCatelogJsonFromDb() {
         List<CategoryEntity> categoryEntityList = list();
 

@@ -64,6 +64,9 @@ spring:
     type: redis
     redis:
       time-to-live: 360000
+      #key-prefix: CACHE_   # 有关cache进行缓存的key都添加 CACHE_ 前缀   如果此处指定了前缀就用我们指定的前缀，如果没有就默认使用缓存的名称作为前缀
+      #use-key-prefix: true #是否开启spring.cache.redis.key-prefix 可开启或者关闭
+      cache-null-values: true #是否缓存 null 值   可以用来处理缓存穿透
 
 mybatis-plus:
   # 虽然我不知道为啥在源码和自动提示都是config-location，但是这样就报错，需要修改成config-locations(带s)

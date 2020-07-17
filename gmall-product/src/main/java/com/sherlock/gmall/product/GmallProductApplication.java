@@ -11,8 +11,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
@@ -121,7 +119,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  *      @see CacheProperties   关于cache的可配置属性
  *
  */
-@EnableCaching
+
 @EnableFeignClients(basePackages = GmallConstant.GMALL_PRODUCT_BASEPATH + GmallConstant.FEIGN)
 @EnableDiscoveryClient
 @SpringBootApplication

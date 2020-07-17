@@ -137,3 +137,45 @@ public class WareSkuController {
 }
 ```
 * <b>或者直接返回org.springframework.http.ResponseEntity(这个对象封装了数据和状态码)<b>
+
+## spring-Cache的不足
+  1）、读模式：
+     缓存穿透： 查询一个null数据。  解决：缓存空数据。  spring.cache.redis.cache-null-values: true
+     缓存击穿： 大量并发进来同时查询一个正好过期的数据。 解决：加锁  spring-Cache默认未加锁
+     org.springframework.cache.annotation.Cacheable.sync = true
+     @Cacheable(value = {"category"}, key = "#root.method.name", sync = true)
+     使用sync = true加锁(源码中为加的本地锁)
+```java
+    
+    public class RedisCache extends AbstractValueAdaptingCache {
+    
+        @Override
+        @SuppressWarnings("unchecked")
+        public synchronized <T> T get(Object key, Callable<T> valueLoader) {
+    
+            ValueWrapper result = get(key);
+    
+            if (result != null) {
+                return (T) result.get();
+            }
+    
+            T value = valueFromLoader(key, valueLoader);
+            put(key, value);
+            return value;
+        }
+        
+    }
+```     
+     缓存雪崩： 大量key同时过期。  解决：加随机时间的过期时间。 spring.cache.redis.time-to-live
+  2）、写模式：（缓存与数据库一致）
+     1）、读写加锁。(加读写锁)
+     2）、引入阿里的canal，感知mysql的更新去更新数据库
+     3）、读多写多，直接去数据库查（加锁更加耗时，加入缓存效果不大）   
+
+  总结:
+    常规数据(读多写少，即时性，一致性要求不高的数据); 完全可以使用Spring-Cache;  写模式（只要缓存的数据有过期时间就足够）
+    特殊数据： 特殊处理
+    
+## spring-Cache的原理    
+  CacheManager(RedisCacheManager) -> Cache(RedisCache) ->Cache进行操作
+  
