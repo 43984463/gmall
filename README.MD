@@ -1,6 +1,9 @@
 #采坑记录
 ## [https://docs.spring.io/spring/docs/] spring所有版本的文档地址
 ## [https://docs.spring.io/spring/docs/current/spring-framework-reference/] spring当前最新版本文档目录
+
+本地访问gmall-product时把/resources/templates/index2.html替换掉index.html
+
 ```properties
 spring.thymeleaf.cache=false #暂时关闭thymeleaf的缓存
 swagger.enable=false #暂时关闭swagger文档
