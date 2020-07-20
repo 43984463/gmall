@@ -61,3 +61,8 @@ spring:
             - Path=/api/**  #拦截path包含/api的请求
           filters:
             - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}  #请求地址经过网关进行转换
+
+        - id: gmall_host_route
+          uri: lb://gmall-product #转到商品服务
+          predicates:
+            - Host=**.gmall.com

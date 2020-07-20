@@ -183,14 +183,40 @@ public class WareSkuController {
 ## spring-Cache的原理    
   CacheManager(RedisCacheManager) -> Cache(RedisCache) ->Cache进行操作
   
-## nginx配置 gmall.conf
+## nginx配置
+### 请求的原理
+```text
+①. 本地请求gmall.com，由于在host文件中配置了转发地址到虚拟机。
+②. 虚拟机中安装了nginx, nginx的gmall.conf默认监听端口80端口以及域名为gmall.com的请求。
+③. gmall.conf中的location / 节点的proxy_pass属性 把符合gmall.com域名80端口的请求都转发给总配置nginx.conf的
+proxy_pass http://gmall; 中的upstream节点。 proxy_pass http://gmall;中的gmall为nginx.conf的upstream节点的server属性。
+④. 总配置nginx.conf的upstream节点中的server属性再次转发请求到具体地址(即本机上的88端口(本机上的网关。))
+⑤. 网关将请求转到具体的html或者controller获得相应。
+(gmall.com 这步最终匹配到 IndexController的indexPage方法，因为没有加@responseBody，则返回的是一个页面的名称
+配合默认的spring.mvc.view.prefix 和 spring.mvc.view.prefix组成 index.html
+)
+
+
+nginx在转发时会丢掉信息
+①. Host地址丢失 需要在gmall.conf的location / 节点配置 proxy_set_header Host $host;
+
+
+网关gatway关于
+        - id: gmall_host_route
+          uri: lb://gmall-product #转到商品服务
+          predicates:
+            - Host=**.gmall.com
+需要放在最后。不然首页可以访问，但是在访问API接口时，接口中包含gmall.com
+上面的首先匹配到进行了转发，会导致找不到接口，所以需要放在最后
+```
+### gmall.conf
 ```text
 server {
     listen       80;
-    server_name  gmall.com;          #监听gmall.com的请求
+    server_name  gmall.com;                # 监听gmall.com的请求
     large_client_header_buffers 4 16k;     # 读取大型客户端请求头的缓冲区的最大数量和大小
-    client_max_body_size 300m;     #设置nginx能处理的最大请求主体大小。
-    client_body_buffer_size 128k;  #请求主体的缓冲区大小。 
+    client_max_body_size 300m;             # 设置nginx能处理的最大请求主体大小。
+    client_body_buffer_size 128k;          # 请求主体的缓冲区大小。 
     proxy_connect_timeout 600;
     proxy_read_timeout 600;
     proxy_send_timeout 600;
@@ -202,14 +228,20 @@ server {
     #charset koi8-r;
     #access_log  /var/log/nginx/host.access.log  main;
 
+    # 拦截所有路径包含 /static/ 的请求，并在 /usr/share/nginx/html 目录寻找资源。（root属性）
+    location /static/ {
+       root   /usr/share/nginx/html;
+    }
+
+    # 拦截所有请求，并转发请求（proxy_pass属性）
     # 配置请求要转到哪里和超时时间
     location / {
-     uwsgi_send_timeout 600;        # 指定向uWSGI传送请求的超时时间，完成握手后向uWSGI传送请求的超时时间。
-     uwsgi_connect_timeout 600;   # 指定连接到后端uWSGI的超时时间。
-     uwsgi_read_timeout 600;        # 指定接收uWSGI应答的超时时间，完成握手后接收uWSGI应答的超时时间。
-     proxy_set_header Host $host;    #nginx代理网关的时候会丢失请求的host信息，需要在此处重新设置。
-     # proxy_pass http://192.168.1.3:1301;   在nginx.conf还没有配置upstream节点时使用，直接转到对应地址请求
-     proxy_pass http://<b>gmall<b>;          在nginx.conf还配置upstream节点后使用，gmall为在nginx.conf中配置upstream节点的名称
+     uwsgi_send_timeout 600;                # 指定向uWSGI传送请求的超时时间，完成握手后向uWSGI传送请求的超时时间。
+     uwsgi_connect_timeout 600;             # 指定连接到后端uWSGI的超时时间。
+     uwsgi_read_timeout 600;                # 指定接收uWSGI应答的超时时间，完成握手后接收uWSGI应答的超时时间。
+     proxy_set_header Host $host;           # nginx代理网关的时候会丢失请求的host信息，需要在此处重新设置。
+     # proxy_pass http://192.168.1.3:1301;  # 在nginx.conf还没有配置upstream节点时使用，直接转到对应地址请求
+     proxy_pass http://gmall;               # 在nginx.conf还配置upstream节点后使用，gmall为在nginx.conf中配置upstream节点的名称
     }
 
     #error_page  404              /404.html;
@@ -245,7 +277,7 @@ server {
     #}
  }
 ```
-## nginx配置 nginx.conf
+### nginx.conf
 ```text
 user  nginx;
 worker_processes  1;

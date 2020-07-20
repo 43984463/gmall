@@ -5,5 +5,7 @@ spring:
         server-addr: 120.76.60.77:9848
   application:
     name: gmall-search
+  thymeleaf:
+    cache: false
 server:
   port: 1600
