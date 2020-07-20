@@ -204,7 +204,7 @@ nginx在转发时会丢掉信息
 ①. Host地址丢失 需要在gmall.conf的location / 节点配置 proxy_set_header Host $host;
 
 
-网关gatway关于
+网关gateway关于
         - id: gmall_host_route
           uri: lb://gmall-product #转到商品服务
           predicates:
