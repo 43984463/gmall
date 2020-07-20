@@ -1,6 +1,10 @@
 #采坑记录
 ## [https://docs.spring.io/spring/docs/] spring所有版本的文档地址
 ## [https://docs.spring.io/spring/docs/current/spring-framework-reference/] spring当前最新版本文档目录
+```properties
+spring.thymeleaf.cache=false #暂时关闭thymeleaf的缓存
+swagger.enable=false #暂时关闭swagger文档
+```
 ##mybatisPlus配置文件采坑
 https://www.bilibili.com/video/BV1np4y1C7Yf?p=18 照着视频处理时在测试时发现会抛出
 org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'attrAttrgroupRelationController': Unsatisfied dependency expressed through field 'attrAttrgroupRelationService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'attrAttrgroupRelationService': Unsatisfied dependency expressed through field 'baseMapper'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'attrAttrgroupRelationDao' defined in file [G:\Projects\gmall\gmall-product\target\classes\com\sherlock\gmall\product\dao\AttrAttrgroupRelationDao.class]: Unsatisfied dependency expressed through bean property 'sqlSessionFactory'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'sqlSessionFactory' defined in class path resource [com/baomidou/mybatisplus/autoconfigure/MybatisPlusAutoConfiguration.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'sqlSessionFactory' threw exception; nested exception is java.io.FileNotFoundException: class path resource [mapper/**/*.xml] cannot be opened because it does not exist 异常
@@ -179,3 +183,105 @@ public class WareSkuController {
 ## spring-Cache的原理    
   CacheManager(RedisCacheManager) -> Cache(RedisCache) ->Cache进行操作
   
+## nginx配置 gmall.conf
+```text
+server {
+    listen       80;
+    server_name  gmall.com;          #监听gmall.com的请求
+    large_client_header_buffers 4 16k;     # 读取大型客户端请求头的缓冲区的最大数量和大小
+    client_max_body_size 300m;     #设置nginx能处理的最大请求主体大小。
+    client_body_buffer_size 128k;  #请求主体的缓冲区大小。 
+    proxy_connect_timeout 600;
+    proxy_read_timeout 600;
+    proxy_send_timeout 600;
+    proxy_buffer_size 64k;
+    proxy_buffers   4 32k;
+    proxy_busy_buffers_size 64k;
+    proxy_temp_file_write_size 64k;
+
+    #charset koi8-r;
+    #access_log  /var/log/nginx/host.access.log  main;
+
+    # 配置请求要转到哪里和超时时间
+    location / {
+     uwsgi_send_timeout 600;        # 指定向uWSGI传送请求的超时时间，完成握手后向uWSGI传送请求的超时时间。
+     uwsgi_connect_timeout 600;   # 指定连接到后端uWSGI的超时时间。
+     uwsgi_read_timeout 600;        # 指定接收uWSGI应答的超时时间，完成握手后接收uWSGI应答的超时时间。
+     proxy_set_header Host $host;    #nginx代理网关的时候会丢失请求的host信息，需要在此处重新设置。
+     # proxy_pass http://192.168.1.3:1301;   在nginx.conf还没有配置upstream节点时使用，直接转到对应地址请求
+     proxy_pass http://<b>gmall<b>;          在nginx.conf还配置upstream节点后使用，gmall为在nginx.conf中配置upstream节点的名称
+    }
+
+    #error_page  404              /404.html;
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+
+    # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+    #
+    #location ~ \.php$ {
+    #    proxy_pass   http://127.0.0.1;
+    #}
+
+    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    #
+    #location ~ \.php$ {
+    #    root           html;
+    #    fastcgi_pass   127.0.0.1:9000;
+    #    fastcgi_index  index.php;
+    #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+    #    include        fastcgi_params;
+    #}
+
+    # deny access to .htaccess files, if Apache's document root
+    # concurs with nginx's one
+    #
+    #location ~ /\.ht {
+    #    deny  all;
+    #}
+ }
+```
+## nginx配置 nginx.conf
+```text
+user  nginx;
+worker_processes  1;
+
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    keepalive_timeout  65;
+
+    #gzip  on;
+    
+    # 配置名称为gmall的upstream，下游配置可以使用这个进行请求的转发
+    upstream gmall{
+        server 192.168.1.3:88;
+        }
+
+    include /etc/nginx/conf.d/*.conf;
+}
+
+```
