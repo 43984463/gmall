@@ -9,6 +9,7 @@ spring.thymeleaf.cache=false #暂时关闭thymeleaf的缓存
 swagger.enable=false #暂时关闭swagger文档
 ```
 ##mybatisPlus配置文件采坑
+```text
 https://www.bilibili.com/video/BV1np4y1C7Yf?p=18 照着视频处理时在测试时发现会抛出
 org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'attrAttrgroupRelationController': Unsatisfied dependency expressed through field 'attrAttrgroupRelationService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'attrAttrgroupRelationService': Unsatisfied dependency expressed through field 'baseMapper'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'attrAttrgroupRelationDao' defined in file [G:\Projects\gmall\gmall-product\target\classes\com\sherlock\gmall\product\dao\AttrAttrgroupRelationDao.class]: Unsatisfied dependency expressed through bean property 'sqlSessionFactory'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'sqlSessionFactory' defined in class path resource [com/baomidou/mybatisplus/autoconfigure/MybatisPlusAutoConfiguration.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'sqlSessionFactory' threw exception; nested exception is java.io.FileNotFoundException: class path resource [mapper/**/*.xml] cannot be opened because it does not exist 异常
 处理方法: 在application.yml中将mybatis-plus.config-location修改成为mybatis-plus.config-locations。
@@ -16,6 +17,7 @@ org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating
 Durid配置参考Url：https://github.com/alibaba/druid/tree/master/druid-spring-boot-starter
 
 alibaba的config配置中心结合@RefreshScope使用动态读取Nacos配置中的信息。
+```
 
 ```properties
 springcloud读取Nacos配置中心配置
@@ -88,7 +90,7 @@ mybatis-plus:
       id-type: auto
 
 ```
-在创建gateway时一直报错说servlet问题，修改方法为修改
+## 在创建gateway时一直报错说servlet问题，修改方法为修改
 <dependency>
     <groupId>javax.servlet</groupId>
     <artifactId>servlet-api</artifactId>
@@ -104,7 +106,7 @@ mybatis-plus:
 ```
 依赖转移到gmall-third-party中,否则会在启动时报找不到endpoint错误。
 
-#解决远程调用时需要强制转换返回值类型
+# 解决远程调用时需要强制转换返回值类型
 * 在设计公共返回对象R时应该加上泛型限制，可以在远程调用获取结果时不需要强制转换。
 ```java
 public class R<T> extends HashMap<String, Object> {
