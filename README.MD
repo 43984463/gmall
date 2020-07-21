@@ -210,13 +210,18 @@ proxy_pass http://gmall; 中的upstream节点。 proxy_pass http://gmall;中的g
 
 nginx在转发时会丢掉信息
 ①. Host地址丢失 需要在gmall.conf的location / 节点配置 proxy_set_header Host $host;
-
+这个host匹配的是网关中的
+predicates:
+      - Host=gmall.com
+或者
+predicates:
+      - Host=search.gmall.com
 
 网关gateway关于
         - id: gmall_host_route
           uri: lb://gmall-product #转到商品服务
           predicates:
-            - Host=**.gmall.com
+            - Host=gmall.com
 需要放在最后。不然首页可以访问，但是在访问API接口时，接口中包含gmall.com
 上面的首先匹配到进行了转发，会导致找不到接口，所以需要放在最后
 ```
@@ -224,7 +229,7 @@ nginx在转发时会丢掉信息
 ```text
 server {
     listen       80;
-    server_name  gmall.com;                # 监听gmall.com的请求
+    server_name  gmall.com *.gmall.com;    # 监听*.gmall.com和gmall.com的请求
     large_client_header_buffers 4 16k;     # 读取大型客户端请求头的缓冲区的最大数量和大小
     client_max_body_size 300m;             # 设置nginx能处理的最大请求主体大小。
     client_body_buffer_size 128k;          # 请求主体的缓冲区大小。 

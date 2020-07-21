@@ -115,7 +115,7 @@
         <input id="searchText" type="text" placeholder="" />
         <span style="background: url(..staticindex/img/img_12.png) 0 -1px;"></span>
         <!--<button><i class="glyphicon"></i></button>-->
-        <a href="static/#" ><img src="static/index/img/img_09.png" onclick="search()" /></a>
+        <a href="javaScript:search()"><img src="static/index/img/img_09.png"  /></a>
       </div>
       <div class="header_ico">
         <div class="header_gw">
@@ -202,7 +202,7 @@
         <div class="header_main_left">
           <ul>
             <li th:each="category : ${categorys}">
-              <a href="static/#" class="header_main_left_a" th:attr="ctg-data=${category.catId}"><b th:text="${category.name}">家用电器</b></a>
+              <a href="#" class="header_main_left_a" th:attr="ctg-data=${category.catId}"><b th:text="${category.name}">家用电器</b></a>
             </li>
            <!-- <li class="header_li2">
               <a href="static/#" class="header_main_left_a" ctg-data="2,4"><b>手机</b> / <b>运营商</b> / <b>数码</b></a>
@@ -664,7 +664,7 @@
 <script type="text/javascript">
   function search() {
       var keyword=$("#searchText").val()
-      window.location.href="http://search.gulimall.com/search.html?keyword="+keyword;
+      window.location.href="http://search.gmall.com/list.html?keyword="+keyword;
   }
 
 </script>
