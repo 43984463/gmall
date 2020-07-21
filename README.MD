@@ -1,6 +1,7 @@
 # 采坑记录
 ## [https://docs.spring.io/spring/docs/] spring所有版本的文档地址
 ## [https://docs.spring.io/spring/docs/current/spring-framework-reference/] spring当前最新版本文档目录
+## [https://www.cs.usfca.edu/~galles/visualization/Algorithms.html] 数据结构图形化演示地址
 
 ## tips:
 * 本地访问gmall-product时把/resources/templates/index2.html替换掉index.html
