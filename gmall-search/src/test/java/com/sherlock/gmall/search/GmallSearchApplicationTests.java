@@ -31,6 +31,10 @@ public class GmallSearchApplicationTests {
     @Resource
     private RestHighLevelClient client;
 
+    /**
+     * 测试
+     * @throws IOException
+     */
     @Test
     public void indexData() throws IOException {
         IndexRequest indexRequest = new IndexRequest("users");

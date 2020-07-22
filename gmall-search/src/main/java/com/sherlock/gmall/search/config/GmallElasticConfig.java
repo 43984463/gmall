@@ -15,6 +15,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class GmallElasticConfig {
 
+    /**
+     * http://120.76.60.77:9100/  elasticsearch测试连接地址
+     * http://120.76.60.77:5501/app/kibana#/dev_tools/console?_g=() Kibana搜索地址
+     * @return
+     */
     @Bean
     public RestHighLevelClient esRestClient(){
         RestHighLevelClient client = new RestHighLevelClient(
