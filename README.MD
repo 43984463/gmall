@@ -229,10 +229,10 @@ predicates:
 ```text
 server {
     listen       80;
-    server_name  gmall.com *.gmall.com;    # 监听*.gmall.com和gmall.com的请求
-    large_client_header_buffers 4 16k;     # 读取大型客户端请求头的缓冲区的最大数量和大小
-    client_max_body_size 300m;             # 设置nginx能处理的最大请求主体大小。
-    client_body_buffer_size 128k;          # 请求主体的缓冲区大小。 
+    server_name  gmall.com  *.gmall.com;    # 监听*.gmall.com和gmall.com的请求
+    large_client_header_buffers 4 16k;      # 读取大型客户端请求头的缓冲区的最大数量和大小
+    client_max_body_size 300m;              # 设置nginx能处理的最大请求主体大小。
+    client_body_buffer_size 128k;           # 请求主体的缓冲区大小。 
     proxy_connect_timeout 600;
     proxy_read_timeout 600;
     proxy_send_timeout 600;
