@@ -18,6 +18,9 @@ public class GmallElasticConfig {
     /**
      * http://120.76.60.77:9100/  elasticsearch测试连接地址
      * http://120.76.60.77:5501/app/kibana#/dev_tools/console?_g=() Kibana搜索地址
+     *
+     * elasticsearch 与java API文档
+     * {@link <https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-search.html>}
      * @return
      */
     @Bean
