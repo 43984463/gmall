@@ -1,0 +1,14 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 120.76.60.77:9848
+      config:
+        server-addr: 120.76.60.77:9848
+        namespace: b6ce7e34-5113-4572-8823-7b5ffe200f8e
+        group: dev
+        file-extension: properties
+        extension-configs[0]:
+          data-id: renren.properties
+          group: dev
+          refresh: true

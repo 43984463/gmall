@@ -1,0 +1,73 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: qq_routes
+          uri: https://www.qq.com
+          predicates:
+            - Query=url,qq
+
+
+        - id: baidu_routes
+          uri: https://www.baidu.com
+          predicates:
+            - Query=url,baidu
+
+        - id: coupon_route
+          uri: lb://gmall-coupon  #转到优惠服务
+          predicates:
+            - Path=/api/coupon/**  #拦截path包含/api的请求
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}  #请求地址经过网关进行转换
+
+        - id: member_route
+          uri: lb://gmall-member  #转到会员服务
+          predicates:
+            - Path=/api/member/**  #拦截path包含/api的请求
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}  #请求地址经过网关进行转换
+
+        - id: order_route
+          uri: lb://gmall-order  #转到订单服务
+          predicates:
+            - Path=/api/order/**  #拦截path包含/api的请求
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}  #请求地址经过网关进行转换
+
+        - id: product_route
+          uri: lb://gmall-product  #转到商品服务
+          predicates:
+            - Path=/api/product/**  #拦截path包含/api的请求
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}  #请求地址经过网关进行转换
+
+        - id: third_party_route
+          uri: lb://gmall-third-party  #转到第三方服务
+          predicates:
+            - Path=/api/thirdparty/**  #拦截path包含/api的请求
+          filters:
+            - RewritePath=/api/thirdparty/(?<segment>.*),/$\{segment}  #请求地址经过网关进行转换
+
+        - id: ware_route
+          uri: lb://gmall-ware  #转到仓库服务
+          predicates:
+            - Path=/api/ware/**  #拦截path包含/api的请求
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}  #请求地址经过网关进行转换
+
+        - id: admin_route
+          uri: lb://renren-fast #转到人人后台服务
+          predicates:
+            - Path=/api/**  #拦截path包含/api的请求
+          filters:
+            - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}  #请求地址经过网关进行转换
+
+        - id: gmall_host_route
+          uri: lb://gmall-product #转到商品服务
+          predicates:
+            - Host=gmall.com
+
+        - id: gmall_search_route
+          uri: lb://gmall-search #转到商品搜索服务
+          predicates:
+            - Host=search.gmall.com

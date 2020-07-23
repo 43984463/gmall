@@ -1,0 +1,12 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        server-addr: 120.76.60.77:9848
+        namespace: 8bcbf712-7cf3-471a-8fcc-ba179efd5ce7
+        file-extension: properties
+        extension-configs[0]:
+          data-id: gmall-member.properties
+          group: dev
+          refrush: true
+

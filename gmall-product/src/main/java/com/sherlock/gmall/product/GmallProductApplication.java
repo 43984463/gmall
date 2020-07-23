@@ -1,0 +1,133 @@
+package com.sherlock.gmall.product;
+
+/**
+ * @auther Sherlock
+ * @date 2020/5/7 22:46
+ * @Description:
+ */
+
+import com.sherlock.common.constants.GmallConstant;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+
+/**
+ * 1、整合MyBatis-Plus
+ *      1）、导入依赖
+ *      <dependency>
+ *             <groupId>com.baomidou</groupId>
+ *             <artifactId>mybatis-plus-boot-starter</artifactId>
+ *             <version>3.2.0</version>
+ *      </dependency>
+ *      2）、配置
+ *          1、配置数据源；
+ *              1）、导入数据库的驱动。https://dev.mysql.com/doc/connector-j/8.0/en/connector-j-versions.html
+ *              2）、在application.yml配置数据源相关信息
+ *          2、配置MyBatis-Plus；
+ *              1）、使用@MapperScan
+ *              2）、告诉MyBatis-Plus，sql映射文件位置
+ *
+ * 2、逻辑删除
+ *  1）、配置全局的逻辑删除规则（省略）
+ *  2）、配置逻辑删除的组件Bean（mybatis plus 3.1.1之后省略）
+ *  3）、给Bean加上逻辑删除注解@TableLogic
+ *
+ * 3、JSR303
+ *   1）、给Bean添加校验注解:javax.validation.constraints，并定义自己的message提示
+ *   2)、开启校验功能@Valid
+ *      效果：校验错误以后会有默认的响应；
+ *   3）、给校验的bean后紧跟一个BindingResult，就可以获取到校验的结果
+ *   4）、分组校验（多场景的复杂校验）
+ *         1)、	@NotBlank(message = "品牌名必须提交",groups = {AddGroup.class,UpdateGroup.class})
+ *          给校验注解标注什么情况需要进行校验
+ *         2）、@Validated({AddGroup.class})
+ *         3)、默认没有指定分组的校验注解@NotBlank，在分组校验情况@Validated({AddGroup.class})下不生效，只会在@Validated生效；
+ *
+ *   5）、自定义校验
+ *      1）、编写一个自定义的校验注解
+ *      2）、编写一个自定义的校验器 ConstraintValidator
+ *      3）、关联自定义的校验器和自定义的校验注解
+ *      @Documented
+ *      @Constraint(validatedBy = { ListValueConstraintValidator.class【可以指定多个不同的校验器，适配不同类型的校验】 })
+ *      @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
+ *      @Retention(RUNTIME)
+ * public @interface ListValue {
+ *
+ * 4、统一的异常处理
+ * @ControllerAdvice
+ *  1）、编写异常处理类，使用@ControllerAdvice。
+ *  2）、使用@ExceptionHandler标注方法可以处理的异常。
+ *
+ *  5、模板引擎
+ *  1）、thymeleaf-starter：关闭缓存
+ *  2）、静态资源放在static文件夹下就可以按照路径直接访问
+ *  3）、页面放在templates下，直接访问
+ *           springboot访问项目时，会默认找index.html
+ *  4)、页面修改不重启服务实时更新
+ *       1）、引入dev-tools
+ *       2)、修改完之后重新编译启动(需要关闭thymeleaf缓存)
+ *
+ *  6、整合redis
+ *  1）、引入data-redis-starter
+ *  2）、简单配置redis信息
+ *  3）、使用springboot自动配置好的StringRedisTemplate来操作redis
+ *
+ *
+ *  7、整合redisson作为分布式锁等功能的框架
+ *      ① 引入依赖
+ *          <dependency>
+ *              <groupId>org.redisson</groupId>
+ *              <artifactId>redisson</artifactId>
+ *              <version>3.12.0</version>
+ *          </dependency>
+ *      ②配置redisson MyRedissonConfig
+ *      https://github.com/redisson/redisson/wiki/%E7%9B%AE%E5%BD%95  redisson github百科
+ *
+ *  8、 整合springCache简化缓存开发
+ *      ① 引入依赖 cache + redis
+ *      <dependency>
+ *             <groupId>org.springframework.boot</groupId>
+ *             <artifactId>spring-boot-starter-cache</artifactId>
+ *         </dependency>
+ *      依赖中的自动配置
+ *      @see CacheAutoConfiguration  自动配置类
+ *      @link org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration.CacheConfigurationImportSelector
+ *      添加org.springframework.boot.autoconfigure.cache.CacheConfigurations#MAPPINGS 导入
+ *      @see org.springframework.boot.autoconfigure.cache.RedisCacheConfiguration 配置类
+ *      RedisCacheConfiguration 会通过@bean添加 RedisCacheManager( implements CacheManager )
+ *
+ *      ② 配置文件中添加 spring.cache.type = redis 使用redis作为缓存
+ *      springcache文档地址
+ *      @see <a href="https://docs.spring.io/spring/docs/5.2.2.RELEASE/spring-framework-reference/integration.html#cache">springCache文档</>
+ *      @Cacheable: Triggers cache population.
+ *      触发将数据保存到缓存的操作
+ *      @CacheEvict: Triggers cache eviction.
+ *      触发将数据从缓存删除的操作
+ *      @CachePut: Updates the cache without interfering with the method execution.
+ *      不影响方法执行更新缓存
+ *      @Caching: Regroups multiple cache operations to be applied on a method.
+ *      组合以上多个操作
+ *      @CacheConfig: Shares some common cache-related settings at class-level.
+ *      在类级别共享缓存的相同配置
+ *
+ *      ③开启缓存功能
+ *      @EnableCaching
+ *
+ *      @see CacheProperties   关于cache的可配置属性
+ *
+ */
+
+@EnableFeignClients(basePackages = GmallConstant.GMALL_PRODUCT_BASEPATH + GmallConstant.FEIGN)
+@EnableDiscoveryClient
+@SpringBootApplication
+public class GmallProductApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(GmallProductApplication.class, args);
+    }
+
+}
+

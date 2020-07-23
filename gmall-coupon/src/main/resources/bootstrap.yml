@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: gmall-coupon
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 120.76.60.77:9848 #Nacos服务器地址
+      config:
+        server-addr: 120.76.60.77:9848 #Nacos配置中心地址
+        file-extension: yaml #配置文件后缀类型
+        namespace: 8ec3c7b8-75ca-4549-838e-ea7ec3507ea7  #Nacos命名空间
+        group: dev
+        extension-configs[0]:
+          data-id: other.yaml
+          group: dev
+          refresh: true
+        extension-configs[1]:
+          data-id: data_source.yaml
+          group: dev
+          refresh: true
+        extension-configs[2]:
+          data-id: mybatis_plus.yaml
+          group: dev
+          refresh: true
+
+
+
+# ${spring.application.name}-${spring.profile.active}.${spring.cloud.nacos.config.file-extension}
+# nacos-config-client-dev.yml
+# nacos-config-client-test.yml   ----> config.info

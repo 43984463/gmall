@@ -1,0 +1,14 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 120.76.60.77:9848
+      config:
+        server-addr: 120.76.60.77:9848
+        namespace: 61cf9311-e03a-4495-93e8-56e5c938f09c
+        group: dev
+        file-extension: yaml
+        extension-configs[0]:
+          data-id: gateway.yaml
+          group: dev
+          refresh: true
