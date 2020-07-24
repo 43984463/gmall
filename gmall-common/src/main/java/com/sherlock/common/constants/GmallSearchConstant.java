@@ -7,6 +7,7 @@ package com.sherlock.common.constants;
  */
 public abstract class GmallSearchConstant {
 
-    public static final String PRODUCT_INDEX = "product";
+    public static final String PRODUCT_INDEX = "product";  // sku数据在es中的索引
+    public static final Integer PRODUCT_PAGESIZE = 2;  // sku分页大小
 
 }
