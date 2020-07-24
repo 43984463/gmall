@@ -31,10 +31,10 @@ public class SearchParam {
      *
      */
 
-    private Integer hasStock = 1;   // 是否有货 0无 1有
+    private Integer hasStock = 1;   // 是否有货 0无 1有 默认选择有货
     private String skuPrice;    // 价格区间查询
     private List<Long> BrandId; // 按照品牌进行查询，可以多选
     private List<String> attrs; // 按照属性进行筛选，可以多选
 
-    private Integer pageNum;    // 页码
+    private Integer pageNum = 1;    // 页码  //默认第一页
 }
