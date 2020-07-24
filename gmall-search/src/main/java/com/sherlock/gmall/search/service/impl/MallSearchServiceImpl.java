@@ -27,6 +27,7 @@ import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -228,6 +229,13 @@ public class MallSearchServiceImpl implements MallSearchService {
             Arrays.stream(hitsHits).forEach(hit -> {
                 String sourceAsString = hit.getSourceAsString();
                 SkuEsModel skuEsModel = JSON.parseObject(sourceAsString, SkuEsModel.class);
+                // 检索条件传入了才会高亮
+                if (param.getKeyword() != null) {
+                    // 获取高亮部分并替换原本的title
+                    HighlightField skuTitle = hit.getHighlightFields().get("skuTitle");
+                    String highlightTitle = skuTitle.getFragments()[0].string();
+                    skuEsModel.setSkuTitle(highlightTitle);
+                }
                 skuEsModelList.add(skuEsModel);
             });
         }
