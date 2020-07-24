@@ -2,9 +2,10 @@
 ## [https://docs.spring.io/spring/docs/] spring所有版本的文档地址
 ## [https://docs.spring.io/spring/docs/current/spring-framework-reference/] spring当前最新版本文档目录
 ## [https://www.cs.usfca.edu/~galles/visualization/Algorithms.html] 数据结构图形化演示地址
+## [https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-search.html] Elasticsearch与java API文档
 
 ## tips:
-* 本地访问gmall-product时把/resources/templates/index2.html(index3.html)替换掉index.html
+* 本地访问gmall-product时把/resources/templates/index2.html替换掉index.html
 ```properties
 spring.thymeleaf.cache=false #暂时关闭thymeleaf的缓存
 swagger.enable=false #暂时关闭swagger文档
@@ -229,10 +230,10 @@ predicates:
 ```text
 server {
     listen       80;
-    server_name  gmall.com  *.gmall.com;    # 监听*.gmall.com和gmall.com的请求
-    large_client_header_buffers 4 16k;      # 读取大型客户端请求头的缓冲区的最大数量和大小
-    client_max_body_size 300m;              # 设置nginx能处理的最大请求主体大小。
-    client_body_buffer_size 128k;           # 请求主体的缓冲区大小。 
+    server_name  gmall.com *.gmall.com;    # 监听*.gmall.com和gmall.com的请求
+    large_client_header_buffers 4 16k;     # 读取大型客户端请求头的缓冲区的最大数量和大小
+    client_max_body_size 300m;             # 设置nginx能处理的最大请求主体大小。
+    client_body_buffer_size 128k;          # 请求主体的缓冲区大小。 
     proxy_connect_timeout 600;
     proxy_read_timeout 600;
     proxy_send_timeout 600;
