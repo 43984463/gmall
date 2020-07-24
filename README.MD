@@ -25,10 +25,12 @@ alibaba的config配置中心结合@RefreshScope使用动态读取Nacos配置中�
 ## Elasticsearch查询错误解决办法
 ```text
 Elasticsearch exception [type=illegal_argument_exception, reason=Fielddata is disabled on text fields by default. Set fielddata=true on [brandName] in order to load fielddata in memory by uninverting the inverted index. Note that this can however use significant memory. Alternatively use a keyword field instead
-```
-将type为text的字段添加keyword并且查询时添加.keyword
-参考com.sherlock.gmall.search.service.impl.MallSearchServiceImpl.buildSearchRequest
 
+解决办法： 将type为text的字段添加keyword并且查询时添加.keyword
+          参考com.sherlock.gmall.search.service.impl.MallSearchServiceImpl.buildSearchRequest
+```
+
+## 配置文件
 ```properties
 springcloud读取Nacos配置中心配置
 spring.cloud.nacos.discovery.server-addr=120.76.60.77:9848  #Nacos服务器地址
