@@ -1,3 +1,5 @@
+# product mapping
+# 产品的elasticsearch中的mapping映射文件 类似于mysql中定义列的类型
 PUT product
 {
   "mappings": {
