@@ -123,7 +123,9 @@ public class MallSearchServiceImpl implements MallSearchService {
             });
         }
         // 1.2.4、bool - filter - 按照是否有库存进行查询
-        boolQueryBuilder.filter(QueryBuilders.termQuery("hasStock", param.getHasStock() == 1));
+        if (param.getHasStock() != null) {
+            boolQueryBuilder.filter(QueryBuilders.termQuery("hasStock", param.getHasStock() == 1));
+        }
         // 1.2.5、bool - filter - 按照价格区间进行查询
         // skuPrice -> 1_500/_500/500_ 价格区间前端传进来的模式
         if (StringUtils.isNotEmpty(param.getSkuPrice())) {
