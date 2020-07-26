@@ -323,8 +323,14 @@ public class MallSearchServiceImpl implements MallSearchService {
         long totalCount = hits.getTotalHits().value;
         result.setTotal(totalCount);
         // 5.3、分页信息 - 总页码
-        int totalPageSize = (int) totalCount % GmallSearchConstant.PRODUCT_PAGESIZE == 0 ? (int) totalCount / GmallSearchConstant.PRODUCT_PAGESIZE : (int) totalCount / GmallSearchConstant.PRODUCT_PAGESIZE + 1;
-        result.setTotalPages(totalPageSize);
+        int totalPages = (int) totalCount % GmallSearchConstant.PRODUCT_PAGESIZE == 0 ? (int) totalCount / GmallSearchConstant.PRODUCT_PAGESIZE : (int) totalCount / GmallSearchConstant.PRODUCT_PAGESIZE + 1;
+        result.setTotalPages(totalPages);
+
+        List<Integer> pageNavs = new ArrayList<>();
+        for (int i = 1; i <= totalPages; i++) {
+            pageNavs.add(i);
+        }
+        result.setPageNavs(pageNavs);
 
         return result;
     }

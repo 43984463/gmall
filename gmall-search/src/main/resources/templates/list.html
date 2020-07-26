@@ -402,8 +402,8 @@
         <a href="http://gmall.com"><img src="static/search/image/logo1.jpg" alt=""></a>
     </div>
     <div class="header_form">
-        <input type="text" placeholder="手机"/>
-        <a href="#">搜索</a>
+        <input id="keyword" type="text" placeholder="手机" th:value="${param.keyword}"/>
+        <a href="javascript:searchByKeyword()">搜索</a>
     </div>
     <div class="header_ico">
         <div class="header_gw">
@@ -785,7 +785,8 @@
                         <div class="sl_value_logo">
                             <ul>
                                 <li th:each="brand:${result.getBrands()}">
-                                    <a href="/static/search/#" th:href="${'javascript:searchProducts(&quot;brandId&quot;,' + brand.brandId + ')'}">
+                                    <a href="/static/search/#"
+                                       th:href="${'javascript:searchProducts(&quot;brandId&quot;,' + brand.brandId + ')'}">
                                         <img th:src="${brand.brandImg}" alt="">
                                         <div th:text="${brand.brandName}">
                                             华为(HUAWEI)
@@ -1039,10 +1040,16 @@
                 <div class="filter">
                     <!--综合排序-->
                     <div class="filter_top">
-                        <div class="filter_top_left">
-                            <a href="#">综合排序</a>
-                            <a href="#">销量</a>
-                            <a href="#">价格</a>
+                        <div class="filter_top_left" th:with="p = ${param.sort}">
+                            <a th:class="${(!#strings.isEmpty(p) && #strings.startsWith(p, 'hotScore') && #strings.endsWith(p, 'desc')) ? 'sort_a desc': 'sort_a'}"
+                               th:attr="style=${(#strings.isEmpty(p) || #strings.startsWith(p, 'hotScore')) ? 'color: #FFF;border-color:#e4393c;background: #e4393c' : 'color: #333;border-color:#CCC;background: #FFF'}"
+                               sort="hotScore" href="#">综合排序[[${(!#strings.isEmpty(p) && #strings.startsWith(p, 'hotScore') && #strings.endsWith(p, 'desc')) ? '↓' : '↑'}]]</a>
+                            <a th:class="${(!#strings.isEmpty(p) && #strings.startsWith(p, 'saleCount') && #strings.endsWith(p, 'desc')) ? 'sort_a desc': 'sort_a'}"
+                               th:attr="style=${(!#strings.isEmpty(p) && #strings.startsWith(p, 'saleCount')) ? 'color: #FFF;border-color:#e4393c;background: #e4393c' : 'color: #333;border-color:#CCC;background: #FFF'}"
+                               sort="saleCount" href="#">销量[[${(!#strings.isEmpty(p) && #strings.startsWith(p, 'saleCount') && #strings.endsWith(p, 'desc')) ? '↓' : '↑'}]]</a>
+                            <a th:class="${(!#strings.isEmpty(p) && #strings.startsWith(p, 'skuPrice') && #strings.endsWith(p, 'desc')) ? 'sort_a desc': 'sort_a'}"
+                               th:attr="style=${(!#strings.isEmpty(p) && #strings.startsWith(p, 'skuPrice')) ? 'color: #FFF;border-color:#e4393c;background: #e4393c' : 'color: #333;border-color:#CCC;background: #FFF'}"
+                               sort="skuPrice" href="#">价格[[${(!#strings.isEmpty(p) && #strings.startsWith(p, 'skuPrice') && #strings.endsWith(p, 'desc')) ? '↓' : '↑'}]]</a>
                             <a href="#">评论分</a>
                             <a href="#">上架时间</a>
                         </div>
@@ -1219,23 +1226,23 @@
                     <div class="filter_page">
                         <div class="page_wrap">
                             <span class="page_span1">
-                                <a href="#">
+                                <a class="page_a" href="#" th:attr="pn=${result.pageNum - 1}"
+                                   th:if="${result.pageNum > 1}">
                                     < 上一页
                                 </a>
-                                <a href="#" style="border: 0;color:#ee2222;background: #fff">1</a>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <a href="#" style="border: 0;font-size: 20px;color: #999;background: #fff">...</a>
-                                <a href="#">169</a>
-                                <a href="#">
+                                <a class="page_a" href="#"
+                                   th:attr="pn=${nav}, style=${nav == result.pageNum ? 'border: 0;color:#ee2222;background: #fff' : ''}"
+                                   th:each="nav:${result.pageNavs}">[[ ${nav} ]]</a>
+                                <a class="page_a" href="#" th:attr="pn=${result.pageNum + 1}"
+                                   th:if="${result.pageNum < result.totalPages}">
                                     下一页 >
                                 </a>
                             </span>
                             <span class="page_span2">
-                                <em>共<b>169</b>页&nbsp;&nbsp;到第</em>
+                                <em>共<b>[[${result.totalPages}]]</b>页&nbsp;&nbsp;到第</em>
                                 <input type="number" value="1">
                                 <em>页</em>
-                                <a href="#">确定</a>
+                                <a class="page_submit">确定</a>
                             </span>
                         </div>
                     </div>
@@ -1984,6 +1991,79 @@
         $(this).css("color", "#727272")
     })
 
+
+
+
+
+
+
+
+
+
+    // 单机翻页触发事件
+    $(".page_a").click( function () {
+        var pn = $(this).attr("pn");
+        var href = location.href;
+        if (href.indexOf("pageNum") != -1) {
+            // 替换原来的页码
+            location.href = replaceAndAddParamVal(href, "pageNum", pn);
+        } else {
+            location.href = location.href + "&pageNum=" + pn;
+        }
+
+        return false; // 禁用默认行为 超链接默认跳转
+    });
+
+    // 单击排序字段触发事件
+    $(".sort_a").click(function () {
+
+        // changeStyle($(this));
+
+        // 第一次点击设置为降序
+        $(this).toggleClass("desc"); // 加上就是降序 否则升序
+
+        var sort = $(this).attr("sort");
+        sort = $(this).hasClass("desc") ? sort + "_desc" : sort + "_asc";
+        location.href = replaceAndAddParamVal(location.href, "sort", sort);
+
+
+        return false;
+    });
+
+    // 修改样式
+    function changeStyle(ele) {
+        // 改变当前被点击的元素和其他未被点击的元素的样式
+
+        // 'color: #333;border-color:#CCC;background: #FFF'         // 默认
+
+        // 'color: #FFF;border-color:#e4393c;background: #e4393c'   // 高亮
+
+
+        $(".sort_a").css({"color": "#333", "border-color": "#CCC", "background": "#FFF"});
+
+        $(".sort_a").each(function () {
+            // $(this)指的是循环的每个元素
+            var text = $(this).text().replace("↓", "").replace("↑", "");
+            $(this).text(text);
+        });
+
+        $(ele).css({"color": "#FFF", "border-color": "#e4393c", "background": "#e4393c"});
+        // 判断升降序 使用 jQuery toggleClass() 方法。该方法对被选元素进行添加/删除类的切换操作
+        $(ele).toggleClass("desc"); // 加上就是降序 否则升序
+        if ($(ele).hasClass("desc")) {
+            // 降序
+            var text = $(ele).text().replace("↓", "").replace("↑", "");
+            text = text + "↓";
+            $(ele).text(text);
+        } else {
+            // 升序
+            var text = $(ele).text().replace("↓", "").replace("↑", "");
+            text = text + "↑";
+            $(ele).text(text);
+        }
+
+    }
+
     // 检索条件拼接
     function searchProducts(name, value) {
 
@@ -2004,7 +2084,7 @@
                 } else {
                     nUrl = oUrl + "?" + paramName + "=" + replaceVal;
                 }
-                return  nUrl;
+                return nUrl;
             } else {
                 var re = eval('/(' + paramName + '=)([^&]*)/gi');
                 nUrl = oUrl.replace(re, paramName + '=' + replaceVal);
@@ -2016,10 +2096,17 @@
             } else {
                 nUrl = oUrl + "?" + paramName + "=" + replaceVal;
             }
-            return  nUrl;
+            return nUrl;
 
         }
 
+    }
+
+    // 搜索框搜索
+    function searchByKeyword() {
+        var keyword = $("#keyword").val();
+        console.log(keyword.length);
+        searchProducts("keyword", keyword);
     }
 </script>
 </body>
