@@ -11,3 +11,9 @@ git拉取master分支的提交
 * -Xss 为jvm启动的每个线程分配的内存大小，默认JDK1.4中是256K，JDK1.5+中是1M
 
 
+## 项目大,build的时候一直显示writing classes最终OOM
+```text
+① 在File ->setting... -> build,Execution,Deployment -> Complier -> build process heap size 中修改编译时的内存大小。
+```
+
+
