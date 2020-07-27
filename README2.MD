@@ -13,7 +13,8 @@ git拉取master分支的提交
 
 ## 项目大,build的时候一直显示writing classes最终OOM
 ```text
-① 在File ->setting... -> build,Execution,Deployment -> Complier -> build process heap size 中修改编译时的内存大小。
+① 在File -> setting... -> build,Execution,Deployment -> Complier -> build process heap size 中修改编译时的内存大小。
+② 在Help -> Edit Customer VM Options... 增大-Xms和-Xmx的值
 ```
 
 
