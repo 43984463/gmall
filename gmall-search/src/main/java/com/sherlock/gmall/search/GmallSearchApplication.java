@@ -3,12 +3,14 @@ package com.sherlock.gmall.search;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
  * @auther Sherlock
  * @date 2020/6/15 23:33
  * @Description:
  */
+@EnableFeignClients
 @EnableDiscoveryClient
 @SpringBootApplication
 public class GmallSearchApplication {

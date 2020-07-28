@@ -1,12 +1,17 @@
 package com.sherlock.gmall.search.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.sherlock.common.constants.GmallSearchConstant;
 import com.sherlock.common.to.es.SkuEsModel;
+import com.sherlock.common.utils.R;
 import com.sherlock.gmall.search.config.GmallElasticConfig;
+import com.sherlock.gmall.search.feign.ProductFeignService;
 import com.sherlock.gmall.search.service.MallSearchService;
+import com.sherlock.gmall.search.vo.AttrResponseVo;
 import com.sherlock.gmall.search.vo.SearchParam;
 import com.sherlock.gmall.search.vo.SearchResult;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.search.SearchRequest;
@@ -30,10 +35,14 @@ import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,10 +55,14 @@ import java.util.stream.Collectors;
  * @Description:
  */
 @Service
+@Slf4j
 public class MallSearchServiceImpl implements MallSearchService {
 
     @Autowired
     private RestHighLevelClient client;
+
+    @Autowired
+    private ProductFeignService productFeignService;
 
     /**
      * 去ES中检索
@@ -326,12 +339,66 @@ public class MallSearchServiceImpl implements MallSearchService {
         int totalPages = (int) totalCount % GmallSearchConstant.PRODUCT_PAGESIZE == 0 ? (int) totalCount / GmallSearchConstant.PRODUCT_PAGESIZE : (int) totalCount / GmallSearchConstant.PRODUCT_PAGESIZE + 1;
         result.setTotalPages(totalPages);
 
+        // 5.4、前一页和后一页按钮中间的页数
         List<Integer> pageNavs = new ArrayList<>();
         for (int i = 1; i <= totalPages; i++) {
             pageNavs.add(i);
         }
-        result.setPageNavs(pageNavs);
 
+        // 6、面包屑导航
+        if (param.getAttrs() != null && param.getAttrs().size() > 0) {
+
+            List<SearchResult.NavVo> navVos = param.getAttrs().stream().map(attr -> {
+                // 6.1、分析每个传过来的attr查询参数
+                SearchResult.NavVo navVo = new SearchResult.NavVo();
+                String[] s = attr.split("_");
+
+                /**
+                 * 远程调用参考 {@link com.sherlock.gmall.product.service.impl.SpuInfoServiceImpl#up(Long)}
+                 */
+
+                /*R<AttrResponseVo> r = productFeignService.info(Long.parseLong(s[0]));*/
+                ResponseEntity<AttrResponseVo> r = productFeignService.info(Long.parseLong(s[0]));
+
+                try {
+
+                /*if (r.getCode() == 0) {
+                    AttrResponseVo attrVo = r.getData("attr", new TypeReference<AttrResponseVo>(){});
+                    navVo.setNavName(attrVo.getAttrName());
+                } else {
+                    navVo.setNavName(s[0]);
+                }*/
+
+                    if (r.getStatusCode() == HttpStatus.OK) {
+                        AttrResponseVo attrVo = r.getBody();
+                        navVo.setNavName(attrVo.getAttrName());
+                    } else {
+                        navVo.setNavName(s[0]);
+                    }
+                }catch (Exception e){
+                    log.error("属性名称查询异常");
+                    e.printStackTrace();
+                }
+                // 6.2、取消了这个面包屑之后，我们要跳转到哪个地方，将请求地址url里面的当前置空
+                // 拿到当前所有的查询条件，去掉当前。
+                String encode = null;
+                try {
+                    encode = URLEncoder.encode(attr, "UTF-8");
+                    // 将前台与java对空格的处理进行转换 前台的空格是 "20%"， java转换(encode之后)变成了"+";
+                    encode = encode.replace("+", "20%");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                String replace = param.getQueryString().replace("&attr=" + encode, "");
+                navVo.setLink("http://search.gmall.com/list.html?" + replace);
+
+                navVo.setNavValue(s[1]);
+                return navVo;
+            }).collect(Collectors.toList());
+
+
+            result.setNavs(navVos);
+        }
         return result;
     }
 }

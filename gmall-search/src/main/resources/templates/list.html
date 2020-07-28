@@ -762,6 +762,10 @@
                 <a href="#">游戏手机</a>
             </div>
         </div>
+        <!--遍历面包屑功能-->
+        <div class="JD_ipone_one c">
+            <a th:href="${nav.link}" th:each="nav:${result.navs}"><span th:text="${nav.navName}"></span>: <span th:text="${nav.navValue}"></span>×</a>
+        </div>
         <i><img src="static/search/image/right-@1x.png" alt=""></i>
     </div>
 </div>

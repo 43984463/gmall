@@ -37,4 +37,6 @@ public class SearchParam {
     private List<String> attrs; // 按照属性进行筛选，可以多选
 
     private Integer pageNum = 1;    // 页码  //默认第一页
+
+    private String queryString; // 原生所有的查询条件
 }

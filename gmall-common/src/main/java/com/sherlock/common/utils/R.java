@@ -24,7 +24,15 @@ public class R<T> extends HashMap<String, Object> {
 		put("msg", "success");
 	}
 
-	private T data;
+	public <T> T getData(String key, TypeReference<T> typeReference) {
+		Object obj = get("key");
+
+		String json = JSON.toJSONString(obj);
+
+		T t = JSON.parseObject(json, typeReference);
+
+		return t;
+	}
 
 	public <T> T getData(TypeReference<T> typeReference) {
 		Object obj = get("data");

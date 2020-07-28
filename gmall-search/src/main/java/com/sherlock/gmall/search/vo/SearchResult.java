@@ -26,7 +26,19 @@ public class SearchResult {
     private Integer pageNum;    //当前页码
     private Long total;         //总记录数
     private Integer totalPages; //总页码
-    private List<Integer> pageNavs; // 用于前端页面循环显示页数
+    private List<Integer> pageNavs; // 用于前端页面循环显示页
+
+    //-------------------------------以上为返回给页面的数据------------------------------------------
+    //----------------------------------以下为面包屑导航--------------------------------------------
+
+    private List<NavVo> navs;
+
+    @Data
+    public static class NavVo{
+        private String navName;
+        private String navValue;
+        private String link;
+    }
 
     @Data
     public static class BrandVo{
