@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +58,11 @@ public class BrandServiceImpl extends ServiceImpl<BrandDao, BrandEntity> impleme
             columnMap.put("brand_id", brandId);
             categoryBrandRelationService.removeByMap(columnMap);
         });
+    }
+
+    @Override
+    public List<BrandEntity> getBrandByIds(List<Long> brandIds) {
+        return list(new QueryWrapper<BrandEntity>().in("brandId", brandIds));
     }
 
 }

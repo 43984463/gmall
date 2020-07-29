@@ -375,7 +375,7 @@ public class MallSearchServiceImpl implements MallSearchService {
                     } else {
                         navVo.setNavName(s[0]);
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     log.error("属性名称查询异常");
                     e.printStackTrace();
                 }
@@ -398,6 +398,15 @@ public class MallSearchServiceImpl implements MallSearchService {
 
 
             result.setNavs(navVos);
+        }
+
+        // 品牌和分类
+        if (!CollectionUtils.isEmpty(param.getBrandId())) {
+            List<SearchResult.NavVo> navs = result.getNavs();
+            SearchResult.NavVo navVo = new SearchResult.NavVo();
+            navVo.setNavName("品牌");
+            // 远程查询品牌
+            navVo.setNavName("品牌");
         }
         return result;
     }

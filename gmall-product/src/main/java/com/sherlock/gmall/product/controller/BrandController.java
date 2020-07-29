@@ -11,6 +11,7 @@ import com.sherlock.gmall.product.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 
@@ -31,6 +33,7 @@ import java.util.Map;
 @RestController
 @GmallMapping("product/brand")
 public class BrandController {
+
     @Autowired
     private BrandService brandService;
 
@@ -53,6 +56,15 @@ public class BrandController {
     public R info(@PathVariable("brandId") Long brandId){
 		BrandEntity brand = brandService.getById(brandId);
         return R.ok().put("brand", brand);
+    }
+
+    /**
+     * 多个品牌的信息
+     */
+    @GetMapping("/infos")
+    public R brandsInfo(@RequestParam("brandIds") List<Long> brandIds){
+        List<BrandEntity> brands = brandService.getBrandByIds(brandIds);
+        return R.ok().put("brands", brands);
     }
 
     /**

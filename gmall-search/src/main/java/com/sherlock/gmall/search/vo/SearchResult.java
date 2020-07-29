@@ -3,6 +3,7 @@ package com.sherlock.gmall.search.vo;
 import com.sherlock.common.to.es.SkuEsModel;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,7 +32,7 @@ public class SearchResult {
     //-------------------------------以上为返回给页面的数据------------------------------------------
     //----------------------------------以下为面包屑导航--------------------------------------------
 
-    private List<NavVo> navs;
+    private List<NavVo> navs = new ArrayList<>();
 
     @Data
     public static class NavVo{

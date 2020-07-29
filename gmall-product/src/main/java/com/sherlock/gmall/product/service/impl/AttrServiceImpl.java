@@ -1,10 +1,8 @@
 package com.sherlock.gmall.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sherlock.common.constants.GmallConstant;
 import com.sherlock.common.constants.GmallProductConstant;
 import com.sherlock.common.utils.PageUtils;
 import com.sherlock.common.utils.Query;
@@ -24,18 +22,16 @@ import com.sherlock.gmall.product.vo.AttrVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 @Service("attrService")
@@ -116,6 +112,12 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         return pageUtils;
     }
 
+    /**
+     * 将查询结果放入缓存 key为attrInfo: + 第一个参数(传入的attrId)
+     * @param attrId
+     * @return
+     */
+    @Cacheable(value = "attr", key = "'attrInfo:' + #root.args[0]")
     @Override
     public AttrResVo getAttrInfo(Long attrId) {
         AttrEntity attrEntity = getById(attrId);

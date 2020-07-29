@@ -21,5 +21,7 @@ public interface BrandService extends IService<BrandEntity> {
     void updateCascade(BrandEntity brand);
 
     void removeCascade(List<Long> BrandIds);
+
+    List<BrandEntity> getBrandByIds(List<Long> brandIds);
 }
 
