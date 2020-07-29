@@ -9,6 +9,7 @@ import com.sherlock.gmall.search.config.GmallElasticConfig;
 import com.sherlock.gmall.search.feign.ProductFeignService;
 import com.sherlock.gmall.search.service.MallSearchService;
 import com.sherlock.gmall.search.vo.AttrResponseVo;
+import com.sherlock.gmall.search.vo.BrandVo;
 import com.sherlock.gmall.search.vo.SearchParam;
 import com.sherlock.gmall.search.vo.SearchResult;
 import lombok.extern.slf4j.Slf4j;
@@ -272,7 +273,8 @@ public class MallSearchServiceImpl implements MallSearchService {
                 attrIdAggBuckets.forEach(attr -> {
                     SearchResult.AttrVo attrVo = new SearchResult.AttrVo();
                     // 属性ID
-                    attrVo.setAttrId(attr.getKeyAsNumber().longValue());
+                    long attrId = attr.getKeyAsNumber().longValue();
+                    attrVo.setAttrId(attrId);
                     // 属性名称
                     ParsedStringTerms attr_name_agg = attr.getAggregations().get("attr_name_agg");
                     String attrName = attr_name_agg.getBuckets().get(0).getKeyAsString();
@@ -281,6 +283,7 @@ public class MallSearchServiceImpl implements MallSearchService {
                     ParsedStringTerms attr_value_agg = attr.getAggregations().get("attr_value_agg");
                     List<String> attrValues = attr_value_agg.getBuckets().stream().map(attr_bucket -> ((Terms.Bucket) attr_bucket).getKeyAsString()).collect(Collectors.toList());
                     attrVo.setAttrValue(attrValues);
+
                     attrVoList.add(attrVo);
                 });
             }
@@ -357,39 +360,36 @@ public class MallSearchServiceImpl implements MallSearchService {
                  * 远程调用参考 {@link com.sherlock.gmall.product.service.impl.SpuInfoServiceImpl#up(Long)}
                  */
 
-                /*R<AttrResponseVo> r = productFeignService.info(Long.parseLong(s[0]));*/
-                ResponseEntity<AttrResponseVo> r = productFeignService.info(Long.parseLong(s[0]));
-
                 try {
 
-                /*if (r.getCode() == 0) {
-                    AttrResponseVo attrVo = r.getData("attr", new TypeReference<AttrResponseVo>(){});
-                    navVo.setNavName(attrVo.getAttrName());
-                } else {
-                    navVo.setNavName(s[0]);
-                }*/
+                    /*R<AttrResponseVo> r = productFeignService.info(Long.parseLong(s[0]));
+                    // 前端遍历面包屑导航属性时用到
+                    result.getAttrIds().add(Long.parseLong(s[0]));
+                    if (r.getCode() == 0) {
+                        AttrResponseVo attrVo = r.getData("attr", new TypeReference<AttrResponseVo>(){});
+                        navVo.setNavName(attrVo.getAttrName());
+                    } else {
+                        navVo.setNavName(s[0]);
+                    }*/
 
+                    ResponseEntity<AttrResponseVo> r = productFeignService.info(Long.parseLong(s[0]));
+                    // 前端遍历面包屑导航属性时用到
+                    result.getAttrIds().add(Long.parseLong(s[0]));
                     if (r.getStatusCode() == HttpStatus.OK) {
                         AttrResponseVo attrVo = r.getBody();
                         navVo.setNavName(attrVo.getAttrName());
                     } else {
+                        // 没查询到名字的直接就是ID吧
                         navVo.setNavName(s[0]);
                     }
                 } catch (Exception e) {
                     log.error("属性名称查询异常");
                     e.printStackTrace();
                 }
+
                 // 6.2、取消了这个面包屑之后，我们要跳转到哪个地方，将请求地址url里面的当前置空
                 // 拿到当前所有的查询条件，去掉当前。
-                String encode = null;
-                try {
-                    encode = URLEncoder.encode(attr, "UTF-8");
-                    // 将前台与java对空格的处理进行转换 前台的空格是 "20%"， java转换(encode之后)变成了"+";
-                    encode = encode.replace("+", "20%");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                String replace = param.getQueryString().replace("&attr=" + encode, "");
+                String replace = replaceQueryString(param, attr, "attrs");
                 navVo.setLink("http://search.gmall.com/list.html?" + replace);
 
                 navVo.setNavValue(s[1]);
@@ -400,14 +400,68 @@ public class MallSearchServiceImpl implements MallSearchService {
             result.setNavs(navVos);
         }
 
-        // 品牌和分类
+        // 品牌
         if (!CollectionUtils.isEmpty(param.getBrandId())) {
             List<SearchResult.NavVo> navs = result.getNavs();
             SearchResult.NavVo navVo = new SearchResult.NavVo();
-            navVo.setNavName("品牌");
             // 远程查询品牌
             navVo.setNavName("品牌");
+
+            try {
+                R<List<BrandVo>> r = productFeignService.brandsInfo(param.getBrandId());
+
+                if (r.getCode() == 0) {
+                    List<BrandVo> brandIds = r.getData("brands", new TypeReference<List<BrandVo>>() {});
+                    StringBuffer sb = new StringBuffer();
+                    String replace = "";
+                    for (BrandVo brandVo : brandIds) {
+                        sb = sb.append(brandVo).append(";");
+                        replace = replaceQueryString(param, brandVo.getBrandId().toString(), "brandIds");
+                    }
+                    navVo.setNavValue(sb.toString());
+                    navVo.setLink("http://search.gmall.com/list.html?" + replace);
+                }
+
+               /* ResponseEntity<List<BrandVo>> brandsInfo = productFeignService.brandsInfo(param.getBrandId());
+                if (brandsInfo.getStatusCode() == HttpStatus.OK) {
+                    List<BrandVo> body = brandsInfo.getBody();
+                    StringBuffer sb = new StringBuffer();
+                    String replace = "";
+                    for (BrandVo brandVo : body) {
+                        sb = sb.append(brandVo).append(";");
+                        replace = replaceQueryString(param, brandVo.getBrandId().toString(), "brandId");
+                    }
+                    navVo.setNavValue(sb.toString());
+                    navVo.setLink("http://search.gmall.com/list.html?" + replace);
+                }*/
+                navs.add(navVo);
+            } catch (Exception e) {
+
+            }
         }
+
+        // TODO 分类
+
         return result;
+    }
+
+    /**
+     * 替换原来URL中的字段
+     *
+     * @param param
+     * @param replaceValue
+     * @param replaceKey
+     * @return
+     */
+    private String replaceQueryString(SearchParam param, String replaceValue, String replaceKey) {
+        String encode = null;
+        try {
+            encode = URLEncoder.encode(replaceValue, "UTF-8");
+            // 将前台与java对空格的处理进行转换 前台的空格是 "20%"， java转换(encode之后)变成了"+";
+            encode = encode.replace("+", "20%");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return param.getQueryString().replace("&" + replaceKey + "=" + encode, "");
     }
 }

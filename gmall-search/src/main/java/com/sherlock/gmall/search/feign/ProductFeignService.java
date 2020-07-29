@@ -22,9 +22,22 @@ public interface ProductFeignService {
     /*@GetMapping("/product/attr/info/{attrId}")
     R<AttrResponseVo> info(@PathVariable("attrId") Long attrId);*/
 
+    /**
+     * 获取属性信息
+     * @param attrId
+     * @return
+     */
     @GetMapping("/product/attr/info/{attrId}")
     ResponseEntity<AttrResponseVo> info(@PathVariable("attrId") Long attrId);
 
-    @GetMapping("/infos")
+    @GetMapping("/product/attr/infos")
     R<List<BrandVo>> brandsInfo(@RequestParam("brandIds") List<Long> brandIds);
+
+   /**
+     * 获取多个
+     * @param brandIds
+     * @return
+     */
+    /*@GetMapping("/product/attr/infos")
+    ResponseEntity<List<BrandVo>> brandsInfo(@RequestParam("brandIds") List<Long> brandIds);*/
 }

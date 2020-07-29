@@ -62,7 +62,7 @@ public class BrandServiceImpl extends ServiceImpl<BrandDao, BrandEntity> impleme
 
     @Override
     public List<BrandEntity> getBrandByIds(List<Long> brandIds) {
-        return list(new QueryWrapper<BrandEntity>().in("brandId", brandIds));
+        return list(new QueryWrapper<BrandEntity>().in("brand_id", brandIds));
     }
 
 }

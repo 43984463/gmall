@@ -33,6 +33,7 @@ public class SearchResult {
     //----------------------------------以下为面包屑导航--------------------------------------------
 
     private List<NavVo> navs = new ArrayList<>();
+    private List<Long> attrIds = new ArrayList<>();
 
     @Data
     public static class NavVo{
