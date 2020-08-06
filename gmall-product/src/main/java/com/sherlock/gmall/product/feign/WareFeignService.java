@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @auther Sherlock
  * @date 2020/6/17 21:20
- * @Description:
+ * @Description: 所有的方法头和方法签名需要和远程的保持一致
  */
 @FeignClient("gmall-ware")
 public interface WareFeignService {

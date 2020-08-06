@@ -10,6 +10,8 @@ import com.sherlock.gmall.product.vo.AttrResVo;
 import com.sherlock.gmall.product.vo.AttrVo;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -76,6 +78,13 @@ public class AttrController {
 
         return R.ok().put("attr", attrInfo);
     }
+
+    /*@RequestMapping("/info/{attrId}")
+    public ResponseEntity info(@PathVariable("attrId") Long attrId){
+        AttrResVo attrInfo = attrService.getAttrInfo(attrId);
+
+        return new ResponseEntity(attrInfo, HttpStatus.OK);
+    }*/
 
     /**
      * 保存

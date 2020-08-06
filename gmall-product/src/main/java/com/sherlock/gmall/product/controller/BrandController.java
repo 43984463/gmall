@@ -9,6 +9,8 @@ import com.sherlock.common.valid.UpdateStatusGroup;
 import com.sherlock.gmall.product.entity.BrandEntity;
 import com.sherlock.gmall.product.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,12 +61,21 @@ public class BrandController {
     }
 
     /**
-     * 多个品牌的信息
+     * 多个品牌的信息 返回结果用R包装
      */
-    @GetMapping("/infos")
+    /*@GetMapping("/infos")
     public R brandsInfo(@RequestParam("brandIds") List<Long> brandIds){
         List<BrandEntity> brands = brandService.getBrandByIds(brandIds);
         return R.ok().put("brands", brands);
+    }*/
+
+    /**
+     * 多个品牌的信息 返回结果用ResponseEntity包装
+     */
+    @GetMapping("/infos")
+    public ResponseEntity brandsInfo(@RequestParam("brandIds") List<Long> brandIds){
+        List<BrandEntity> brands = brandService.getBrandByIds(brandIds);
+        return new ResponseEntity(brands, HttpStatus.OK);
     }
 
     /**

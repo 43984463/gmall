@@ -362,17 +362,18 @@ public class MallSearchServiceImpl implements MallSearchService {
 
                 try {
 
-                    /*R<AttrResponseVo> r = productFeignService.info(Long.parseLong(s[0]));
+                    R<AttrResponseVo> r = productFeignService.info(Long.parseLong(s[0]));
                     // 前端遍历面包屑导航属性时用到
                     result.getAttrIds().add(Long.parseLong(s[0]));
                     if (r.getCode() == 0) {
                         AttrResponseVo attrVo = r.getData("attr", new TypeReference<AttrResponseVo>(){});
                         navVo.setNavName(attrVo.getAttrName());
                     } else {
+                        // 没查询到名字的直接就是ID吧
                         navVo.setNavName(s[0]);
-                    }*/
+                    }
 
-                    ResponseEntity<AttrResponseVo> r = productFeignService.info(Long.parseLong(s[0]));
+                   /* ResponseEntity<AttrResponseVo> r = productFeignService.info(Long.parseLong(s[0]));
                     // 前端遍历面包屑导航属性时用到
                     result.getAttrIds().add(Long.parseLong(s[0]));
                     if (r.getStatusCode() == HttpStatus.OK) {
@@ -381,7 +382,7 @@ public class MallSearchServiceImpl implements MallSearchService {
                     } else {
                         // 没查询到名字的直接就是ID吧
                         navVo.setNavName(s[0]);
-                    }
+                    }*/
                 } catch (Exception e) {
                     log.error("属性名称查询异常");
                     e.printStackTrace();
@@ -408,7 +409,12 @@ public class MallSearchServiceImpl implements MallSearchService {
             navVo.setNavName("品牌");
 
             try {
-                R<List<BrandVo>> r = productFeignService.brandsInfo(param.getBrandId());
+
+                /**
+                 * 使用不同的方式接收远程调用的结果
+                 */
+
+                /*R<List<BrandVo>> r = productFeignService.brandsInfo(param.getBrandId());
 
                 if (r.getCode() == 0) {
                     List<BrandVo> brandIds = r.getData("brands", new TypeReference<List<BrandVo>>() {});
@@ -420,9 +426,9 @@ public class MallSearchServiceImpl implements MallSearchService {
                     }
                     navVo.setNavValue(sb.toString());
                     navVo.setLink("http://search.gmall.com/list.html?" + replace);
-                }
+                }*/
 
-               /* ResponseEntity<List<BrandVo>> brandsInfo = productFeignService.brandsInfo(param.getBrandId());
+                ResponseEntity<List<BrandVo>> brandsInfo = productFeignService.brandsInfo(param.getBrandId());
                 if (brandsInfo.getStatusCode() == HttpStatus.OK) {
                     List<BrandVo> body = brandsInfo.getBody();
                     StringBuffer sb = new StringBuffer();
@@ -433,10 +439,12 @@ public class MallSearchServiceImpl implements MallSearchService {
                     }
                     navVo.setNavValue(sb.toString());
                     navVo.setLink("http://search.gmall.com/list.html?" + replace);
-                }*/
+                }
+
                 navs.add(navVo);
             } catch (Exception e) {
-
+                log.error("品牌详情查询异常");
+                e.printStackTrace();
             }
         }
 

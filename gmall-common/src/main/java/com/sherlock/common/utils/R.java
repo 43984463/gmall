@@ -25,7 +25,7 @@ public class R<T> extends HashMap<String, Object> {
 	}
 
 	public <T> T getData(String key, TypeReference<T> typeReference) {
-		Object obj = get("key");
+		Object obj = get(key);
 
 		String json = JSON.toJSONString(obj);
 
@@ -35,13 +35,16 @@ public class R<T> extends HashMap<String, Object> {
 	}
 
 	public <T> T getData(TypeReference<T> typeReference) {
-		Object obj = get("data");
+
+		return getData("data", typeReference);
+
+		/*Object obj = get("data");
 
 		String json = JSON.toJSONString(obj);
 
 		T t = JSON.parseObject(json, typeReference);
 
-		return t;
+		return t;*/
 	}
 
 	public R<T> setData(T data) {
