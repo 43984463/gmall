@@ -18,3 +18,15 @@ git拉取master分支的提交
 ```
 
 
+## 技术目录
+
+**线程池：com.sherlock.gmall.search.thread.ThreadTest** 
+**redis缓存技术 + 分布式锁 + springCache：
+com.sherlock.gmall.product.GmallProductApplication
+com.sherlock.gmall.product.service.impl.CategoryServiceImpl
+com.sherlock.gmall.product.config.SpringCacheConfig**
+**MyBatis-Plus:
+com.sherlock.gmall.product.GmallProductApplication**
+**JSR303数据校验：
+com.sherlock.gmall.product.GmallProductApplication
+com.sherlock.gmall.product.entity.BrandEntity**
