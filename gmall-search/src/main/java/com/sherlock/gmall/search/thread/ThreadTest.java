@@ -14,6 +14,78 @@ public class ThreadTest {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
 
         System.out.println("main...start");
+
+        /**
+         *
+         * ************************************************************CompletableFuture 使用****************************************************************************
+         *   一、
+         *   CompletableFuture.runAsync()  返回值为Void
+         *   CompletableFuture.supplyAsync() 返回值为定义的泛型类型
+         *
+         *
+         *   二、whenComplete((BiConsumer<? super T, ? super Throwable> action))  可以处理正常和异常的计算结果，
+         *   Lambda 表达式的第一个参数为泛型返回结果，第二个为异常
+         *
+         *   whenComplete 和 whenCompleteAsync:
+         *   whenComplete： 执行当前任务的线程继续执行whenComplete里面的任务。
+         *   whenCompleteAsync：把whenCompleteAsync 里面的任务交给线程池来执行
+         *
+         *   ******方法不以Async结尾，意味着Action使用相同的线程执行，而Async可能会使用其他线程执行(如果使用的是相同的线程池，则有可能使用同一个线程执行)******
+         *
+         *
+         *   三、whenComplete 和 exceptionally, handle
+         *   whenComplete 只能感知结果和异常，不能修改结果
+         *   exceptionally 可以感知异常并重新返回
+         *   handle 可以感知结果和异常，并且可以重新返回。 相当于以上结合
+         *
+         *   四、线程串行化执行
+         *   thenApply方法：当一个线程依赖另一个线程时，获取上一个任务的执行结果，并返回当前任务的返回值。
+         *   thenAccept方法： 消费处理结果。接收任务的处理结果，并消费处理，无返回结果。
+         *   thenRun方法：只要上面的任务执行完成，就开始执行thenRun，只是处理完任务后，执行thenRun的后续操作。
+         *
+         *   带有Async默认是异步执行。 以上都需要前置任务成功完成。
+         *   A thenRun B
+         *   A成功执行完，再执行B   B不接收A的执行结果，并且B执行完无返回值
+         *   A thenAccept B
+         *   A成功执行完，再执行B   B接收A的执行结果，并且B执行完无返回值
+         *   A thenApply B
+         *   A成功执行完，再执行B   B接收A的执行结果，并且B执行完有返回值  返回结果类型以最后一次为准
+         *
+         *
+         *   五、
+         *   5.1 两任务组合（都要完成）
+         *   runAfterBoth: 组合2个future，不需要获取future的结果，只需要2个future处理完成任务后，处理该任务。处理完没有返回值。
+         *   thenAcceptBoth: 组合2个future，需要获取2个future任务的结果，然后处理该任务。处理完没有返回值。
+         *   thenCombine: 组合2个future，需要获取2个future任务的结果，然后处理该任务。并返回当前任务的返回值。
+         *   5.2 两任务组合（任意一个完成） （如果提交给线程池，还是会执行完所有任务）
+         *   runAfterEither: 任意一个任务完成，不需要获取future的结果，只需要完成的任务future处理完成任务后，处理该任务。处理完没有返回值。
+         *   acceptEither: 任意一个任务完成，需要获取future的结果，只需要完成的任务future处理完成任务后，处理该任务。处理完没有返回值。
+         *   applyToEither: 任意一个任务完成，需要获取future的结果，只需要完成的任务future处理完成任务后，处理该任务。处理完并有返回值。
+         *
+         *   六、等待任务执行完之后再继续接下来的任务。
+         *   6.1 多任务阻塞（都要完成）
+         *   CompletableFuture<Void> future = CompletableFuture.allOf(future01, future02);
+         *   future.get();
+         *   这2行代码的作用是等(CompletableFuture.allOf(future01, future02))中的所有结果执行完再继续执行接下来的任务。
+         *   如果没有在这阻塞，有可能参数里面的任务还都没执行完。
+         *   future.get(); 仅仅负责阻塞。
+         *
+         *   6.2 任意任务完成阻塞（如果提交给线程池，还是会执行完所有任务）
+         *   CompletableFuture<Object> anyOf = CompletableFuture.anyOf(future01);
+         *   anyOf.get();
+         *   这2行代码的作用是等(CompletableFuture.allOf(future01, future02))中的任意结果执行完再继续执行接下来的任务。
+         *   如果没有在这阻塞，有可能参数里面的任务都还没执行完。
+         *   future.get(); 可以负责阻塞，并且获取执行完的返回结果。
+         *
+         *
+         *
+         *
+         *   future.get()会阻塞线程直到获取到结果。
+         *
+         * ************************************************************CompletableFuture 使用****************************************************************************
+         */
+
+
         /**
         CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
             System.out.println("当前线程号 -> " + Thread.currentThread().getId());
@@ -22,7 +94,7 @@ public class ThreadTest {
         }, executor); */
 
 
-        CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> {
+        CompletableFuture<Integer> future01 = CompletableFuture.supplyAsync(() -> {
             System.out.println("当前线程号 -> " + Thread.currentThread().getId());
             int n = 10 / 0;
             return n;
@@ -32,7 +104,13 @@ public class ThreadTest {
             return 10;
         });
 
-        Integer integer = future.get();
+        CompletableFuture<Void> future = CompletableFuture.allOf(future01);
+        future.get();
+
+        CompletableFuture<Object> anyOf = CompletableFuture.anyOf(future01);
+        anyOf.get();
+
+        Integer integer = future01.get();
         System.out.println("最终运行结果：" + integer);
         System.out.println("main...end");
 

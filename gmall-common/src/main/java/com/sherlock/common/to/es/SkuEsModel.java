@@ -14,6 +14,7 @@ import java.util.List;
 public class SkuEsModel {
     private Long skuId;
     private Long spuId;
+    private String skuDesc;
     private String skuTitle;
     private BigDecimal skuPrice;
     private String skuImg;

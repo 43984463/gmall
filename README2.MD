@@ -20,11 +20,12 @@ git拉取master分支的提交
 
 ## 技术目录
 ```text
-线程池：com.sherlock.gmall.search.thread.ThreadTest 
-redis缓存技术 + 分布式锁 + springCache：
+线程池 + CompletableFuture：com.sherlock.gmall.search.thread.ThreadTest 
+redis缓存技术 + 分布式锁 + springCache + redission：
 com.sherlock.gmall.product.GmallProductApplication
 com.sherlock.gmall.product.service.impl.CategoryServiceImpl
 com.sherlock.gmall.product.config.SpringCacheConfig
+com.sherlock.gmall.product.web.IndexController
 MyBatis-Plus:
 com.sherlock.gmall.product.GmallProductApplication
 com.sherlock.gmall.coupon.config.MybatisConfig
