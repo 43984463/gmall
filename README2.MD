@@ -21,25 +21,33 @@ git拉取master分支的提交
 ## 技术目录
 ```text
 线程池 + CompletableFuture：com.sherlock.gmall.search.thread.ThreadTest 
+
 redis缓存技术 + 分布式锁 + springCache + redission：
 com.sherlock.gmall.product.GmallProductApplication
 com.sherlock.gmall.product.service.impl.CategoryServiceImpl
 com.sherlock.gmall.product.config.SpringCacheConfig
 com.sherlock.gmall.product.web.IndexController
+
 MyBatis-Plus:
 com.sherlock.gmall.product.GmallProductApplication
 com.sherlock.gmall.coupon.config.MybatisConfig
+
 JSR303数据校验：
 com.sherlock.gmall.product.GmallProductApplication
 com.sherlock.gmall.product.entity.BrandEntity
+
 阿里OSS存储技术：
 com.sherlock.gmall.thirdparty.controller.OssController
+
 elasticsearch存储东西到服务器：
 com.sherlock.gmall.search.service.impl.ProductSaveServiceImpl
+
 elasticsearch从服务器搜索东西：
 com.sherlock.gmall.search.service.impl.MallSearchServiceImpl
+
 springCloud Feign远程调用: 
 com.sherlock.gmall.ware.feign.ProductFeignService
+
 mybatis XML写法
 mapper/product/AttrGroupDao.xml
 ```
