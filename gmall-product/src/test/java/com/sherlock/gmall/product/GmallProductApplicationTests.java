@@ -1,7 +1,12 @@
 package com.sherlock.gmall.product;
 
+import com.sherlock.gmall.product.dao.AttrGroupDao;
+import com.sherlock.gmall.product.dao.SkuSaleAttrValueDao;
 import com.sherlock.gmall.product.entity.BrandEntity;
 import com.sherlock.gmall.product.service.BrandService;
+import com.sherlock.gmall.product.vo.SkuItemSaleAttrVo;
+import com.sherlock.gmall.product.vo.SkuItemVo;
+import com.sherlock.gmall.product.vo.SpuItemAttrGroupVo;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +17,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -33,6 +39,13 @@ public class GmallProductApplicationTests {
 
     @Autowired
     private RedissonClient redissonClient;
+
+    @Autowired
+    private AttrGroupDao attrGroupDao;
+
+    @Autowired
+    private SkuSaleAttrValueDao skuSaleAttrValueDao;
+
    /* @Autowired
     private OSS ossClient;
 
@@ -43,6 +56,18 @@ public class GmallProductApplicationTests {
         ossClient.putObject("gmall-sherlock", "redisConfigFile", is);
         System.out.println("上传成功");
     }*/
+
+    @Test
+    public void mybatisXmlTestGetSaleAttrsBySpuId() {
+        List<SkuItemSaleAttrVo> saleAttrsBySpuId = skuSaleAttrValueDao.getSaleAttrsBySpuId(2L);
+        System.out.println(saleAttrsBySpuId);
+    }
+
+    @Test
+    public void mybatisXmlTestGetAttrGroupWithAttrsBySpuId() {
+        List<SpuItemAttrGroupVo> attrGroupWithAttrsBySpuId = attrGroupDao.getAttrGroupWithAttrsBySpuId(2L, 225L);
+        System.out.println(attrGroupWithAttrsBySpuId);
+    }
 
     @Test
     public void contextLoads() {

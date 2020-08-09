@@ -13,5 +13,34 @@
         <result property="catelogId" column="catelog_id"/>
     </resultMap>
 
+    <!--resultType 返回集合里面元素的类型，只要有嵌套属性，就要封装自定义结果集, 这里不要用内部静态类，会出错-->
+    <resultMap id="SpuItemAttrGroupVo" type="com.sherlock.gmall.product.vo.SpuItemAttrGroupVo">
+        <result property="groupName" column="attr_group_name"></result>
+        <collection property="attrs" ofType="com.sherlock.gmall.product.vo.Attr">
+            <result property="attrName" column="attr_name"></result>
+            <result property="attrValue" column="attr_value"></result>
+        </collection>
+    </resultMap>
+    <!--resultType 返回集合里面元素的类型-->
+    <select id="getAttrGroupWithAttrsBySpuId"
+            resultMap="SpuItemAttrGroupVo">
+
+        SELECT
+        ppav.spu_id,
+        pag.attr_group_id,
+        pag.attr_group_name,
+        paar.attr_id,
+        attr.attr_name,
+        ppav.attr_value
+        FROM
+        pms_attr_group pag
+        LEFT JOIN pms_attr_attrgroup_relation paar ON paar.attr_group_id = pag.attr_group_id
+        LEFT JOIN pms_attr attr ON attr.attr_id = paar.attr_id
+        LEFT JOIN pms_product_attr_value ppav ON ppav.attr_id = attr.attr_id
+        WHERE pag.catelog_id = #{catelogId}
+        AND ppav.spu_id = #{spuId}
+
+    </select>
+
 
 </mapper>

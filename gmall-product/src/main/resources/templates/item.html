@@ -101,11 +101,11 @@
 
 					<div class="imgbox">
 						<div class="probox">
-							<img class="img1" alt="" th:src="${skuInfo?.skuDefaultImg}"  src="/static/item/img/59ded626N7c4cb0a3.jpg">
+							<img class="img1" alt="" th:src="${skuInfo.info.skuDefaultImg}"  src="/static/item/img/59ded626N7c4cb0a3.jpg">
 							<div class="hoverbox"></div>
 						</div>
 						<div class="showbox">
-							<img class="img1" alt="" th:src="${skuInfo?.skuDefaultImg}" src="/static/item/img/59ded626N7c4cb0a3.jpg">
+							<img class="img1" alt="" th:src="${skuInfo.info.skuDefaultImg}" src="/static/item/img/59ded626N7c4cb0a3.jpg">
 						</div>
 					</div>
 
@@ -113,7 +113,7 @@
 
 						<div class="box-lh-one">
 							<ul>
-								<li th:each="skuImage:${skuInfo?.skuImageList}">
+								<li th:each="skuImage:${skuInfo.images}" th:if="${!#strings.isEmpty(skuImage.imgUrl)}">
 								 		<img th:src="${skuImage.imgUrl}"/>
 <!--								<li><img src="/static/item/img/59ded62eN64a9784c.jpg" /></li>
 								<li><img src="/static/item/img/59ded626Ne3c69b70.jpg" /></li>
@@ -148,11 +148,11 @@
 
 					</div>
 					<div class="box-two">
-						<div class="box-name" th:text="${skuInfo?.skuName}">
+						<div class="box-name" th:text="${skuInfo.info.skuTitle}">
 							华为 HUAWEI Mate 10 6GB+128GB 亮黑色 移动联通电信4G手机 双卡双待
 						</div>
  
-						<div class="box-yuyue">
+						<div class="box-yuyue" th:text="${skuInfo.info.skuSubtitle}">
 							<div class="yuyue-one">
 								 热卖促销中
 							</div>
@@ -172,7 +172,7 @@
 								<li>惊喜价</li>
 								<li>
 									<span>￥</span>
-									<span th:text="${skuInfo?.price}">4499.00</span>
+									<span th:text="${#numbers.formatDecimal(skuInfo.info.price, 3, 2)}">4499.00</span>
 								</li>
 								<li>
 								 
@@ -198,12 +198,12 @@
 
 								</li>
 								<li>
-									<span>无货</span>， 此商品暂时售完
+									<span th:text="${skuInfo.hasStock ? '有货' : '无货， 此商品暂时售完'}">无货</span>
 								</li>
  
 							</ul>
 						</div>
-						 <div class="box-stock">
+						 <!--<div class="box-stock">
 							<ul class="box-ul">
 								<li>重  量:</li>
 								<li class="box-stock-li">
@@ -212,22 +212,22 @@
  
 
 								</li>
-								<li  th:text="${skuInfo?.weight}+' kg'">
+								<li  th:text="${skuInfo.info.}+' kg'">
 									  10 kg
 								</li>
  
 							</ul>
-						</div>
+						</div>-->
 						  
 						<div class="box-attr-3">
 						<br/>
-							<div class="box-attr-2 clear"  th:each="spuSaleAttr:${spuSaleAttrListCheckBySku}">
+							<div class="box-attr-2 clear"  th:each="spuSaleAttr:${skuInfo.saleAttr}">
 								<dl>
-									<dt th:text="${spuSaleAttr.saleAttrName}">选择颜色</dt>
-									<dd  th:class="redborder" th:each="saleAttrValue:${spuSaleAttr.spuSaleAttrValueList}">
-										<div th:value="${saleAttrValue.id}" th:text="${saleAttrValue.saleAttrValueName}">
-											  摩卡金
-										</div>
+									<dt>选择[[${spuSaleAttr.attrName}]]</dt>
+									<dd th:each="saleAttrValue:${spuSaleAttr.attrValues}">
+										<a th:attr="skus=${saleAttrValue.skuIds}, class = ${#lists.contains(#strings.listSplit(saleAttrValue.skuIds,','), skuInfo.info.skuId.toString()) ? 'sku_attr_value checked' : 'sku_attr_value'}">
+											[[${saleAttrValue.attrValue}]]
+										</a>
 									</dd>
 								</dl>
 							</div>
@@ -261,7 +261,7 @@
 							<div class="box-btns-one">
 								<form id="itemForm" action="http://cart.gmall.com:8087/addToCart" method="post">
 									<input type="text" name="num" id=""  value="1"/>
-									<input type="hidden" name="skuId"  th:value="${skuInfo?.id}" />
+									<input type="hidden" name="skuId"/>
 
 									<div class="box-btns-one1">
 
@@ -373,24 +373,24 @@
 				<div class="allquanbushop">
 					<ul class="shopjieshao">
 						<li class="jieshoa" style="background: #e4393c;">
-							<a href="##" style="color: white;">商品介绍</a>
+							<a href="#li1" style="color: white;">商品介绍</a>
 						</li>
 						<li class="baozhuang">
-							<a href="##">规格与包装</a>
+							<a href="#li2">规格与包装</a>
 						</li>
 						<li class="baozhang">
-							<a href="##">售后保障</a>
+							<a href="#li3">售后保障</a>
 						</li>
 						<li class="pingjia">
-							<a href="##">商品评价(4万+)</a>
+							<a href="#li4">商品评价(4万+)</a>
 						</li>
 						<li class="shuoming">
-							<a href="##">预约说明</a>
+							<a href="#li5">预约说明</a>
 						</li>
 
 					</ul>
  
-					<ul class="shopjieshaos posi" style="display: none;">
+					<!--<ul class="shopjieshaos posi" style="display: none;">
 						<li class="jieshoa" style="background: #e4393c;">
 							<a href="#li1" style="color: white;">商品介绍</a>
 						</li>
@@ -407,13 +407,13 @@
 							<a href="#li5">预约说明</a>
 						</li>
 					</ul>
-
+-->
 					<!--商品详情-->
 					<div class="huawei">
 						<ul class="xuanxiangka">
 							<li class="jieshoa actives" id="li1">
 								<div class="shanpinsssss">
-									<p>
+									<!--<p>
 										<a href="#">品牌:华为（HUAWEI）</a>
 									</p>
 									<table>
@@ -450,11 +450,11 @@
 												<a href="##">全面屏，双卡双待，指纹识别，Type-C，VoLTE，2K屏，拍照神器，支持NFC，商务手机，安全手机，分辨率10</a>
 											</td>
 										</tr>
-									</table>
-									<img class="xiaoguo" src="/static/item/img/5a0d4181Nf70c5ebf.jpg" />
-									<div class="guiGebox guiGebox1">
-										<div class="guiGe">
-											<h3>主体</h3>
+									</table>-->
+									<img class="xiaoguo" th:src="${desc}" th:each="desc:${#strings.listSplit(skuInfo.desc, ',')}"/>
+									<!--<div class="guiGebox guiGebox1">
+										<div class="guiGe" th:each="guige:${skuInfo.groupAttrs}">
+											<h3 th:text="${guige.groupName}">主体</h3>
 											<dl>
 												<dt>品牌</dt>
 												<dd>华为(HUAWEI)</dd>
@@ -599,7 +599,7 @@
 												<dd>支持</dd>
 											</dl>
 										</div>
-									<!--nav-->
+									&lt;!&ndash;nav&ndash;&gt;
 										<div class="guiGe">
 											<h3>后置摄像头</h3>
 											<dl>
@@ -706,33 +706,21 @@
 											<h3>包装清单</h3>
 											<p>手机（含内置电池） X 1、5A大电流华为SuperCharge充电器X 1、5A USB数据线 X 1、半入耳式线控耳机 X 1、快速指南X 1、三包凭证 X 1、取卡针 X 1、保护壳 X 1</p>
 										</div>
-									</div>
+									</div>-->
 								</div>
 							</li>
-							<li class="baozhuang actives" id="li2">
+							<li class="baozhuang" id="li2">
 								<div class="guiGebox">
-									<div class="guiGe">
-										<h3>主体</h3>
+									<div class="guiGe" th:each="group:${skuInfo.groupAttrs}">
+										<h3 th:text="${group.groupName}">主体</h3>
 										<dl>
-											<dt>品牌</dt>
-											<dd>华为(HUAWEI)</dd>
-											<dt>型号</dt>
-											<dd class="Ptable-tips">
-												<a href="#"><i>？</i></a>
-											</dd>
-											<dd>ALP-AL00</dd>
-											<dt>入网型号</dt>
-											<dd class="Ptable-tips">
-												<a href="#"><i>？</i></a>
-											</dd>
-											<dd>ALP-AL00</dd>
-											<dt>上市年份</dt>
-											<dd>2017年</dd>
-											<dt>上市时间</dt>
-											<dd>10月</dd>
+											<div th:each="attr:${group.attrs}">
+												<dt th:text="${attr.attrName}">品牌</dt>
+												<dd th:text="${attr.attrValue}">华为(HUAWEI)</dd>
+											</div>
 										</dl>
 									</div>
-									<div class="guiGe">
+									<!--<div class="guiGe">
 										<h3>基本信息</h3>
 										<dl>
 											<dt>机身颜色</dt>
@@ -957,7 +945,7 @@
 											<dt>其他2</dt>
 											<dd>单手操作</dd>
 										</dl>
-									</div>
+									</div>-->
 									<div class="package-list">
 										<h3>包装清单</h3>
 										<p>手机（含内置电池） X 1、5A大电流华为SuperCharge充电器X 1、5A USB数据线 X 1、半入耳式线控耳机 X 1、快速指南X 1、三包凭证 X 1、取卡针 X 1、保护壳 X 1</p>
@@ -965,7 +953,7 @@
 								</div>
 							</li>
 							<!--包装-->
-							<li class="baozhang actives" id="li3">
+							<li class="baozhang" id="li3">
 								<div class="oBox">
 		<div class="shuoHou">
 			<div class="baoZhang">
@@ -984,7 +972,7 @@
 
 							</li>
 							<!--评价-->
-							<li class="PINgjia actives" id="li4">
+							<li class="PINgjia" id="li4">
 								 
 						</ul>
 					</div>
@@ -993,7 +981,7 @@
 		</div>
 
 
-		<input id="skuId" type="text"  th:value= " ${skuInfo?.id}"  />
+		<input id="skuId" type="text"/>
 
 		<div class="Fixedbian">
 			<ul>
@@ -1009,7 +997,7 @@
 	<script src="/static/item/js/jquery1.9.js" type="text/javascript" charset="utf-8"></script>
 	<script src="/static/item/js/js.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript">
-        function addToCart(obj){
+        /*function addToCart(obj){
             var canClick = $(obj).attr("canClick");
             if(canClick=='0'){
                 return ;
@@ -1048,7 +1036,19 @@
             }else{
                 $("#cartBtn").attr("class","box-btns-two-off");
             }
-        }
+        }*/
+
+        $(".sku_attr_value").click(function () {
+			// 1.获取所有加了checked属性的
+			// 2.取出所有的交集，得到skuId
+			// 3.跳转
+		})
+
+		// 页面加载完成之后就给选中的属性添加红色外框
+		$(function () {
+			$(".sku_attr_value").parent().css({"border":"solid 1px #CCC"});
+			$("a[class='sku_attr_value checked']").parent().css({"border":"solid 1px red"});
+		})
 	</script>
 
 </html>

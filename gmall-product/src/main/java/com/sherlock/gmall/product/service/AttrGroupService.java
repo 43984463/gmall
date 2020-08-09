@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.sherlock.common.utils.PageUtils;
 import com.sherlock.gmall.product.entity.AttrGroupEntity;
 import com.sherlock.gmall.product.vo.AttrGroupWithAttrsVo;
+import com.sherlock.gmall.product.vo.SkuItemVo;
+import com.sherlock.gmall.product.vo.SpuItemAttrGroupVo;
 
 import java.util.List;
 import java.util.Map;
@@ -24,5 +26,7 @@ public interface AttrGroupService extends IService<AttrGroupEntity> {
     void updateAttrAndRelation(AttrGroupEntity attrGroup);
 
     List<AttrGroupWithAttrsVo> getAttrGroupWithAttrsByCatelogId(Long catelogId);
+
+    List<SpuItemAttrGroupVo> getAttrGroupWithAttrsBySpuId(Long spuId, Long catelogId);
 }
 

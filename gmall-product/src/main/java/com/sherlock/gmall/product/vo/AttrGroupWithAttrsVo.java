@@ -1,6 +1,5 @@
 package com.sherlock.gmall.product.vo;
 
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.sherlock.gmall.product.entity.AttrEntity;
 import lombok.Data;
 

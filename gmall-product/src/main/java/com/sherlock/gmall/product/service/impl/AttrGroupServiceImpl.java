@@ -1,10 +1,13 @@
 package com.sherlock.gmall.product.service.impl;
 
+import com.sherlock.gmall.product.dao.AttrAttrgroupRelationDao;
 import com.sherlock.gmall.product.entity.AttrAttrgroupRelationEntity;
 import com.sherlock.gmall.product.entity.AttrEntity;
 import com.sherlock.gmall.product.service.AttrAttrgroupRelationService;
 import com.sherlock.gmall.product.service.AttrService;
 import com.sherlock.gmall.product.vo.AttrGroupWithAttrsVo;
+import com.sherlock.gmall.product.vo.SkuItemVo;
+import com.sherlock.gmall.product.vo.SpuItemAttrGroupVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,8 @@ import com.sherlock.gmall.product.entity.AttrGroupEntity;
 import com.sherlock.gmall.product.service.AttrGroupService;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+
 
 @Service("attrGroupService")
 public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEntity> implements AttrGroupService {
@@ -35,6 +40,9 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
 
     @Autowired
     private AttrService attrService;
+
+    @Autowired
+    private AttrGroupDao attrGroupDao;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -88,6 +96,13 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
             return vo;
         }).collect(Collectors.toList());
         return attrGroupWithAttrsVos;
+    }
+
+    @Override
+    public List<SpuItemAttrGroupVo> getAttrGroupWithAttrsBySpuId(Long spuId, Long catelogId) {
+        // 1、查出当前Spu对应的所有属性的分组信息以及当前分组下的所有属性对应的值
+        List<SpuItemAttrGroupVo> vos = attrGroupDao.getAttrGroupWithAttrsBySpuId(spuId, catelogId);
+        return vos;
     }
 
 }

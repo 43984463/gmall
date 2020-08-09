@@ -40,4 +40,6 @@ elasticsearch从服务器搜索东西：
 com.sherlock.gmall.search.service.impl.MallSearchServiceImpl
 springCloud Feign远程调用: 
 com.sherlock.gmall.ware.feign.ProductFeignService
+mybatis XML写法
+mapper/product/AttrGroupDao.xml
 ```
