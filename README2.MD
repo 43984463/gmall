@@ -53,4 +53,7 @@ mapper/product/AttrGroupDao.xml
 
 自定义线程池
 com.sherlock.gmall.product.config.MyThreadConfig
+
+使用线程池 + CompletableFuture异步编排进行异步任务执行
+com.sherlock.gmall.product.service.impl.SkuInfoServiceImpl.item()
 ```
