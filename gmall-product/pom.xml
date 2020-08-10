@@ -50,6 +50,11 @@
             <artifactId>jedis</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+        </dependency>
+
         <!--分布式缓存-->
         <dependency>
             <groupId>org.redisson</groupId>

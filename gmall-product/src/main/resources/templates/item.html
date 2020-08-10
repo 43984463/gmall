@@ -1039,9 +1039,27 @@
         }*/
 
         $(".sku_attr_value").click(function () {
-			// 1.获取所有加了checked属性的
+			// 1.点击的元素先添加上自定义的属性，为了识别我们是刚才被点击的
+			// 1.1 给被点击的属性的值添加clicked属性
+			var skus = new Array();
+			$(this).addClass("clicked");
+			var curr = $(this).attr("skus").split(",");
+			// 当前被点击的所有sku组合数组放进去
+			skus.push(curr);
+			// 1.2 去掉同一个属性下的其他值的checked属性
+			$(this).parent().parent().find(".sku_attr_value").removeClass("checked");
+
+			$("a[class='sku_attr_value checked']").each(function () {
+				skus.push($(this).attr("skus").split(","));
+			});
+
 			// 2.取出所有的交集，得到skuId
+			var filterEle = skus[0];
+			for (var i = 1; i < skus.length; i++) {
+				filterEle = $(filterEle).filter(skus[i]);
+			}
 			// 3.跳转
+			location.href = "http://item.gmall.com/" + filterEle[0] + ".html";
 		})
 
 		// 页面加载完成之后就给选中的属性添加红色外框

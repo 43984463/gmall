@@ -50,4 +50,7 @@ com.sherlock.gmall.ware.feign.ProductFeignService
 
 mybatis XML写法
 mapper/product/AttrGroupDao.xml
+
+自定义线程池
+com.sherlock.gmall.product.config.MyThreadConfig
 ```
