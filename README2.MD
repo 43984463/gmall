@@ -56,4 +56,12 @@ com.sherlock.gmall.product.config.MyThreadConfig
 
 使用线程池 + CompletableFuture异步编排进行异步任务执行
 com.sherlock.gmall.product.service.impl.SkuInfoServiceImpl.item()
+
+线程池状态监控
+com.sherlock.common.utils.ThreadPoolMonitor
+
+springMVC 请求直接映射视图(页面)
+com.sherlock.gmall.auth.controller.LoginController
+com.sherlock.gmall.auth.config.GmallWebConfig
+
 ```

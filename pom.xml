@@ -27,6 +27,7 @@
         <module>gmall-gateway</module>
         <module>gmall-third-party</module>
         <module>gmall-search</module>
+        <module>gmall-auth-server</module>
     </modules>
     <packaging>pom</packaging>
 

@@ -1,0 +1,9 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 120.76.60.77:9848
+  thymeleaf:
+    cache: false
+server:
+  port: 1700

@@ -71,3 +71,8 @@ spring:
           uri: lb://gmall-search #转到商品搜索服务
           predicates:
             - Host=search.gmall.com
+
+        - id: gmall_auth_route
+          uri: lb://gmall-auth-server #转到认证服务
+          predicates:
+            - Host=auth.gmall.com

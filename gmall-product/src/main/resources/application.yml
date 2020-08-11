@@ -90,6 +90,6 @@ swagger:
 #自定义线程池配置
 gmall:
   thread:
-    core-pool-size: 20
+    core-pool-size: 10
     maximum-pool-size: 200
     keep-alive-time: 10

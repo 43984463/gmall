@@ -1,5 +1,6 @@
 package com.sherlock.gmall.product.config;
 
+import com.sherlock.common.utils.ThreadPoolMonitor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,9 +29,9 @@ public class MyThreadConfig {
 
     @Bean
     public ThreadPoolExecutor threadPoolExecutor(ThreadPoolConfigProperties poolConfigProperties) {
-        return new ThreadPoolExecutor(poolConfigProperties.getCorePoolSize(),poolConfigProperties.getMaximumPoolSize(),
+        return new ThreadPoolMonitor(poolConfigProperties.getCorePoolSize(),poolConfigProperties.getMaximumPoolSize(),
                 poolConfigProperties.getKeepAliveTime(), TimeUnit.SECONDS,
-                new LinkedBlockingDeque<>(100000), Executors.defaultThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
+                new LinkedBlockingDeque<>(100000), Executors.defaultThreadFactory(), new ThreadPoolExecutor.AbortPolicy(), "Gmall线程池");
     }
 
 }
