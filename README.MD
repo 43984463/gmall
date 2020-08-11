@@ -175,6 +175,14 @@ public class WareSkuController {
     
     public class RedisCache extends AbstractValueAdaptingCache {
     
+        /**
+        * 源码中 springCache + redis
+        * 使用单机锁从缓存中取值
+        * @param key
+        * @param valueLoader
+        * @param <T>
+        * @return 
+        */
         @Override
         @SuppressWarnings("unchecked")
         public synchronized <T> T get(Object key, Callable<T> valueLoader) {
