@@ -6,3 +6,15 @@ spring:
     nacos:
       discovery:
         server-addr: 120.76.60.77:9848
+    alicloud:
+      access-key: LTAI4GDpqaKDbeU5sAjufkUS
+      secret-key: rveC4R0LKFjn5bttjkqGpcXPHlqZk5
+      oss:
+        endpoint: oss-cn-beijing.aliyuncs.com
+        bucket: gmall-sherlock
+      sms:
+        host: http://smsmsgs.market.alicloudapi.com
+        path: /smsmsgs
+        appcode: 93b7e19861a24c519a7548b17dc16d75   #老师的appcode
+        sign: 175622
+        skin: 1
