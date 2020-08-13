@@ -5,6 +5,10 @@ spring:
         server-addr: 120.76.60.77:9848
   thymeleaf:
     cache: false
+  redis:
+    host: 120.76.60.77
+    port: 7379
+    password: sherlock
 server:
   port: 1700
 

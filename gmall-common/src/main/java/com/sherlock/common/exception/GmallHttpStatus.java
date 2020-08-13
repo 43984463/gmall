@@ -9,6 +9,7 @@ public interface GmallHttpStatus extends HttpStatus {
 
     /** {@code 10001 Valid fail Exception}*/
     public static final int VALID_EXCEPTION = 10001;
+    public static final int SMS_CODE_EXCEPTION = 10002;
 
     /** {@code 11000 Valid fail Exception}*/
     public static final int PRODUCT_UP_EXCEPTION = 11000;

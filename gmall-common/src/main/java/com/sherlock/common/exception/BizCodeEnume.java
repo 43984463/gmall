@@ -10,6 +10,7 @@ import org.apache.http.HttpStatus;
  * 错误码列表：
  *  10: 通用
  *      001：参数格式校验
+ *      002：短信验证吗频率太高
  *  11: 商品
  *  12: 订单
  *  13: 购物车
@@ -22,6 +23,7 @@ public enum BizCodeEnume {
     VALID_EXCEPTION(GmallHttpStatus.VALID_EXCEPTION,"参数格式校验失败"),
     NOT_FOUND_EXCEPTION(HttpStatus.SC_NOT_FOUND,"404 Not Found"),
     PRODUCT_UP_EXCEPTION(GmallHttpStatus.PRODUCT_UP_EXCEPTION,"商品上架异常"),
+    SMS_CODE_EXCEPTION(GmallHttpStatus.SMS_CODE_EXCEPTION,"验证码获取频率太高,请稍后再试"),
     GMALL_SYSTEM_OK(GmallHttpStatus.RESPONSE_OK, "OK");
 
     private int code;

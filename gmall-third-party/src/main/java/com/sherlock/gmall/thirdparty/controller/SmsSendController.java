@@ -2,6 +2,7 @@ package com.sherlock.gmall.thirdparty.controller;
 
 import com.sherlock.common.utils.R;
 import com.sherlock.gmall.thirdparty.component.SmsComponent;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,8 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/sms")
-public class SmsSendCntroller {
+@Slf4j
+public class SmsSendController {
 
     @Autowired
     private SmsComponent smsComponent;
@@ -29,6 +31,7 @@ public class SmsSendCntroller {
     @GetMapping("/sendcode")
     public R sendCode (@RequestParam("phone") String phone, @RequestParam("code") String code) {
         Map<String, Object> smsCode = smsComponent.sendSmsCode(phone, code);
+        log.info("code is:" + smsCode.get("code") + ", response msg is:" + smsCode.get("msg"));
         return R.ok().setData(smsCode);
     }
 
