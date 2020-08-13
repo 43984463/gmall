@@ -7,5 +7,9 @@ spring:
     name: gmall-search
   thymeleaf:
     cache: false
+
 server:
   port: 1600
+
+swagger:
+  enabled: false

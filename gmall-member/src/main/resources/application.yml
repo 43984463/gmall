@@ -64,3 +64,6 @@ logging:
   level:
     com.sherlock.gmall: debug
     com.alibaba.nacos.client.naming: error
+
+swagger:
+  enabled: false

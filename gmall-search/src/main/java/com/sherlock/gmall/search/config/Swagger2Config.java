@@ -1,8 +1,7 @@
-package com.sherlock.gmall.order.config;
+package com.sherlock.gmall.search.config;
 
 import com.sherlock.common.constants.GmallConstant;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,7 +35,7 @@ public class Swagger2Config {
                 //.apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
                 //.apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
                 //包下的类，才生成接口文档  好像只能选择一个满足的条件
-                .apis(RequestHandlerSelectors.basePackage(GmallConstant.GMALL_ORDER_BASEPATH + GmallConstant.CONTROLLER))
+                .apis(RequestHandlerSelectors.basePackage(GmallConstant.GMALL_SEARCH_BASEPATH + GmallConstant.CONTROLLER))
                 .paths(PathSelectors.any())
                 .build()
                 .enable(enabled);
@@ -45,7 +44,7 @@ public class Swagger2Config {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("gmall谷粒商城后台系统")
-                .description("gmall谷粒商城后台gmall-order模块")
+                .description("gmall谷粒商城后台gmall-search模块")
                 .version("1.0")
                 .build();
     }

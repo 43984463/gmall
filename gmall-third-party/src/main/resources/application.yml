@@ -18,3 +18,6 @@ spring:
         appcode: 93b7e19861a24c519a7548b17dc16d75   #老师的appcode
         sign: 175622
         skin: 1
+
+swagger:
+  enabled: true

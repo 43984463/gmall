@@ -3,7 +3,9 @@ package com.sherlock.gmall.product.config;
 import com.sherlock.common.constants.GmallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -27,10 +29,11 @@ import java.util.List;
  **/
 @Configuration
 @EnableSwagger2
+@Data
+@ConfigurationProperties(prefix = "swagger")
 public class Swagger2Config {
 
-    @Value("${swagger.enabled}")
-    private Boolean enabled;
+    private Boolean enabled = false;
 
     @Bean
     public Docket createRestApi(){
@@ -51,7 +54,7 @@ public class Swagger2Config {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("gmall谷粒商城后台系统")
-                .description("gmall谷粒商城后台模块")
+                .description("gmall谷粒商城后台gmall-product模块")
                 .version("1.0")
                 .build();
     }

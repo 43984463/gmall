@@ -12,6 +12,8 @@ public abstract class GmallConstant {
     public static final String GMALL_PRODUCT_BASEPATH = "com.sherlock.gmall.product";
     public static final String GMALL_WARE_BASEPATH = "com.sherlock.gmall.ware";
     public static final String GMALL_AUTH_BASEPATH = "com.sherlock.gmall.auth";
+    public static final String GMALL_SEARCH_BASEPATH = "com.sherlock.gmall.search";
+    public static final String GMALL_THIRDPARTY_BASEPATH = "com.sherlock.gmall.thirdparty";
 
 
     public static final String CONTROLLER = ".controller";

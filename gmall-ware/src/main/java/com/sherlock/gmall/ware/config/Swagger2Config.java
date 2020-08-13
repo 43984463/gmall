@@ -1,6 +1,8 @@
 package com.sherlock.gmall.ware.config;
 
 import com.sherlock.common.constants.GmallConstant;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -18,7 +20,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  **/
 @Configuration
 @EnableSwagger2
+@Data
+@ConfigurationProperties(prefix = "swagger")
 public class Swagger2Config {
+
+    private Boolean enabled = false;
 
     @Bean
     public Docket createRestApi(){
@@ -28,16 +34,17 @@ public class Swagger2Config {
                 //加了ApiOperation注解的类，才生成接口文档
                 //.apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
                 //.apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
-                //包下的类，才生成接口文档
+                //包下的类，才生成接口文档  好像只能选择一个满足的条件
                 .apis(RequestHandlerSelectors.basePackage(GmallConstant.GMALL_WARE_BASEPATH + GmallConstant.CONTROLLER))
                 .paths(PathSelectors.any())
-                .build();
+                .build()
+                .enable(enabled);
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("gmall谷粒商城后台系统")
-                .description("gmall谷粒商城后台模块")
+                .description("gmall谷粒商城后台gmall-ware模块")
                 .version("1.0")
                 .build();
     }

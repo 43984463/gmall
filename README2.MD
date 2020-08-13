@@ -38,6 +38,8 @@ com.sherlock.gmall.product.entity.BrandEntity
 
 阿里OSS存储技术：
 com.sherlock.gmall.thirdparty.controller.OssController
+阿里短信发送业务：
+com.sherlock.gmall.thirdparty.controller.OssController
 
 elasticsearch存储东西到服务器：
 com.sherlock.gmall.search.service.impl.ProductSaveServiceImpl

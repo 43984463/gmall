@@ -99,6 +99,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!--swagger-->
             <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-swagger2</artifactId>
@@ -109,6 +110,7 @@
                 <artifactId>springfox-swagger-ui</artifactId>
                 <version>${swagger.version}</version>
             </dependency>
+            <!--苞米豆mybatis-->
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
@@ -147,6 +149,12 @@
                 <version>${org.redisson.version}</version>
             </dependency>
 
+            <!--HuTool工具包-->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool-all.version}</version>
+            </dependency>
 
 
             <!--mysql驱动-->
