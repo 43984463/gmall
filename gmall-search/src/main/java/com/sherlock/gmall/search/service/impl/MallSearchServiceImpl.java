@@ -108,7 +108,7 @@ public class MallSearchServiceImpl implements MallSearchService {
         // 1、构建bool - query
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         // 1.1、must - 模糊匹配
-        if (StringUtils.isNotEmpty(param.getKeyword())) {
+        if (StringUtils.isNotBlank(param.getKeyword())) {
             boolQueryBuilder.must(QueryBuilders.matchQuery("skuTitle", param.getKeyword()));
         }
         // 1.2 Start
@@ -142,7 +142,7 @@ public class MallSearchServiceImpl implements MallSearchService {
         }
         // 1.2.5、bool - filter - 按照价格区间进行查询
         // skuPrice -> 1_500/_500/500_ 价格区间前端传进来的模式
-        if (StringUtils.isNotEmpty(param.getSkuPrice())) {
+        if (StringUtils.isNotBlank(param.getSkuPrice())) {
             RangeQueryBuilder rangeQuery = QueryBuilders.rangeQuery("skuPrice");
             String[] s = param.getSkuPrice().split("_");
             if (s.length == 2) {
@@ -164,7 +164,7 @@ public class MallSearchServiceImpl implements MallSearchService {
          * 排序，分页，高亮
          */
         // 2.1、排序
-        if (StringUtils.isNotEmpty(param.getSort())) {
+        if (StringUtils.isNotBlank(param.getSort())) {
             // sort=hotScore_asc/desc 排序前端传进来的模式
             String sort = param.getSort();
             String[] split = sort.split("_");
@@ -175,7 +175,7 @@ public class MallSearchServiceImpl implements MallSearchService {
         sourceBuilder.from(((param.getPageNum() == null ? 1 : param.getPageNum()) - 1) * GmallSearchConstant.PRODUCT_PAGESIZE);
         sourceBuilder.size(GmallSearchConstant.PRODUCT_PAGESIZE);
         // 2.3 高亮
-        if (StringUtils.isNotEmpty(param.getKeyword())) {
+        if (StringUtils.isNotBlank(param.getKeyword())) {
             HighlightBuilder highlightBuilder = new HighlightBuilder();
             highlightBuilder.field("skuTitle");
             highlightBuilder.preTags("<b style='color:red'>");

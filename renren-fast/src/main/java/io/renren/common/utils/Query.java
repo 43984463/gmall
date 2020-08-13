@@ -52,7 +52,7 @@ public class Query<T> {
 
 
         //前端字段排序
-        if(StringUtils.isNotEmpty(orderField) && StringUtils.isNotEmpty(order)){
+        if(StringUtils.isNotBlank(orderField) && StringUtils.isNotBlank(order)){
             if(Constant.ASC.equalsIgnoreCase(order)) {
                 return  page.addOrder(OrderItem.asc(orderField));
             }else {

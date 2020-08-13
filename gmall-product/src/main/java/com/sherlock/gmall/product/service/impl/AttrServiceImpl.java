@@ -228,7 +228,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         }
         // 模糊查询
         String key = (String) params.get("key");
-        if (StringUtils.isNotEmpty(key)) {
+        if (StringUtils.isNotBlank(key)) {
             queryWrapper.and(wapper -> {
                 wapper.eq("attr_id",key).or().like("attr_name",key);
             });

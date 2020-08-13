@@ -24,19 +24,19 @@ public class PurchaseDetailServiceImpl extends ServiceImpl<PurchaseDetailDao, Pu
     public PageUtils queryPage(Map<String, Object> params) {
         QueryWrapper<PurchaseDetailEntity> queryWrapper = new QueryWrapper<>();
         String key = (String) params.get("key");
-        if (StringUtils.isNotEmpty(key)) {
+        if (StringUtils.isNotBlank(key)) {
             queryWrapper.and(wapper -> {
                 wapper.eq("purchase_id", key).or().eq("sku_id", key);
             });
         }
 
         String status = (String) params.get("status");
-        if (StringUtils.isNotEmpty(status)) {
+        if (StringUtils.isNotBlank(status)) {
             queryWrapper.eq("status", status);
         }
 
         String wareId = (String) params.get("wareId");
-        if (StringUtils.isNotEmpty(wareId)) {
+        if (StringUtils.isNotBlank(wareId)) {
             queryWrapper.eq("ware_id", wareId);
         }
 

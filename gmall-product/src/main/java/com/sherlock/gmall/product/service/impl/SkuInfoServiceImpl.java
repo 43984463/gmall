@@ -64,25 +64,25 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
     public PageUtils queryPageByCondition(Map<String, Object> params) {
         QueryWrapper<SkuInfoEntity> queryWrapper = new QueryWrapper<>();
         String key = (String) params.get("key");
-        if (StringUtils.isNotEmpty(key)) {
+        if (StringUtils.isNotBlank(key)) {
             queryWrapper.and(wapper -> {
                 wapper.eq("sku_id", key).or().like("sku_name", key);
             });
         }
         String catelogId = (String) params.get("catelogId");
-        if (StringUtils.isNotEmpty(catelogId) && !("0").equals(catelogId)) {
+        if (StringUtils.isNotBlank(catelogId) && !("0").equals(catelogId)) {
             queryWrapper.eq("catalog_id", catelogId);
         }
         String brandId = (String) params.get("brandId");
-        if (StringUtils.isNotEmpty(brandId) && !("0").equals(brandId)) {
+        if (StringUtils.isNotBlank(brandId) && !("0").equals(brandId)) {
             queryWrapper.eq("brand_id", brandId);
         }
         String min = (String) params.get("min");
-        if (StringUtils.isNotEmpty(min)) {
+        if (StringUtils.isNotBlank(min)) {
             queryWrapper.ge("price", min);
         }
         String max = (String) params.get("max");
-        if (StringUtils.isNotEmpty(max)) {
+        if (StringUtils.isNotBlank(max)) {
             try {
                 BigDecimal maxValue = new BigDecimal(max);
                 if (maxValue.compareTo(BigDecimal.ZERO) > 0){

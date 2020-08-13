@@ -180,7 +180,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
                     skuImagesEntity.setDefaultImg(image.getDefaultImg());
                     skuImagesEntity.setImgUrl(image.getImgUrl());
                     return skuImagesEntity;
-                }).filter(skuImagesEntity -> StringUtils.isNotEmpty(skuImagesEntity.getImgUrl()))
+                }).filter(skuImagesEntity -> StringUtils.isNotBlank(skuImagesEntity.getImgUrl()))
                         .collect(Collectors.toList());
 
                 skuImagesService.saveBatch(skuImagesEntities);
@@ -219,19 +219,19 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
         QueryWrapper<SpuInfoEntity> queryWrapper = new QueryWrapper<>();
         String key = (String) params.get("key");
-        if (StringUtils.isNotEmpty(key)) {
+        if (StringUtils.isNotBlank(key)) {
             queryWrapper.and(wapper -> wapper.eq("id", key).or().like("spu_name", key));
         }
         String status = (String) params.get("status");
-        if (StringUtils.isNotEmpty(status)) {
+        if (StringUtils.isNotBlank(status)) {
             queryWrapper.eq("publish_status", status);
         }
         String brandId = (String) params.get("brandId");
-        if (StringUtils.isNotEmpty(brandId) && !("0").equals(brandId)) {
+        if (StringUtils.isNotBlank(brandId) && !("0").equals(brandId)) {
             queryWrapper.eq("brand_id", brandId);
         }
         String catelogId = (String) params.get("catelogId");
-        if (StringUtils.isNotEmpty(catelogId) && !("0").equals(brandId)) {
+        if (StringUtils.isNotBlank(catelogId) && !("0").equals(brandId)) {
             queryWrapper.eq("catalog_id", catelogId);
         }
 

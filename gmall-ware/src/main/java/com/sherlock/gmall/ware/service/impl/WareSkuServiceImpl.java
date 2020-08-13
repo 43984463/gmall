@@ -34,11 +34,11 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
     public PageUtils queryPage(Map<String, Object> params) {
         QueryWrapper<WareSkuEntity> queryWrapper = new QueryWrapper<>();
         String skuId = (String) params.get("skuId");
-        if (StringUtils.isNotEmpty(skuId)) {
+        if (StringUtils.isNotBlank(skuId)) {
             queryWrapper.eq("sku_id", skuId);
         }
         String wareId = (String) params.get("wareId");
-        if (StringUtils.isNotEmpty(skuId)) {
+        if (StringUtils.isNotBlank(skuId)) {
             queryWrapper.eq("ware_id", wareId);
         }
         IPage<WareSkuEntity> page = this.page(

@@ -29,7 +29,7 @@ public class BrandServiceImpl extends ServiceImpl<BrandDao, BrandEntity> impleme
     public PageUtils queryPage(Map<String, Object> params) {
         QueryWrapper<BrandEntity> brandEntityQueryWrapper = new QueryWrapper<>();
         String key = (String)params.get("key");
-        if (StringUtils.isNotEmpty(key)) {
+        if (StringUtils.isNotBlank(key)) {
             brandEntityQueryWrapper = brandEntityQueryWrapper.eq("brand_id", key).or().like("name", key).or().like("descript",key);
         }
         IPage<BrandEntity> page = this.page(new Query<BrandEntity>().getPage(params),brandEntityQueryWrapper);
@@ -41,7 +41,7 @@ public class BrandServiceImpl extends ServiceImpl<BrandDao, BrandEntity> impleme
     @Override
     public void updateCascade(BrandEntity brand) {
         updateById(brand);
-        if (StringUtils.isNotEmpty(brand.getName())) {
+        if (StringUtils.isNotBlank(brand.getName())) {
             categoryBrandRelationService.UpdateBrand(brand.getBrandId(), brand.getName());
         }
     }
