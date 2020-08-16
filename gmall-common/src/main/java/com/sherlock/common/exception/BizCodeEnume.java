@@ -15,7 +15,7 @@ import org.apache.http.HttpStatus;
  *  12: 订单
  *  13: 购物车
  *  14: 物流
- *
+ *  15: 用户
  *
  */
 public enum BizCodeEnume {
@@ -24,6 +24,8 @@ public enum BizCodeEnume {
     NOT_FOUND_EXCEPTION(HttpStatus.SC_NOT_FOUND,"404 Not Found"),
     PRODUCT_UP_EXCEPTION(GmallHttpStatus.PRODUCT_UP_EXCEPTION,"商品上架异常"),
     SMS_CODE_EXCEPTION(GmallHttpStatus.SMS_CODE_EXCEPTION,"验证码获取频率太高,请稍后再试"),
+    USER_EXIST_EXCEPTION(GmallHttpStatus.USER_EXIST_EXCEPTION,"用户已存在"),
+    PHONE_EXIST_EXCEPTION(GmallHttpStatus.PHONE_EXIST_EXCEPTION,"手机号已存在"),
     GMALL_SYSTEM_OK(GmallHttpStatus.RESPONSE_OK, "OK");
 
     private int code;

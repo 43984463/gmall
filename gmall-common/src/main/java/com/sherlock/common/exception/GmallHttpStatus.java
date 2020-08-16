@@ -16,4 +16,7 @@ public interface GmallHttpStatus extends HttpStatus {
 
     /** {@code 0 ok}*/
     public static final int RESPONSE_OK = 0;
+
+    public static final int USER_EXIST_EXCEPTION = 15001;
+    public static final int PHONE_EXIST_EXCEPTION = 15002;
 }

@@ -1,7 +1,4 @@
 spring:
-  application:
-    name: gmall-third-party
-
   cloud:
     nacos:
       config:

@@ -1,10 +1,12 @@
 package com.sherlock.gmall.auth.controller;
 
 import cn.hutool.core.util.IdUtil;
+import com.alibaba.fastjson.TypeReference;
 import com.sherlock.common.constants.GmallAuthConstant;
 import com.sherlock.common.exception.BizCodeEnume;
 import com.sherlock.common.utils.R;
 import com.sherlock.gmall.auth.config.GmallWebConfig;
+import com.sherlock.gmall.auth.feign.MemberFeignService;
 import com.sherlock.gmall.auth.feign.ThirdPartyFeignService;
 import com.sherlock.gmall.auth.vo.UserRegistVo;
 import org.apache.commons.lang.StringUtils;
@@ -16,7 +18,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -26,7 +27,6 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -44,6 +44,8 @@ public class LoginController {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
+    @Autowired
+    private MemberFeignService memberFeignService;
 
     /**
      * 这2个方法的作用是用来跳转页面，没有做任何逻辑处理.
@@ -110,12 +112,11 @@ public class LoginController {
      * @param model   返回给页面的视图，往这个里面存需要给页面返回的数据
      * @param redirectAttributes   模拟重定向携带数据
      */
-    @RequestMapping("/regist")
+    @PostMapping("/regist")
     public String regist(@Valid UserRegistVo vo, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
 
-        System.out.println(vo);
-
         if (result.hasErrors()) {
+            // 字段校验错误
             List<FieldError> fieldErrors = result.getFieldErrors();
             Map<String,String> errors = result.getFieldErrors().stream().collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
             //model.addAttribute("errors", errors);
@@ -145,6 +146,38 @@ public class LoginController {
             return "redirect:http://auth.gmall.com/reg.html";
         }
 
-        return "redirect:/login.html";
+        // 真正注册。调用远程会员服务进行注册
+        // 1、 调用之前先进行验证码的校验
+        String code = vo.getCode();
+        String redisValue = redisTemplate.opsForValue().get(GmallAuthConstant.SMS_CODE_CACHE_PREFIX + vo.getPhone());
+        if (StringUtils.isBlank(redisValue)) {
+            Map<String,String> errors = new HashMap<>();
+            errors.put("code", "验证码错误");
+            redirectAttributes.addFlashAttribute("errors", errors);
+            return "redirect:http://auth.gmall.com/reg.html";
+        } else {
+            if (code.equals(redisValue.split("_")[0])){
+                // 对比成功删除验证码；令牌机制
+                redisTemplate.delete(GmallAuthConstant.SMS_CODE_CACHE_PREFIX + vo.getPhone());
+
+                // 调用会员远程服务进行注册
+                R r = memberFeignService.regist(vo);
+                // 调用成功
+                if (r.getCode() == 0) {
+                    return "redirect:http://auth.gmall.com/login.html";
+                } else {
+                    Map<String,String> errors = new HashMap<>();
+                    errors.put("msg", r.getData(new TypeReference<String>(){}).toString());
+                    redirectAttributes.addFlashAttribute("errors", errors);
+                    return "redirect:http://auth.gmall.com/reg.html";
+                }
+
+            } else {
+                Map<String,String> errors = new HashMap<>();
+                errors.put("code", "验证码错误");
+                redirectAttributes.addFlashAttribute("errors", errors);
+                return "redirect:http://auth.gmall.com/reg.html";
+            }
+        }
     }
 }

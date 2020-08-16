@@ -4,12 +4,18 @@ import java.util.Arrays;
 import java.util.Map;
 
 import com.sherlock.common.Annotation.GmallMapping;
+import com.sherlock.common.exception.BizCodeEnume;
+import com.sherlock.gmall.member.exception.PhoneExistException;
+import com.sherlock.gmall.member.exception.UserNameExistException;
 import com.sherlock.gmall.member.feign.CouponFeignService;
+import com.sherlock.gmall.member.vo.MemberRegistVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sherlock.gmall.member.entity.MemberEntity;
@@ -45,6 +51,17 @@ public class MemberController {
                 .put("remoteCoupons",couponFeignService.couponList().get("coupons"));
     }
 
+    @PostMapping("/regist")
+    public R regist(@RequestBody MemberRegistVo vo) {
+        try {
+            memberService.regist(vo);
+        } catch (PhoneExistException phoneExist){
+            return R.error(BizCodeEnume.PHONE_EXIST_EXCEPTION.getCode(), BizCodeEnume.PHONE_EXIST_EXCEPTION.getMsg());
+        } catch (UserNameExistException userNameExist){
+            return R.error(BizCodeEnume.USER_EXIST_EXCEPTION.getCode(), BizCodeEnume.USER_EXIST_EXCEPTION.getMsg());
+        }
+        return R.ok();
+    }
 
     /**
      * 列表

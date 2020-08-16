@@ -17,6 +17,7 @@ git拉取master分支的提交
 ② 在Help -> Edit Customer VM Options... 增大-Xms和-Xmx的值
 ```
 
+## 远程调用都是通过json格式传输对象，接收时需要@RequestBody
 
 ## 技术目录
 ```text
@@ -65,5 +66,8 @@ com.sherlock.common.utils.ThreadPoolMonitor
 springMVC 请求直接映射视图(页面)
 com.sherlock.gmall.auth.controller.LoginController
 com.sherlock.gmall.auth.config.GmallWebConfig
+
+spring的MD5盐值加密
+com.sherlock.gmall.member.GmallMemberApplicationTests.contextLoads
 
 ```

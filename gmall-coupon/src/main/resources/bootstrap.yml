@@ -1,6 +1,4 @@
 spring:
-  application:
-    name: gmall-coupon
   cloud:
     nacos:
       discovery:

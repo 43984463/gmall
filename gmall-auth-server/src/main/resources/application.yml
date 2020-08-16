@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: gmall-auth-server
   cloud:
     nacos:
       discovery:
