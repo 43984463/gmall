@@ -5054,7 +5054,7 @@ Cookie</span>是由网页服务器存放在您的访问设备上的文本文件�
 					<div class="tips" style="color: red" th:text="${errors!=null && (#maps.containsKey(errors,'code'))? errors.code : ''}">
 
 					</div>
-					<a class="sendCode">发送验证码</a>
+					<a id="sendCode">发送验证码</a>
 				</div>
 				<div class="arguement">
 					<input type="checkbox" id="xieyi"> 阅读并同意
@@ -5166,7 +5166,7 @@ Cookie</span>是由网页服务器存放在您的访问设备上的文本文件�
 					})
 					//input各种判断
 					//用户名：
-				$('input').eq(0).blur(function() {
+				/*$('input').eq(0).blur(function() {
 						if($(this).val().length == 0) {
 							$(this).parent().next("div").text("");
 							$(this).parent().next("div").css("color", '#ccc');
@@ -5222,7 +5222,7 @@ Cookie</span>是由网页服务器存放在您的访问设备上的文本文件�
 						} else {
 							$(this).parent().next("div").text("");
 						}
-					})
+					})*/
 					// 	验证码
 					//	 验证码刷新
 				function code() {
@@ -5298,7 +5298,7 @@ Cookie</span>是由网页服务器存放在您的访问设备上的文本文件�
 					}
 				}
 
-			})
+			});
 			$(".ty").click(function() {
 				$(".zong").hide();
 				$(".laoda").hide();
@@ -5307,7 +5307,7 @@ Cookie</span>是由网页服务器存放在您的访问设备上的文本文件�
 				$(".zong").hide();
 			});
 
-			$(function () {
+			$(function() {
 				$("#sendCode").click(function () {
 					if ($(this).hasClass("disabled")) {
 						// 正在倒计时

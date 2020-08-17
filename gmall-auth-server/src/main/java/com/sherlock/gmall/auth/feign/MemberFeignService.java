@@ -15,6 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface MemberFeignService {
 
     @PostMapping("/member/member/regist")
-    R regist(@RequestBody UserRegistVo vo);
+    R<String> regist(@RequestBody UserRegistVo vo);
 
 }

@@ -1,6 +1,7 @@
 package com.sherlock.gmall.member.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import com.sherlock.common.Annotation.GmallMapping;
@@ -52,7 +53,7 @@ public class MemberController {
     }
 
     @PostMapping("/regist")
-    public R regist(@RequestBody MemberRegistVo vo) {
+    public R<String> regist(@RequestBody MemberRegistVo vo) {
         try {
             memberService.regist(vo);
         } catch (PhoneExistException phoneExist){

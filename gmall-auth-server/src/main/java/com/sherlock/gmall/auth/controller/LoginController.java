@@ -161,13 +161,13 @@ public class LoginController {
                 redisTemplate.delete(GmallAuthConstant.SMS_CODE_CACHE_PREFIX + vo.getPhone());
 
                 // 调用会员远程服务进行注册
-                R r = memberFeignService.regist(vo);
+                R<String> r = memberFeignService.regist(vo);
                 // 调用成功
                 if (r.getCode() == 0) {
                     return "redirect:http://auth.gmall.com/login.html";
                 } else {
                     Map<String,String> errors = new HashMap<>();
-                    errors.put("msg", r.getData(new TypeReference<String>(){}).toString());
+                    errors.put("msg", r.getData("msg", new TypeReference<String>(){}));
                     redirectAttributes.addFlashAttribute("errors", errors);
                     return "redirect:http://auth.gmall.com/reg.html";
                 }
