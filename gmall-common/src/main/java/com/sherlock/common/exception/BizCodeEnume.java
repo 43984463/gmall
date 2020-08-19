@@ -26,6 +26,7 @@ public enum BizCodeEnume {
     SMS_CODE_EXCEPTION(GmallHttpStatus.SMS_CODE_EXCEPTION,"验证码获取频率太高,请稍后再试"),
     USER_EXIST_EXCEPTION(GmallHttpStatus.USER_EXIST_EXCEPTION,"用户已存在"),
     PHONE_EXIST_EXCEPTION(GmallHttpStatus.PHONE_EXIST_EXCEPTION,"手机号已存在"),
+    LOGINACC_PASSWORD_INVAILD_EXCEPTION(GmallHttpStatus.LOGINACC_PASSWORD_INVAILD_EXCEPTION,"账号密码错误"),
     GMALL_SYSTEM_OK(GmallHttpStatus.RESPONSE_OK, "OK");
 
     private int code;

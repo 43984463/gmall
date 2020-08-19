@@ -1,6 +1,7 @@
 package com.sherlock.gmall.auth.feign;
 
 import com.sherlock.common.utils.R;
+import com.sherlock.gmall.auth.vo.UserLoginVo;
 import com.sherlock.gmall.auth.vo.UserRegistVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,4 +18,6 @@ public interface MemberFeignService {
     @PostMapping("/member/member/regist")
     R<String> regist(@RequestBody UserRegistVo vo);
 
+    @PostMapping("/member/member/login")
+    public R<String> login(@RequestBody UserLoginVo vo);
 }

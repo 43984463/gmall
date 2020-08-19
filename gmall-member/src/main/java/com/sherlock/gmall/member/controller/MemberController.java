@@ -9,6 +9,7 @@ import com.sherlock.common.exception.BizCodeEnume;
 import com.sherlock.gmall.member.exception.PhoneExistException;
 import com.sherlock.gmall.member.exception.UserNameExistException;
 import com.sherlock.gmall.member.feign.CouponFeignService;
+import com.sherlock.gmall.member.vo.MemberLoginVo;
 import com.sherlock.gmall.member.vo.MemberRegistVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -63,6 +64,17 @@ public class MemberController {
         }
         return R.ok();
     }
+
+    @PostMapping("/login")
+    public R<String> login(@RequestBody MemberLoginVo vo) {
+         MemberEntity memberEntity = memberService.login(vo);
+         if (memberEntity != null) {
+             return R.ok();
+         } else {
+            return R.error(BizCodeEnume.LOGINACC_PASSWORD_INVAILD_EXCEPTION.getCode(),BizCodeEnume.LOGINACC_PASSWORD_INVAILD_EXCEPTION.getMsg());
+         }
+    }
+
 
     /**
      * 列表

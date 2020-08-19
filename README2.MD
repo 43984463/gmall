@@ -17,7 +17,7 @@ git拉取master分支的提交
 ② 在Help -> Edit Customer VM Options... 增大-Xms和-Xmx的值
 ```
 
-## 远程调用都是通过json格式传输对象，接收时需要@RequestBody
+## 远程调用都是通过json格式传输对象，接收时需要在参数位置添加@RequestBody
 
 ## 技术目录
 ```text

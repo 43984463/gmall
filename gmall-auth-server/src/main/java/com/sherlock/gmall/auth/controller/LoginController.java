@@ -8,6 +8,7 @@ import com.sherlock.common.utils.R;
 import com.sherlock.gmall.auth.config.GmallWebConfig;
 import com.sherlock.gmall.auth.feign.MemberFeignService;
 import com.sherlock.gmall.auth.feign.ThirdPartyFeignService;
+import com.sherlock.gmall.auth.vo.UserLoginVo;
 import com.sherlock.gmall.auth.vo.UserRegistVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -179,5 +181,25 @@ public class LoginController {
                 return "redirect:http://auth.gmall.com/reg.html";
             }
         }
+    }
+
+    /**
+     * 表单提交不需要给参数添加@RequestBody注解
+     * @param loginVo
+     * @return
+     */
+    @PostMapping("/login")
+    public String login(UserLoginVo loginVo, RedirectAttributes redirectAttributes){
+        // 调用远程服务进行验证账号和密码
+        R<String> r = memberFeignService.login(loginVo);
+        if (r.getCode() == 0) {
+            return "redirect:http://gmall.com";
+        } else {
+            Map<String, String> errors = new HashMap();
+            errors.put("msg", r.getData("msg", new TypeReference<String>(){}));
+            redirectAttributes.addFlashAttribute("errors", errors);
+            return "redirect:http://auth.gmall.com/login.html";
+        }
+
     }
 }

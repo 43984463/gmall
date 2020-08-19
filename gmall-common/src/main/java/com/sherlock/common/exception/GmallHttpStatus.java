@@ -19,4 +19,5 @@ public interface GmallHttpStatus extends HttpStatus {
 
     public static final int USER_EXIST_EXCEPTION = 15001;
     public static final int PHONE_EXIST_EXCEPTION = 15002;
+    public static final int LOGINACC_PASSWORD_INVAILD_EXCEPTION = 15003;
 }

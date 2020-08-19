@@ -5,6 +5,7 @@ import com.sherlock.common.utils.PageUtils;
 import com.sherlock.gmall.member.entity.MemberEntity;
 import com.sherlock.gmall.member.exception.PhoneExistException;
 import com.sherlock.gmall.member.exception.UserNameExistException;
+import com.sherlock.gmall.member.vo.MemberLoginVo;
 import com.sherlock.gmall.member.vo.MemberRegistVo;
 
 import java.util.Map;
@@ -25,5 +26,7 @@ public interface MemberService extends IService<MemberEntity> {
     void checkUserNameUnique(String userName) throws UserNameExistException;
 
     void checkPhoneUnique(String phone) throws PhoneExistException;
+
+    MemberEntity login(MemberLoginVo vo);
 }
 

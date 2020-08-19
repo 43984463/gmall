@@ -4,6 +4,7 @@ import com.sherlock.gmall.member.entity.MemberLevelEntity;
 import com.sherlock.gmall.member.exception.PhoneExistException;
 import com.sherlock.gmall.member.exception.UserNameExistException;
 import com.sherlock.gmall.member.service.MemberLevelService;
+import com.sherlock.gmall.member.vo.MemberLoginVo;
 import com.sherlock.gmall.member.vo.MemberRegistVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -76,6 +77,21 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         if (phoneCount > 0) {
             throw new PhoneExistException();
         }
+    }
+
+    @Override
+    public MemberEntity login(MemberLoginVo vo) {
+        MemberEntity memberEntity = getOne(new QueryWrapper<MemberEntity>().eq("username", vo.getLoginAccount()).or().eq("mobile", vo.getLoginAccount()));
+        if (memberEntity != null) {
+            // 密码对比
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            boolean matches = passwordEncoder.matches(vo.getPassword(), memberEntity.getPassword());
+            if (matches){
+                return memberEntity;
+            }
+        }
+
+        return null;
     }
 
 }
