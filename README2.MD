@@ -70,4 +70,7 @@ com.sherlock.gmall.auth.config.GmallWebConfig
 spring的MD5盐值加密
 com.sherlock.gmall.member.GmallMemberApplicationTests.contextLoads
 
+网关gateway统一配置跨域
+com.sherlock.gmall.gateway.config.GmallCorsConfig#corsWebFilter()
+
 ```
