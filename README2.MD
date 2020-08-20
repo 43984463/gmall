@@ -23,14 +23,15 @@ git拉取master分支的提交
 
 ![Image text](https://gmall-sherlock.oss-cn-beijing.aliyuncs.com/oauth2.png)
 
+```text
 第一步通过访问
 https://api.weibo.com/oauth2/authorize?client_id=1509412573&response_type=code&redirect_uri=http://gmall.com/success
 授权之后返回到成功页面+一个code(URL中)
 http://gmall.com/success?code=85091825e0c37b6481f18b86fd30a8c2
 然后访问获取access_token + uid
-[https://api.weibo.com/oauth2/access_token?client_id=1509412573&client_secret=c08bbf7a9174e5f218f8125f997ed2bd&grant_type=authorization_code&redirect_uri=http://gmall.com/success&code=85091825e0c37b6481f18b86fd30a8c2]
+https://api.weibo.com/oauth2/access_token?client_id=1509412573&client_secret=c08bbf7a9174e5f218f8125f997ed2bd&grant_type=authorization_code&redirect_uri=http://gmall.com/success&code=85091825e0c37b6481f18b86fd30a8c2
 
-```text
+
 {
     "access_token": "2.00suH9jFFK2JeB113648cb43Ld6PDD",
     "remind_in": "157679999",
@@ -38,13 +39,13 @@ http://gmall.com/success?code=85091825e0c37b6481f18b86fd30a8c2
     "uid": "5252302898",
     "isRealName": "true"
 }
-```
+
 获取到access_token + uid就可以参考https://open.weibo.com/apps/1509412573/privilege的接口去访问用户信息
 
 获取微博用户信息：https://api.weibo.com/2/users/show.json?access_token=2.00suH9jFFK2JeB113648cb43Ld6PDD&uid=5252302898
 
 返回结果
-```text
+
 {
     "id": 5252302898,
     "idstr": "5252302898",
@@ -175,7 +176,6 @@ http://gmall.com/success?code=85091825e0c37b6481f18b86fd30a8c2
     "live_status": 0
 }
 ```
-
 返回字段说明
 ```text
 返回字段说明
