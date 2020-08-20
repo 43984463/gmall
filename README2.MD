@@ -21,7 +21,7 @@ git拉取master分支的提交
 
 ## 微博获取oauth2登录
 
-![Image text](https://github.com/43984463/gmall/blob/master/oauth2.png)
+![Image text](https://gmall-sherlock.oss-cn-beijing.aliyuncs.com/oauth2.png)
 
 第一步通过访问
 https://api.weibo.com/oauth2/authorize?client_id=1509412573&response_type=code&redirect_uri=http://gmall.com/success
