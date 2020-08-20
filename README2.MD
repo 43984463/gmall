@@ -20,6 +20,9 @@ git拉取master分支的提交
 ## 远程调用都是通过json格式传输对象，接收时需要在参数位置添加@RequestBody
 
 ## 微博获取oauth2登录
+
+![Image text](https://github.com/43984463/gmall/blob/master/oauth2.png)
+
 第一步通过访问
 https://api.weibo.com/oauth2/authorize?client_id=1509412573&response_type=code&redirect_uri=http://gmall.com/success
 授权之后返回到成功页面+一个code(URL中)
