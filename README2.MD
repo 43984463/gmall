@@ -19,6 +19,200 @@ git拉取master分支的提交
 
 ## 远程调用都是通过json格式传输对象，接收时需要在参数位置添加@RequestBody
 
+## 微博获取oauth2登录
+第一步通过访问
+https://api.weibo.com/oauth2/authorize?client_id=1509412573&response_type=code&redirect_uri=http://gmall.com/success
+授权之后返回到成功页面+一个code(URL中)
+http://gmall.com/success?code=85091825e0c37b6481f18b86fd30a8c2
+然后访问获取access_token + uid
+[https://api.weibo.com/oauth2/access_token?client_id=1509412573&client_secret=c08bbf7a9174e5f218f8125f997ed2bd&grant_type=authorization_code&redirect_uri=http://gmall.com/success&code=85091825e0c37b6481f18b86fd30a8c2]
+
+```text
+{
+    "access_token": "2.00suH9jFFK2JeB113648cb43Ld6PDD",
+    "remind_in": "157679999",
+    "expires_in": 157679999,
+    "uid": "5252302898",
+    "isRealName": "true"
+}
+```
+获取到access_token + uid就可以参考https://open.weibo.com/apps/1509412573/privilege的接口去访问用户信息
+
+获取微博用户信息：https://api.weibo.com/2/users/show.json?access_token=2.00suH9jFFK2JeB113648cb43Ld6PDD&uid=5252302898
+
+返回结果
+```text
+{
+    "id": 5252302898,
+    "idstr": "5252302898",
+    "class": 1,
+    "screen_name": "落叶10206",
+    "name": "落叶10206",
+    "province": "61",
+    "city": "1",
+    "location": "陕西 西安",
+    "description": "",
+    "url": "",
+    "profile_image_url": "https://tvax2.sinaimg.cn/crop.0.0.1002.1002.50/005Js7USly8fn3hmnajurj30ru0ru0yg.jpg?KID=imgbed,tva&Expires=1597948589&ssig=kzF0kRf9ir",
+    "cover_image_phone": "http://ww1.sinaimg.cn/crop.0.0.640.640.640/549d0121tw1egm1kjly3jj20hs0hsq4f.jpg",
+    "profile_url": "u/5252302898",
+    "domain": "",
+    "weihao": "",
+    "gender": "m",
+    "followers_count": 5,
+    "friends_count": 40,
+    "pagefriends_count": 4,
+    "statuses_count": 5,
+    "video_status_count": 0,
+    "video_play_count": 0,
+    "favourites_count": 1,
+    "created_at": "Wed Aug 13 15:09:58 +0800 2014",
+    "following": false,
+    "allow_all_act_msg": false,
+    "geo_enabled": true,
+    "verified": false,
+    "verified_type": -1,
+    "remark": "",
+    "email": "",
+    "insecurity": {
+        "sexual_content": false
+    },
+    "status": {
+        "visible": {
+            "type": 0,
+            "list_id": 0
+        },
+        "created_at": "Mon May 04 14:20:34 +0800 2020",
+        "id": 4500864725373683,
+        "idstr": "4500864725373683",
+        "mid": "4500864725373683",
+        "can_edit": false,
+        "show_additional_indication": 0,
+        "text": "转发微博",
+        "source_allowclick": 1,
+        "source_type": 1,
+        "source": "<a href=\"http://app.weibo.com/t/feed/2ZhgIG\" rel=\"nofollow\">小米10 Pro</a>",
+        "favorited": false,
+        "truncated": false,
+        "in_reply_to_status_id": "",
+        "in_reply_to_user_id": "",
+        "in_reply_to_screen_name": "",
+        "pic_urls": [],
+        "geo": null,
+        "is_paid": false,
+        "mblog_vip_type": 0,
+        "annotations": [
+            {
+                "client_mblogid": "f91ea7a0-b2f5-4ef2-8578-b99c59c4f20a"
+            },
+            {
+                "mapi_request": true
+            }
+        ],
+        "reposts_count": 0,
+        "comments_count": 0,
+        "attitudes_count": 0,
+        "pending_approval_count": 0,
+        "isLongText": false,
+        "reward_exhibition_type": 0,
+        "hide_flag": 0,
+        "mlevel": 0,
+        "biz_feature": 0,
+        "hasActionTypeCard": 0,
+        "darwin_tags": [],
+        "hot_weibo_tags": [],
+        "text_tag_tips": [],
+        "mblogtype": 0,
+        "rid": "0",
+        "userType": 0,
+        "more_info_type": 0,
+        "positive_recom_flag": 0,
+        "content_auth": 0,
+        "gif_ids": "",
+        "is_show_bulletin": 2,
+        "comment_manage_info": {
+            "comment_permission_type": -1,
+            "approval_comment_type": 0
+        },
+        "repost_type": 2,
+        "pic_num": 0
+    },
+    "ptype": 0,
+    "allow_all_comment": true,
+    "avatar_large": "https://tvax2.sinaimg.cn/crop.0.0.1002.1002.180/005Js7USly8fn3hmnajurj30ru0ru0yg.jpg?KID=imgbed,tva&Expires=1597948589&ssig=VsLKRlr2tc",
+    "avatar_hd": "https://tvax2.sinaimg.cn/crop.0.0.1002.1002.1024/005Js7USly8fn3hmnajurj30ru0ru0yg.jpg?KID=imgbed,tva&Expires=1597948589&ssig=HnhM2%2Bv0FW",
+    "verified_reason": "",
+    "verified_trade": "",
+    "verified_reason_url": "",
+    "verified_source": "",
+    "verified_source_url": "",
+    "follow_me": false,
+    "like": false,
+    "like_me": false,
+    "online_status": 0,
+    "bi_followers_count": 3,
+    "lang": "zh-cn",
+    "star": 0,
+    "mbtype": 0,
+    "mbrank": 0,
+    "block_word": 0,
+    "block_app": 0,
+    "credit_score": 80,
+    "user_ability": 35651584,
+    "urank": 4,
+    "story_read_state": -1,
+    "vclub_member": 0,
+    "is_teenager": 0,
+    "is_guardian": 0,
+    "is_teenager_list": 0,
+    "pc_new": 0,
+    "special_follow": false,
+    "planet_video": 0,
+    "video_mark": 0,
+    "live_status": 0
+}
+```
+
+返回字段说明
+```text
+返回字段说明
+返回值字段	字段类型	字段说明
+id	int64	用户UID
+idstr	string	字符串型的用户UID
+screen_name	string	用户昵称
+name	string	友好显示名称
+province	int	用户所在省级ID
+city	int	用户所在城市ID
+location	string	用户所在地
+description	string	用户个人描述
+url	string	用户博客地址
+profile_image_url	string	用户头像地址（中图），50×50像素
+profile_url	string	用户的微博统一URL地址
+domain	string	用户的个性化域名
+weihao	string	用户的微号
+gender	string	性别，m：男、f：女、n：未知
+followers_count	int	粉丝数
+friends_count	int	关注数
+statuses_count	int	微博数
+favourites_count	int	收藏数
+created_at	string	用户创建（注册）时间
+following	boolean	暂未支持
+allow_all_act_msg	boolean	是否允许所有人给我发私信，true：是，false：否
+geo_enabled	boolean	是否允许标识用户的地理位置，true：是，false：否
+verified	boolean	是否是微博认证用户，即加V用户，true：是，false：否
+verified_type	int	暂未支持
+remark	string	用户备注信息，只有在查询用户关系时才返回此字段
+status	object	用户的最近一条微博信息字段 详细
+allow_all_comment	boolean	是否允许所有人对我的微博进行评论，true：是，false：否
+avatar_large	string	用户头像地址（大图），180×180像素
+avatar_hd	string	用户头像地址（高清），高清头像原图
+verified_reason	string	认证原因
+follow_me	boolean	该用户是否关注当前登录用户，true：是，false：否
+online_status	int	用户的在线状态，0：不在线、1：在线
+bi_followers_count	int	用户的互粉数
+lang	string	用户当前的语言版本，zh-cn：简体中文，zh-tw：繁体中文，en：英语
+```
+
 ## 技术目录
 ```text
 线程池 + CompletableFuture：com.sherlock.gmall.search.thread.ThreadTest 
