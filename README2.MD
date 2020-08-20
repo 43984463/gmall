@@ -25,11 +25,11 @@ git拉取master分支的提交
 
 ```text
 第一步通过访问
-https://api.weibo.com/oauth2/authorize?client_id=1509412573&response_type=code&redirect_uri=http://gmall.com/success
+https://api.weibo.com/oauth2/authorize?client_id=1509412573&response_type=code&redirect_uri=http://auth.gmall.com/oauth2.0/weibo/success
 授权之后返回到成功页面+一个code(URL中)
-http://gmall.com/success?code=85091825e0c37b6481f18b86fd30a8c2
+http://auth.gmall.com/oauth2.0/weibo/success?code=85091825e0c37b6481f18b86fd30a8c2
 然后访问获取access_token + uid
-https://api.weibo.com/oauth2/access_token?client_id=1509412573&client_secret=c08bbf7a9174e5f218f8125f997ed2bd&grant_type=authorization_code&redirect_uri=http://gmall.com/success&code=85091825e0c37b6481f18b86fd30a8c2
+https://api.weibo.com/oauth2/access_token?client_id=1509412573&client_secret=c08bbf7a9174e5f218f8125f997ed2bd&grant_type=authorization_code&redirect_uri=http://auth.gmall.com/oauth2.0/weibo/success&code=85091825e0c37b6481f18b86fd30a8c2
 
 
 {
