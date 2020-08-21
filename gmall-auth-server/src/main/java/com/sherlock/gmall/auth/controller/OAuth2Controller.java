@@ -37,7 +37,7 @@ public class OAuth2Controller {
         map.put("redirect_uri", "http://auth.gmall.com/oauth2.0/weibo/success");
         map.put("code", code);
 
-        HttpResponse response = HttpUtils.doPost("https://api.weibo.com", "/oauth2/access_token", "post", header, query, map);
+        /*HttpResponse response = HttpUtils.doPost("https://api.weibo.com", "/oauth2/access_token", "post", header, query, map);
 
         // 2、处理响应数据
         if (response.getStatusLine().getStatusCode() == 200) {
@@ -46,10 +46,11 @@ public class OAuth2Controller {
             SocialUserVo socialUserVo = JSON.parseObject(json, SocialUserVo.class); // 将获取到的json转换成SocialUserVo对象
         }else {
             return "redirect:http://auth.gmall.com/login.html";
-        }
+        }*/
 
-       /* RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<SocialUserVo> forEntity = restTemplate.postForEntity("https://api.weibo.com/oauth2/access_token",toJSON(map), SocialUserVo.class);*/
+        RestTemplate restTemplate = new RestTemplate();
+        SocialUserVo socialUserVo = restTemplate.postForObject("https://api.weibo.com/oauth2/access_token", toJSON(map), SocialUserVo.class);
+        System.out.println(socialUserVo);
 
         // 2、登录成功就跳回首页
         return "redirect:http://gmall.com";
