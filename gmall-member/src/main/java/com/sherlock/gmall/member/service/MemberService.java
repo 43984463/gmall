@@ -1,6 +1,7 @@
 package com.sherlock.gmall.member.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.sherlock.common.to.SocialUserVo;
 import com.sherlock.common.utils.PageUtils;
 import com.sherlock.gmall.member.entity.MemberEntity;
 import com.sherlock.gmall.member.exception.PhoneExistException;
@@ -28,5 +29,7 @@ public interface MemberService extends IService<MemberEntity> {
     void checkPhoneUnique(String phone) throws PhoneExistException;
 
     MemberEntity login(MemberLoginVo vo);
+
+    MemberEntity oauth2Login(SocialUserVo vo);
 }
 

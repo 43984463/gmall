@@ -14,5 +14,12 @@ spring:
 server:
   port: 1700
 
+oauth2:
+  weibo:
+    client_id: 1509412573
+    client_secret: c08bbf7a9174e5f218f8125f997ed2bd
+    grant_type: authorization_code
+    redirect_uri: http://auth.gmall.com/oauth2.0/weibo/success
+
 swagger:
   enabled: true

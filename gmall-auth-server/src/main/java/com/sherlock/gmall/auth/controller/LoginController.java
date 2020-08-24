@@ -3,6 +3,7 @@ package com.sherlock.gmall.auth.controller;
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.TypeReference;
 import com.sherlock.common.constants.GmallAuthConstant;
+import com.sherlock.common.constants.GmallRedisKeysConstant;
 import com.sherlock.common.exception.BizCodeEnume;
 import com.sherlock.common.utils.R;
 import com.sherlock.gmall.auth.config.GmallWebConfig;
@@ -73,7 +74,7 @@ public class LoginController {
          * 2、验证码的再次校验 存key-phoneNum value-code
          * sms:code:phoneNum -> code
          */
-        String redisCode = redisTemplate.opsForValue().get(GmallAuthConstant.SMS_CODE_CACHE_PREFIX + phone);
+        String redisCode = redisTemplate.opsForValue().get(GmallRedisKeysConstant.GMALL_SMS_CODE_CACHE_PREFIX + phone);
         if (StringUtils.isNotBlank(redisCode)) {
             long l = Long.parseLong(redisCode.split("_")[1]);
             // System.currentTimeMillis() - l 获得的是毫秒  <60000是60S之内只能发送1次
@@ -86,7 +87,7 @@ public class LoginController {
         String redisValue = code + "_" + System.currentTimeMillis();
 
         // 缓存验证码
-        redisTemplate.opsForValue().set(GmallAuthConstant.SMS_CODE_CACHE_PREFIX + phone, redisValue, 10, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(GmallRedisKeysConstant.GMALL_SMS_CODE_CACHE_PREFIX + phone, redisValue, 10, TimeUnit.MINUTES);
         thirdPartyFeignService.sendCode(phone, code);
         return R.ok();
     }
@@ -151,7 +152,7 @@ public class LoginController {
         // 真正注册。调用远程会员服务进行注册
         // 1、 调用之前先进行验证码的校验
         String code = vo.getCode();
-        String redisValue = redisTemplate.opsForValue().get(GmallAuthConstant.SMS_CODE_CACHE_PREFIX + vo.getPhone());
+        String redisValue = redisTemplate.opsForValue().get(GmallRedisKeysConstant.GMALL_SMS_CODE_CACHE_PREFIX + vo.getPhone());
         if (StringUtils.isBlank(redisValue)) {
             Map<String,String> errors = new HashMap<>();
             errors.put("code", "验证码错误");
@@ -160,7 +161,7 @@ public class LoginController {
         } else {
             if (code.equals(redisValue.split("_")[0])){
                 // 对比成功删除验证码；令牌机制
-                redisTemplate.delete(GmallAuthConstant.SMS_CODE_CACHE_PREFIX + vo.getPhone());
+                redisTemplate.delete(GmallRedisKeysConstant.GMALL_SMS_CODE_CACHE_PREFIX + vo.getPhone());
 
                 // 调用会员远程服务进行注册
                 R<String> r = memberFeignService.regist(vo);

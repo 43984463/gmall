@@ -5,7 +5,7 @@ package com.sherlock.common.constants;
  * @date 2020/6/10 22:55
  * @Description:
  */
-public abstract class GmallProductConstant {
+public interface GmallProductConstant {
 
     public enum ProductAttrEnum {
         ATTR_TYPE_BASE(1, "基本"), ATTR_TYPE_SALE(0, "销售");

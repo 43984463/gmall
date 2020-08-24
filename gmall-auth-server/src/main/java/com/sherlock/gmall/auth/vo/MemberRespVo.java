@@ -1,12 +1,10 @@
-package com.sherlock.gmall.member.entity;
+package com.sherlock.gmall.auth.vo;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.Date;
-import lombok.Data;
-import lombok.experimental.Accessors;
 
 /**
  * 会员
@@ -16,15 +14,13 @@ import lombok.experimental.Accessors;
  * @date 2020-05-10 01:04:30
  */
 @Data
-@Accessors(chain=true)
-@TableName("ums_member")
-public class MemberEntity implements Serializable {
+@ToString
+public class MemberRespVo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * id
 	 */
-	@TableId
 	private Long id;
 	/**
 	 * 会员等级id
@@ -96,7 +92,7 @@ public class MemberEntity implements Serializable {
 	private Date createTime;
 
 	/**
-	 * 社交UID(微博)
+     * 社交UID(微博)
 	 */
 	private String socialUid;
 	private String accessToken;

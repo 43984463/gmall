@@ -5,8 +5,8 @@ package com.sherlock.common.constants;
  * @Description: TODO
  * @Date 2020/8/13
  **/
-public class GmallAuthConstant {
+public interface GmallAuthConstant {
 
-    public static final String SMS_CODE_CACHE_PREFIX = "sms:code:";
+
 
 }

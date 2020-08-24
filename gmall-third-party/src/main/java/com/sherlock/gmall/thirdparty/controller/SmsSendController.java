@@ -31,7 +31,7 @@ public class SmsSendController {
     @GetMapping("/sendcode")
     public R sendCode (@RequestParam("phone") String phone, @RequestParam("code") String code) {
         Map<String, Object> smsCode = smsComponent.sendSmsCode(phone, code);
-        log.info("code is:" + smsCode.get("code") + ", response msg is:" + smsCode.get("msg"));
+        log.info("code is: {}, response msg is: {}", smsCode.get("code"), smsCode.get("msg"));
         return R.ok().setData(smsCode);
     }
 

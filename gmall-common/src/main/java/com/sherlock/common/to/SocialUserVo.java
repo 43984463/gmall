@@ -1,4 +1,4 @@
-package com.sherlock.gmall.auth.controller;
+package com.sherlock.common.to;
 
 import lombok.Data;
 import lombok.ToString;

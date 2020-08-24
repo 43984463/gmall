@@ -35,7 +35,7 @@ public class GmallThirdPartyApplicationTest {
     @Test
     public void sendSmsUseComponent() {
         Map<String, Object> objectMap = smsComponent.sendSmsCode("13772159968", "sherlock");
-        log.info("code = " + objectMap.get("code") + " msg = " + objectMap.get("msg"));
+        log.info("code = {}, msg = {}", objectMap.get("code"), objectMap.get("msg"));
     }
 
     @Test

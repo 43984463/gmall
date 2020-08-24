@@ -5,6 +5,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sherlock.common.constants.GmallRedisKeysConstant;
 import com.sherlock.common.utils.PageUtils;
 import com.sherlock.common.utils.Query;
 import com.sherlock.gmall.product.dao.CategoryDao;
@@ -243,7 +244,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      */
     public Map<String, List<Catelog2Vo>> getCatelogJson2() {
         // 1.先从缓存中获取
-        String catelogJson = stringRedisTemplate.opsForValue().get("catelogJson");
+        String catelogJson = stringRedisTemplate.opsForValue().get(GmallRedisKeysConstant.GMALL_PRODUCT_REDISKEY_CATELOGJSON);
         // 2.缓存中没有就查询数据库并放入缓存
         if (StringUtils.isEmpty(catelogJson)) {
             // 加分布式锁的情况下查询数据库
@@ -252,7 +253,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
             // 我觉得这段也应该放在锁的环境下
             /*String jsonString = JSON.toJSONString(catelogJsonFromDb);
             // 设置自动失效时间，保证数据的最终一致性
-            stringRedisTemplate.opsForValue().setIfAbsent("catelogJson", jsonString, 5, TimeUnit.MINUTES);*/
+            stringRedisTemplate.opsForValue().setIfAbsent(GmallRedisKeysConstant.GMALL_PRODUCT_REDISKEY_CATELOGJSON, jsonString, 5, TimeUnit.MINUTES);*/
             return catelogJsonFromDb;
         }
 
@@ -314,7 +315,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
             String jsonString = JSON.toJSONString(dataFromDb);
             // 设置自动失效时间，保证数据的最终一致性
-            stringRedisTemplate.opsForValue().setIfAbsent("catelogJson", jsonString, 5, TimeUnit.MINUTES);
+            stringRedisTemplate.opsForValue().setIfAbsent(GmallRedisKeysConstant.GMALL_PRODUCT_REDISKEY_CATELOGJSON, jsonString, 5, TimeUnit.MINUTES);
         }finally {
             lock.unlock();
         }

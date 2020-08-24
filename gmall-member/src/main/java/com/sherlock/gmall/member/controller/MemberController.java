@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.sherlock.common.Annotation.GmallMapping;
 import com.sherlock.common.exception.BizCodeEnume;
+import com.sherlock.common.to.SocialUserVo;
 import com.sherlock.gmall.member.exception.PhoneExistException;
 import com.sherlock.gmall.member.exception.UserNameExistException;
 import com.sherlock.gmall.member.feign.CouponFeignService;
@@ -75,6 +76,15 @@ public class MemberController {
          }
     }
 
+    @PostMapping("/oauth2/login")
+    public R<MemberEntity> oauthLogin(@RequestBody SocialUserVo vo) {
+        MemberEntity memberEntity = memberService.oauth2Login(vo);
+        if (memberEntity != null) {
+            return R.ok().setData(memberEntity);
+        } else {
+            return R.error(BizCodeEnume.LOGINACC_PASSWORD_INVAILD_EXCEPTION.getCode(),BizCodeEnume.LOGINACC_PASSWORD_INVAILD_EXCEPTION.getMsg());
+        }
+    }
 
     /**
      * 列表

@@ -5,7 +5,7 @@ package com.sherlock.common.constants;
  * @date 2020/6/10 22:56
  * @Description:
  */
-public abstract class GmallWareConstant {
+public interface GmallWareConstant {
 
     public enum PurchaseStatusEnum {
         CREATED(0, "新建"),

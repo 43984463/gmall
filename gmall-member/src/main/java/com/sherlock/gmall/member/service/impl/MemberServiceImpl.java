@@ -1,14 +1,24 @@
 package com.sherlock.gmall.member.service.impl;
 
+import cn.hutool.http.HttpUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.sherlock.common.to.SocialUserVo;
+import com.sherlock.common.utils.HttpUtils;
 import com.sherlock.gmall.member.entity.MemberLevelEntity;
 import com.sherlock.gmall.member.exception.PhoneExistException;
 import com.sherlock.gmall.member.exception.UserNameExistException;
 import com.sherlock.gmall.member.service.MemberLevelService;
 import com.sherlock.gmall.member.vo.MemberLoginVo;
 import com.sherlock.gmall.member.vo.MemberRegistVo;
+import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -92,6 +102,52 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         }
 
         return null;
+    }
+
+    @Override
+    public MemberEntity oauth2Login(SocialUserVo socialUserVo) {
+        // 社交登录 + 注册合并逻辑
+        String uid = socialUserVo.getUid();
+        // 1、判断当前社交用户是否已经登录过系统
+        MemberEntity memberEntity = getOne(new QueryWrapper<MemberEntity>().eq("social_uid", uid));
+        if (memberEntity != null) {
+            // 该用户已经注册
+            MemberEntity entity = new MemberEntity();
+            entity.setId(memberEntity.getId());
+            entity.setAccessToken(socialUserVo.getAccess_token());
+            entity.setExpiresIn(socialUserVo.getExpires_in());
+
+            updateById(entity);
+
+            memberEntity.setAccessToken(socialUserVo.getAccess_token());
+            memberEntity.setExpiresIn(socialUserVo.getExpires_in());
+            return memberEntity;
+        } else {
+            // 没有查到对应的记录，需要注册
+            MemberEntity regist = new MemberEntity();
+            regist.setSocialUid(socialUserVo.getUid());
+            regist.setAccessToken(socialUserVo.getAccess_token());
+            regist.setExpiresIn(socialUserVo.getExpires_in());
+
+            Map<String,String> query = new HashMap<>();
+            query.put("access_token", socialUserVo.getAccess_token());
+            query.put("uid", socialUserVo.getUid());
+            try {
+                HttpResponse response = HttpUtils.doGet("https://api.weibo.com", "/2/users/show.json", "get", new HashMap<>(), query);
+                if (response.getStatusLine().getStatusCode() == 200) {
+                    String json = EntityUtils.toString(response.getEntity());
+                    JSONObject jsonObject = JSON.parseObject(json);
+                    String name = jsonObject.getString("name");
+                    String gender = jsonObject.getString("gender");
+                    regist.setNickname(name);
+                    regist.setGender("m".equalsIgnoreCase(gender) ? 1 : 0);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            save(regist);
+            return regist;
+        }
     }
 
 }

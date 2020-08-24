@@ -54,7 +54,7 @@ public class SmsComponent {
                /* log.info("正常请求计费(其他均不计费)");
                 log.info("获取返回的json:");
                 log.info(json);*/
-                log.info("send ok. phone number is:" + phone + ", code is:" + code);
+                log.info("send ok. phone number is: {}, code is: {}", phone, code);
                 returnMap.put("code", 200);
                 returnMap.put("msg", json);
             } else {

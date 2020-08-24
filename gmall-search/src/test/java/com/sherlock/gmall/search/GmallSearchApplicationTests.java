@@ -77,7 +77,7 @@ public class GmallSearchApplicationTests {
         AvgAggregationBuilder avgAgg = AggregationBuilders.avg("avgAgg").field("balance");
         searchSourceBuilder.aggregation(avgAgg);
 
-        log.info("检索条件：" +searchSourceBuilder.toString());
+        log.info("检索条件：{}", searchSourceBuilder.toString());
 
         searchRequest.source(searchSourceBuilder);
 
@@ -85,7 +85,7 @@ public class GmallSearchApplicationTests {
         SearchResponse searchResponse = client.search(searchRequest, GmallElasticConfig.COMMON_OPTIONS);
 
         // 分析结果
-        log.info(searchResponse.toString());
+        log.info("分析结果：{}", searchResponse.toString());
 
 //		Map map = JSON.parseObject(searchRequest.toString(), Map.class);
 
@@ -97,7 +97,7 @@ public class GmallSearchApplicationTests {
 
             String asString = searchHit.getSourceAsString();
             Accout accout = JSON.parseObject(asString, Accout.class);
-            log.info("当前检索到的数据信息：" + accout);
+            log.info("当前检索到的数据信息：{}", accout);
         }
 
         // 获取聚合的分析信息
@@ -108,11 +108,11 @@ public class GmallSearchApplicationTests {
         for (Terms.Bucket bucket : terms.getBuckets()) {
 
             String keyAsString = bucket.getKeyAsString();
-            log.info("年龄" + keyAsString);
+            log.info("年龄: {}", keyAsString);
         }
 
         Avg avg = aggregations.get("avgAgg");
-        log.info("平均薪资" + avg.getValue());
+        log.info("平均薪资 {}", avg.getValue());
 
 //		for (Aggregation aggregation : aggregations.asList()) {
 //			System.out.println("当前聚合的名字：" + aggregation.getName());
