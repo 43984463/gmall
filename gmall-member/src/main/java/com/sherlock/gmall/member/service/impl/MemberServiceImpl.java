@@ -12,6 +12,7 @@ import com.sherlock.gmall.member.exception.UserNameExistException;
 import com.sherlock.gmall.member.service.MemberLevelService;
 import com.sherlock.gmall.member.vo.MemberLoginVo;
 import com.sherlock.gmall.member.vo.MemberRegistVo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ import com.sherlock.gmall.member.dao.MemberDao;
 import com.sherlock.gmall.member.entity.MemberEntity;
 import com.sherlock.gmall.member.service.MemberService;
 
-
+@Slf4j
 @Service("memberService")
 public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> implements MemberService {
 
@@ -136,6 +137,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
                 HttpResponse response = HttpUtils.doGet("https://api.weibo.com", "/2/users/show.json", "get", new HashMap<>(), query);
                 if (response.getStatusLine().getStatusCode() == 200) {
                     String json = EntityUtils.toString(response.getEntity());
+                    log.info("oauth 获得用户信息: {}", json);
                     JSONObject jsonObject = JSON.parseObject(json);
                     String name = jsonObject.getString("name");
                     String gender = jsonObject.getString("gender");
