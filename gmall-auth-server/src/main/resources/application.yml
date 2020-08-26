@@ -11,9 +11,14 @@ spring:
     host: 120.76.60.77
     port: 7379
     password: sherlock
+  session:
+    store-type: redis
+
 server:
   port: 1700
-
+  servlet:
+    session:
+      timeout: 30m #session超时时间为30min
 oauth2:
   weibo:
     client_id: 1509412573

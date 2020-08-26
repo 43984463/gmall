@@ -64,10 +64,10 @@
         </b>
         <ul>
             <li>
-                <a href="#" class="li_2">你好，请登录</a>
+                <a href="http://auth.gmall.com/login.html" style="width: 150px">你好，[[${session.loginUser == null ? '请登录' : session.loginUser.nickname}]]</a>
             </li>
             <li>
-                <a href="#">免费注册</a>
+                <a href="http://auth.gmall.com/reg.html" th:if="${session.loginUser == null}" class="li_2">免费注册</a>
             </li>
             <span>|</span>
             <li>

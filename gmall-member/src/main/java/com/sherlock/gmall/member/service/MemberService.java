@@ -22,7 +22,7 @@ public interface MemberService extends IService<MemberEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
 
-    void regist(MemberRegistVo vo);
+    MemberEntity regist(MemberRegistVo vo);
 
     void checkUserNameUnique(String userName) throws UserNameExistException;
 

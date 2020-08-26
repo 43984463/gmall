@@ -7,9 +7,16 @@ spring:
     name: gmall-search
   thymeleaf:
     cache: false
+  redis:
+    host: 120.76.60.77
+    port: 7379
+    password: sherlock
+  session:
+    store-type: redis
 
 server:
   port: 1600
 
 swagger:
   enabled: false
+

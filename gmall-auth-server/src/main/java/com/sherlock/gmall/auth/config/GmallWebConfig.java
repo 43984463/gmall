@@ -25,18 +25,9 @@ public class GmallWebConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
 
-        registry.addViewController("").setViewName("login");
-        registry.addViewController("/login.html").setViewName("login");
+        // registry.addViewController("").setViewName("login");
+        // registry.addViewController("/login.html").setViewName("login");
         registry.addViewController("/reg.html").setViewName("reg");
 
     }
-
-    /*@Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowCredentials(true)
-                .allowedHeaders("*")
-                .allowedOrigins("*")
-                .allowedMethods("*");
-    }*/
 }

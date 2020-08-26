@@ -57,20 +57,20 @@ public class MemberController {
     @PostMapping("/regist")
     public R<String> regist(@RequestBody MemberRegistVo vo) {
         try {
-            memberService.regist(vo);
+            MemberEntity memberEntity = memberService.regist(vo);
+            return R.ok().setData(memberEntity);
         } catch (PhoneExistException phoneExist){
             return R.error(BizCodeEnume.PHONE_EXIST_EXCEPTION.getCode(), BizCodeEnume.PHONE_EXIST_EXCEPTION.getMsg());
         } catch (UserNameExistException userNameExist){
             return R.error(BizCodeEnume.USER_EXIST_EXCEPTION.getCode(), BizCodeEnume.USER_EXIST_EXCEPTION.getMsg());
         }
-        return R.ok();
     }
 
     @PostMapping("/login")
-    public R<String> login(@RequestBody MemberLoginVo vo) {
+    public R<MemberEntity> login(@RequestBody MemberLoginVo vo) {
          MemberEntity memberEntity = memberService.login(vo);
          if (memberEntity != null) {
-             return R.ok();
+             return R.ok().setData(memberEntity);
          } else {
             return R.error(BizCodeEnume.LOGINACC_PASSWORD_INVAILD_EXCEPTION.getCode(),BizCodeEnume.LOGINACC_PASSWORD_INVAILD_EXCEPTION.getMsg());
          }

@@ -2,22 +2,22 @@ package com.sherlock.gmall.auth.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.sherlock.common.constants.GmallAuthConstant;
 import com.sherlock.common.to.SocialUserVo;
 import com.sherlock.common.utils.HttpUtils;
 import com.sherlock.common.utils.R;
 import com.sherlock.gmall.auth.feign.MemberFeignService;
-import com.sherlock.gmall.auth.vo.MemberRespVo;
+import com.sherlock.common.vo.MemberRespVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,7 +47,7 @@ public class OAuth2Controller {
     private String redirectUri;
 
     @GetMapping("/oauth2.0/weibo/success")
-    public String weibo(@RequestParam("code") String code) throws Exception {
+    public String weibo(@RequestParam("code") String code, HttpSession httpSession) throws Exception {
         // 1、根据code换取accessToken;
         Map<String, String> header = new HashMap<>();
         Map<String, String> query = new HashMap<>();
@@ -77,6 +77,7 @@ public class OAuth2Controller {
             if (r.getCode() == 0) {
                 MemberRespVo respVo = r.getData(new TypeReference<MemberRespVo>(){});
                 log.info("登录成功：用户信息: {}", respVo.toString());
+                httpSession.setAttribute(GmallAuthConstant.GMALL_LOGIN_USER, respVo);
                 // 2、登录成功就跳回首页
                 return "redirect:http://gmall.com";
             } else {

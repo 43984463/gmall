@@ -7,6 +7,6 @@ package com.sherlock.common.constants;
  **/
 public interface GmallAuthConstant {
 
-
+    public static final String GMALL_LOGIN_USER = "loginUser";
 
 }

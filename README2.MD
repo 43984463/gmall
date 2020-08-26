@@ -226,6 +226,9 @@ com.sherlock.gmall.product.service.impl.CategoryServiceImpl
 com.sherlock.gmall.product.config.SpringCacheConfig
 com.sherlock.gmall.product.web.IndexController
 
+redis设置序列化机制
+com.sherlock.gmall.auth.config.SpringSessionConfig#springSessionDefaultRedisSerializer()
+
 MyBatis-Plus:
 com.sherlock.gmall.product.GmallProductApplication
 com.sherlock.gmall.coupon.config.MybatisConfig
@@ -269,5 +272,8 @@ com.sherlock.gmall.member.GmallMemberApplicationTests.contextLoads
 
 网关gateway统一配置跨域
 com.sherlock.gmall.gateway.config.GmallCorsConfig#corsWebFilter()
+
+springSession缓存session
+com.sherlock.gmall.auth.config.SpringSessionConfig#cookieSerializer()
 
 ```

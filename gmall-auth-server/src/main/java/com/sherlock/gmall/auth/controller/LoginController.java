@@ -6,6 +6,7 @@ import com.sherlock.common.constants.GmallAuthConstant;
 import com.sherlock.common.constants.GmallRedisKeysConstant;
 import com.sherlock.common.exception.BizCodeEnume;
 import com.sherlock.common.utils.R;
+import com.sherlock.common.vo.MemberRespVo;
 import com.sherlock.gmall.auth.config.GmallWebConfig;
 import com.sherlock.gmall.auth.feign.MemberFeignService;
 import com.sherlock.gmall.auth.feign.ThirdPartyFeignService;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -50,19 +52,26 @@ public class LoginController {
     @Autowired
     private MemberFeignService memberFeignService;
 
+
+    @GetMapping({"/login.html", ""})
+    public String loginPage(HttpSession session) {
+        Object attribute = session.getAttribute(GmallAuthConstant.GMALL_LOGIN_USER);
+        if (attribute == null) {
+            return "login";
+        } else {
+            return "redirect:http://gmall.com";
+        }
+    }
+
     /**
-     * 这2个方法的作用是用来跳转页面，没有做任何逻辑处理.
+     * 这个方法的作用是用来跳转页面，没有做任何逻辑处理.
      *
      * @return
      * @see GmallWebConfig#addViewControllers(org.springframework.web.servlet.config.annotation.ViewControllerRegistry) 可以代替其作用
      */
 
-    /*@GetMapping("/login.html")
-    public String loginPage() {
-        return "login";
-    }
 
-    @GetMapping("/reg.html")
+    /*@GetMapping("/reg.html")
     public String regPage() {
         return "reg";
     }*/
@@ -116,7 +125,7 @@ public class LoginController {
      * @param redirectAttributes   模拟重定向携带数据
      */
     @PostMapping("/regist")
-    public String regist(@Valid UserRegistVo vo, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+    public String regist(@Valid UserRegistVo vo, BindingResult result, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
 
         if (result.hasErrors()) {
             // 字段校验错误
@@ -164,9 +173,10 @@ public class LoginController {
                 redisTemplate.delete(GmallRedisKeysConstant.GMALL_SMS_CODE_CACHE_PREFIX + vo.getPhone());
 
                 // 调用会员远程服务进行注册
-                R<String> r = memberFeignService.regist(vo);
+                R<MemberRespVo> r = memberFeignService.regist(vo);
                 // 调用成功
                 if (r.getCode() == 0) {
+                    session.setAttribute(GmallAuthConstant.GMALL_LOGIN_USER, r.getData(new TypeReference<MemberRespVo>(){}));
                     return "redirect:http://auth.gmall.com/login.html";
                 } else {
                     Map<String,String> errors = new HashMap<>();
@@ -190,10 +200,11 @@ public class LoginController {
      * @return
      */
     @PostMapping("/login")
-    public String login(UserLoginVo loginVo, RedirectAttributes redirectAttributes){
+    public String login(UserLoginVo loginVo, RedirectAttributes redirectAttributes, HttpSession session){
         // 调用远程服务进行验证账号和密码
-        R<String> r = memberFeignService.login(loginVo);
+        R<MemberRespVo> r = memberFeignService.login(loginVo);
         if (r.getCode() == 0) {
+            session.setAttribute(GmallAuthConstant.GMALL_LOGIN_USER, r.getData(new TypeReference<MemberRespVo>(){}));
             return "redirect:http://gmall.com";
         } else {
             Map<String, String> errors = new HashMap();

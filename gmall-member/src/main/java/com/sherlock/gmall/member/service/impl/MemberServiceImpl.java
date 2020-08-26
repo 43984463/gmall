@@ -49,7 +49,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
     }
 
     @Override
-    public void regist(MemberRegistVo vo) {
+    public MemberEntity regist(MemberRegistVo vo) {
         MemberEntity memberEntity = new MemberEntity();
 
         // 设置会员默认等级
@@ -67,11 +67,13 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         memberEntity.setPassword(passwordEncoder.encode(vo.getPassword()));
 
+        memberEntity.setNickname(vo.getUserName());
         // 是否启用
         // memberEntity.setStatus(1);
         // TODO 其他默认信息
 
         save(memberEntity);
+        return memberEntity;
     }
 
     @Override

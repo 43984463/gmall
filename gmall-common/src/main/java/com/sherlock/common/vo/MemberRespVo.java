@@ -1,4 +1,4 @@
-package com.sherlock.gmall.auth.vo;
+package com.sherlock.common.vo;
 
 import lombok.Data;
 import lombok.ToString;
