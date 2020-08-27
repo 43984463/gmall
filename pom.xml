@@ -28,6 +28,9 @@
         <module>gmall-third-party</module>
         <module>gmall-search</module>
         <module>gmall-auth-server</module>
+        <module>gmall-sso-server</module>
+        <module>gmall-sso-client1</module>
+        <module>gmall-sso-client2</module>
     </modules>
     <packaging>pom</packaging>
 
