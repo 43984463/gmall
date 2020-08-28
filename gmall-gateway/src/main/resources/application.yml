@@ -76,3 +76,8 @@ spring:
           uri: lb://gmall-auth-server #转到认证服务
           predicates:
             - Host=auth.gmall.com
+
+        - id: gmall_cart_route
+          uri: lb://gmall-cart    #转到购物车服务
+          predicates:
+            - Host=cart.gmall.com

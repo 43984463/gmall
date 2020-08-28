@@ -72,7 +72,7 @@ public class LoginController {
             // 1、登录成功用户信息放到缓存
             String uuid = UUID.randomUUID().toString().replace("-", "");
             stringRedisTemplate.opsForValue().set(uuid, username);
-            // 2、登录成功给浏览器留下一个token信息
+            // 2、登录成功给(服务器端)浏览器留下一个token信息
             Cookie cookie = new Cookie("sso_token", uuid);
             response.addCookie(cookie); // 给当前服务浏览器设置一个cookie信息
             // 跳回到之前的页面

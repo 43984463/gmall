@@ -276,4 +276,7 @@ com.sherlock.gmall.gateway.config.GmallCorsConfig#corsWebFilter()
 springSession缓存session
 com.sherlock.gmall.auth.config.SpringSessionConfig#cookieSerializer()
 
+spring拦截器 + ThreadLocal对每个线程进行处理
+com.sherlock.gmall.cart.interceptor.CartInterceptor
+
 ```

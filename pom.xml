@@ -31,6 +31,7 @@
         <module>gmall-sso-server</module>
         <module>gmall-sso-client1</module>
         <module>gmall-sso-client2</module>
+        <module>gmall-cart</module>
     </modules>
     <packaging>pom</packaging>
 

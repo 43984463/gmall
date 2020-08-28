@@ -259,7 +259,7 @@
 
 						<div class="box-btns clear">
 							<div class="box-btns-one">
-								<form id="itemForm" action="http://cart.gmall.com:8087/addToCart" method="post">
+								<form id="itemForm" action="http://cart.gmall.com/addToCart" method="post">
 									<input type="text" name="num" id=""  value="1"/>
 									<input type="hidden" name="skuId"/>
 
@@ -281,7 +281,7 @@
 							</div>
 							<div id="cartBtn"  style="cursor:pointer;"  canClick="1"  onclick="addToCart(this)" class="box-btns-two">
 
-								放入购物车
+								加入购物车
 
 							</div>
 						</div>
@@ -997,7 +997,7 @@
 	<script src="/static/item/js/jquery1.9.js" type="text/javascript" charset="utf-8"></script>
 	<script src="/static/item/js/js.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript">
-        /*function addToCart(obj){
+        function addToCart(obj){
             var canClick = $(obj).attr("canClick");
             if(canClick=='0'){
                 return ;
@@ -1005,7 +1005,7 @@
             $("#itemForm").submit();
         }
 
-        function switchSkuId() {
+		/*function switchSkuId() {
             // 被选中属性
             var checkDivs = $(".redborder div");
             var valueIds="";

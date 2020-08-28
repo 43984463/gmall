@@ -7,7 +7,7 @@ import com.sherlock.common.constants.GmallRedisKeysConstant;
 import com.sherlock.common.exception.BizCodeEnume;
 import com.sherlock.common.utils.R;
 import com.sherlock.common.vo.MemberRespVo;
-import com.sherlock.gmall.auth.config.GmallWebConfig;
+import com.sherlock.gmall.auth.config.GmallAuthWebConfig;
 import com.sherlock.gmall.auth.feign.MemberFeignService;
 import com.sherlock.gmall.auth.feign.ThirdPartyFeignService;
 import com.sherlock.gmall.auth.vo.UserLoginVo;
@@ -21,7 +21,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -67,7 +66,7 @@ public class LoginController {
      * 这个方法的作用是用来跳转页面，没有做任何逻辑处理.
      *
      * @return
-     * @see GmallWebConfig#addViewControllers(org.springframework.web.servlet.config.annotation.ViewControllerRegistry) 可以代替其作用
+     * @see GmallAuthWebConfig#addViewControllers(org.springframework.web.servlet.config.annotation.ViewControllerRegistry) 可以代替其作用
      */
 
 
@@ -114,7 +113,7 @@ public class LoginController {
      *
      *
      * 由于在
-     * @see com.sherlock.gmall.auth.config.GmallWebConfig#addViewControllers(org.springframework.web.servlet.config.annotation.ViewControllerRegistry)
+     * @see com.sherlock.gmall.auth.config.GmallAuthWebConfig#addViewControllers(org.springframework.web.servlet.config.annotation.ViewControllerRegistry)
      * 配置了映射，则可以直接跳转到
      * return "redirect:/login.html";
      * return "forward:/reg.html";

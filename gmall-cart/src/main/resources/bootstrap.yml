@@ -1,0 +1,12 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        server-addr: 120.76.60.77:9848
+        namespace: 43ec5c21-1293-4a68-b1a9-aa20e4bf3087
+        file-extension: properties
+        extension-configs[0]:
+          data-id: gmall-cart.properties
+          group: dev
+          refrush: true
+

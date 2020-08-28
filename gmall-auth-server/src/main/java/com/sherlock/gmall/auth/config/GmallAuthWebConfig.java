@@ -11,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @Description:
  */
 @Configuration
-public class GmallWebConfig implements WebMvcConfigurer {
+public class GmallAuthWebConfig implements WebMvcConfigurer {
 
     /**
      * 视图映射
