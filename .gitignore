@@ -27,11 +27,11 @@ gen
 *.ear
 *.zip
 *.tar.gz
-#*.rar
+*.rar
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
 #屏蔽任意目录下的target文件夹及其子文件夹
 **/target/
-#**/test/
+**/test/
