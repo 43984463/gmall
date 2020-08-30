@@ -260,7 +260,7 @@
 						<div class="box-btns clear">
 							<div class="box-btns-one">
 								<form id="itemForm" action="http://cart.gmall.com/addToCart" method="post">
-									<input type="text" name="num" id="numInput"  value="1"/>
+									<input type="text" name="num" id=""  value="1"/>
 									<input type="hidden" name="skuId"/>
 
 									<div class="box-btns-one1">
@@ -279,7 +279,7 @@
 									</div>
 								</form>
 							</div>
-							<div id="addToCart"  style="cursor:pointer;"  canClick="1" th:attr="skuId=${skuInfo.info.skuId}"  onclick="addToCart(this)" class="box-btns-two">
+							<div id="cartBtn"  style="cursor:pointer;"  canClick="1"  onclick="addToCart(this)" class="box-btns-two">
 
 								加入购物车
 
@@ -1066,12 +1066,6 @@
 		$(function () {
 			$(".sku_attr_value").parent().css({"border":"solid 1px #CCC"});
 			$("a[class='sku_attr_value checked']").parent().css({"border":"solid 1px red"});
-		})
-
-		$("#addToCart").click(function () {
-			var num = $("#numInput").val();
-			var skuId = $(this).attr("skuId");
-			location.href = "http://cart.gmall.com/addToCart?skuId=" + skuId + "&num=" + num;
 		})
 	</script>
 

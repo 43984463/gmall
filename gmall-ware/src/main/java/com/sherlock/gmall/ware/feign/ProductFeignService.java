@@ -1,6 +1,7 @@
 package com.sherlock.gmall.ware.feign;
 
 import com.sherlock.common.utils.R;
+import com.sherlock.common.vo.SkuInfoVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,6 @@ public interface ProductFeignService {
      * @return
      */
     @RequestMapping("/product/skuinfo/info/{skuId}")
-    R info(@PathVariable("skuId") Long skuId);
+    R<SkuInfoVo> getSkuInfo(@PathVariable("skuId") Long skuId);
 
 }

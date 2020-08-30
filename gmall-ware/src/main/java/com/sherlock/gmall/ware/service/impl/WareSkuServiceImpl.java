@@ -1,11 +1,13 @@
 package com.sherlock.gmall.ware.service.impl;
 
+import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sherlock.common.utils.PageUtils;
 import com.sherlock.common.utils.Query;
 import com.sherlock.common.utils.R;
+import com.sherlock.common.vo.SkuInfoVo;
 import com.sherlock.gmall.ware.dao.WareSkuDao;
 import com.sherlock.gmall.ware.entity.WareSkuEntity;
 import com.sherlock.gmall.ware.feign.ProductFeignService;
@@ -58,12 +60,13 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
             wareSkuEntity.setWareId(wareId);
             wareSkuEntity.setSkuId(skuId);
             wareSkuEntity.setStockLocked(0);
-            R info = productFeignService.info(skuId);
+            R<SkuInfoVo> info = productFeignService.getSkuInfo(skuId);
             // 远程获取失败不影响整个商品信息保存
             try {
                 if (info.getCode() == 0) {
-                    Map<String, Object> skuInfo = (Map<String, Object>) info.get("skuInfo");
-                    wareSkuEntity.setSkuName((String) skuInfo.get("skuName"));
+                    //Map<String, Object> skuInfo = (Map<String, Object>) info.get("skuInfo");
+                    SkuInfoVo skuInfo = info.getData("skuInfo", new TypeReference<SkuInfoVo>() {});
+                    wareSkuEntity.setSkuName(skuInfo.getSkuName());
                 }
             } catch (Exception e) {
                 log.warn("远程获取商品信息失败");

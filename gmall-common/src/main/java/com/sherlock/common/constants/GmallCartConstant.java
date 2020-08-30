@@ -8,6 +8,7 @@ package com.sherlock.common.constants;
 public interface GmallCartConstant {
 
     public static final String GMALL_TEMP_USER_COOKIE_NAME = "uer-key";
+    public static final String GMALL_CART_PREFIX = "gmall:cart:";
     public static final int GMALL_TEMP_USER_COOKIE_TIMEOUT = 60 * 60 * 24 * 30;
 
 }

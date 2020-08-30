@@ -1,5 +1,6 @@
 package com.sherlock.gmall.cart;
 
+import com.sherlock.common.constants.GmallConstant;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -11,7 +12,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * @date 2020/8/28 20:07
  * @Description:
  */
-//@EnableFeignClients
+@EnableFeignClients(basePackages = GmallConstant.GMALL_CART_BASEPATH + GmallConstant.FEIGN)
 @EnableDiscoveryClient
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 public class GmallCartApplication {

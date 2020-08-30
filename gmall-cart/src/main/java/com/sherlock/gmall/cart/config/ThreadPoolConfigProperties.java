@@ -1,4 +1,4 @@
-package com.sherlock.gmall.product.config;
+package com.sherlock.gmall.cart.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

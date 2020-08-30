@@ -45,6 +45,7 @@ import java.util.UUID;
 @Component
 public class CartInterceptor implements HandlerInterceptor {
 
+    // 一次设置，处处使用
     public static ThreadLocal<UserInfoTo> threadLocal = new ThreadLocal<>();
 
     @Override

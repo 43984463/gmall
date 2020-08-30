@@ -1,7 +1,6 @@
-package com.sherlock.gmall.product.config;
+package com.sherlock.gmall.cart.config;
 
 import com.sherlock.common.utils.ThreadPoolMonitor;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,7 +30,7 @@ public class MyThreadConfig {
     public ThreadPoolExecutor threadPoolExecutor(ThreadPoolConfigProperties poolConfigProperties) {
         return new ThreadPoolMonitor(poolConfigProperties.getCorePoolSize(),poolConfigProperties.getMaximumPoolSize(),
                 poolConfigProperties.getKeepAliveTime(), TimeUnit.SECONDS,
-                new LinkedBlockingDeque<>(100000), Executors.defaultThreadFactory(), new ThreadPoolExecutor.AbortPolicy(), "Gmall-product线程池");
+                new LinkedBlockingDeque<>(100000), Executors.defaultThreadFactory(), new ThreadPoolExecutor.AbortPolicy(), "Gmall-Cart线程池");
     }
 
 }

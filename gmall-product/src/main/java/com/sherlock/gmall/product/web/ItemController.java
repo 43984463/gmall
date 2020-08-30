@@ -2,6 +2,7 @@ package com.sherlock.gmall.product.web;
 
 import com.sherlock.gmall.product.service.SkuInfoService;
 import com.sherlock.gmall.product.vo.SkuItemVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,7 @@ import java.util.concurrent.ExecutionException;
  * @Description:
  */
 @Controller
+@Slf4j
 public class ItemController {
 
     @Autowired
@@ -29,7 +31,7 @@ public class ItemController {
     @GetMapping("/{skuId}.html")
     public String skuItem (@PathVariable("skuId") Long skuId, Model model) throws ExecutionException, InterruptedException {
 
-        System.out.println("skuId =" + skuId);
+        log.info("查询商品的skuId是：{}", skuId);
 
         SkuItemVo skuItemVo = skuInfoService.item(skuId);
         model.addAttribute("skuInfo", skuItemVo);

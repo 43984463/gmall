@@ -1,11 +1,13 @@
 package com.sherlock.gmall.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 
 import com.sherlock.common.Annotation.GmallMapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +31,15 @@ import com.sherlock.common.utils.R;
 @RestController
 @GmallMapping("product/skusaleattrvalue")
 public class SkuSaleAttrValueController {
+
     @Autowired
     private SkuSaleAttrValueService skuSaleAttrValueService;
+
+    @GetMapping("/stringlist/{skuId}")
+    public List<String> getSkuSaleAttrValues(@PathVariable("skuId") Long skuId){
+        List<String> skuSaleAttrValues = skuSaleAttrValueService.getSkuSaleAttrValuesAsStringList(skuId);
+        return skuSaleAttrValues;
+    }
 
     /**
      * 列表
