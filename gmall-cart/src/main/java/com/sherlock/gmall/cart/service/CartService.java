@@ -1,5 +1,6 @@
 package com.sherlock.gmall.cart.service;
 
+import com.sherlock.gmall.cart.vo.Cart;
 import com.sherlock.gmall.cart.vo.CartItem;
 
 import java.util.concurrent.ExecutionException;
@@ -27,4 +28,26 @@ public interface CartService {
      */
     CartItem getCartItem(Long skuId);
 
+    /**
+     * 获取整个购物车
+     * @return
+     */
+    Cart getCart() throws ExecutionException, InterruptedException;
+
+    /**
+     * 清空购物车
+     * @param cartKey
+     */
+    void clearCart(String cartKey);
+
+    /**
+     * 勾选购物项
+     * @param skuId
+     * @param check
+     */
+    void checkCartItem(Long skuId, Integer check);
+
+    void countCartItem(Long skuId, Integer num);
+
+    void deleteCartItem(Long skuId);
 }

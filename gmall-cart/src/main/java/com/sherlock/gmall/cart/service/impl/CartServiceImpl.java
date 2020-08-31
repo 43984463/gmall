@@ -9,6 +9,7 @@ import com.sherlock.common.vo.SkuInfoVo;
 import com.sherlock.gmall.cart.feign.ProductFeignService;
 import com.sherlock.gmall.cart.interceptor.CartInterceptor;
 import com.sherlock.gmall.cart.service.CartService;
+import com.sherlock.gmall.cart.vo.Cart;
 import com.sherlock.gmall.cart.vo.CartItem;
 import com.sherlock.gmall.cart.vo.UserInfoTo;
 import lombok.extern.slf4j.Slf4j;
@@ -17,11 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.stream.Collectors;
 
 /**
  * @auther Sherlock
@@ -99,6 +102,89 @@ public class CartServiceImpl implements CartService {
 
         CartItem cartItem = JSON.parseObject(result, CartItem.class);
         return cartItem;
+    }
+
+    @Override
+    public Cart getCart() throws ExecutionException, InterruptedException {
+        Cart cart = new Cart();
+
+        // 区分用户是否登录
+        UserInfoTo userInfoTo = CartInterceptor.threadLocal.get();
+        if (userInfoTo.getUserId() != null) {
+            // 登录了
+            // 如果临时购物车有数据需要合并并且清空临时购物车
+            // 临时购物车
+            String tempCartKey = GmallCartConstant.GMALL_CART_PREFIX + userInfoTo.getUserId();
+            List<CartItem> tempCartItems = getCartItems(tempCartKey);
+            if (!CollectionUtils.isEmpty(tempCartItems)) {
+                // 临时购物车有商品，需要合并
+                // 直接把临时购物车的所有商品添加到(已登录的)购物车
+                for (CartItem tempCartItem : tempCartItems) {
+                    // TODO 感觉这种不好，如果购物车中的东西多，需要多次调用远程接口，待处理
+                    addToCart(tempCartItem.getSkuId(), tempCartItem.getCount());
+                }
+                // 添加完成之后清空临时购物车
+                clearCart(tempCartKey);
+            }
+            String cartKey = GmallCartConstant.GMALL_CART_PREFIX + userInfoTo.getUserId();
+            List<CartItem> cartItems = getCartItems(cartKey);
+            cart.setItems(cartItems);
+
+        } else {
+            // 没登录
+            String cartKey = GmallCartConstant.GMALL_CART_PREFIX + userInfoTo.getUserKey();
+            List<CartItem> cartItems = getCartItems(cartKey);
+            cart.setItems(cartItems);
+        }
+        return cart;
+    }
+
+    @Override
+    public void clearCart(String cartKey) {
+        redisTemplate.delete(cartKey);
+    }
+
+    @Override
+    public void checkCartItem(Long skuId, Integer check) {
+        BoundHashOperations<String, Object, Object> cartOps = getCartOps();
+        CartItem cartItem = getCartItem(skuId);
+        cartItem.setCheck(check==1);
+        String s = JSON.toJSONString(cartItem);
+        cartOps.put(skuId.toString(), s);
+    }
+
+    @Override
+    public void countCartItem(Long skuId, Integer num) {
+        BoundHashOperations<String, Object, Object> cartOps = getCartOps();
+        CartItem cartItem = getCartItem(skuId);
+        cartItem.setCount(num);
+        String s = JSON.toJSONString(cartItem);
+        cartOps.put(skuId.toString(), s);
+    }
+
+    @Override
+    public void deleteCartItem(Long skuId) {
+        BoundHashOperations<String, Object, Object> cartOps = getCartOps();
+        cartOps.delete(skuId.toString());
+    }
+
+    /**
+     * 获取购物车的所有购物项
+     * @param cartKey
+     * @return
+     */
+    private List<CartItem> getCartItems(String cartKey) {
+        BoundHashOperations<String, Object, Object> hashOps = redisTemplate.boundHashOps(cartKey);
+        List<Object> values = hashOps.values();
+        if (!CollectionUtils.isEmpty(values)) {
+            List<CartItem> collect = values.stream().map(value -> {
+                String string = (String) value;
+                CartItem cartItem = JSON.parseObject(string, CartItem.class);
+                return cartItem;
+            }).collect(Collectors.toList());
+            return collect;
+        }
+        return null;
     }
 
     /**

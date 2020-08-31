@@ -1,7 +1,10 @@
 package com.sherlock.gmall.cart.controller;
 
 import com.sherlock.gmall.cart.service.CartService;
+import com.sherlock.gmall.cart.vo.Cart;
 import com.sherlock.gmall.cart.vo.CartItem;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,8 +26,9 @@ public class CartController {
     private CartService cartService;
 
     @GetMapping({"/cart.html","/cartList"})
-    public String cartListPage(){
-
+    public String cartListPage(Model model) throws ExecutionException, InterruptedException {
+        Cart cart = cartService.getCart();
+        model.addAttribute("cart", cart);
         return "cartList";
     }
 
@@ -58,6 +62,27 @@ public class CartController {
         CartItem cartItem = cartService.getCartItem(skuId);
         model.addAttribute("cartItem", cartItem);
         return "success";
+    }
+
+    @ApiOperation("改变是否选中")
+    @GetMapping("/checkCartItem")
+    public String checkCartItem(@RequestParam("skuId") Long skuId, @RequestParam("check") Integer check){
+        cartService.checkCartItem(skuId, check);
+        return "redirect:http://cart.gmall.com/cart.html";
+    }
+
+    @ApiOperation("改变数量")
+    @GetMapping("/countCartItem")
+    public String countCartItem(@RequestParam("skuId") Long skuId, @RequestParam("num") Integer num){
+        cartService.countCartItem(skuId, num);
+        return "redirect:http://cart.gmall.com/cart.html";
+    }
+
+    @ApiOperation("删除购物项")
+    @GetMapping("/deleteCartItem")
+    public String deleteCartItem(@RequestParam("skuId") Long skuId){
+        cartService.deleteCartItem(skuId);
+        return "redirect:http://cart.gmall.com/cart.html";
     }
 
 }
