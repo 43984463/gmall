@@ -371,3 +371,10 @@ http {
   4可以控制资源。(性能稳定，不会因为创建线程导致系统资源耗尽)。
 
 ```
+
+##springMVC中重定向的时候添加数据
+参考 com.sherlock.gmall.cart.controller.CartController#addToCart()
+```text
+redirectAttributes.addAttribute("skuId", skuId);        将数据放在拼接在url后面
+redirectAttributes.addFlashAttribute("skuId", skuId);   将数据放在session里面可以在页面中取出，但是只能取一次
+```
