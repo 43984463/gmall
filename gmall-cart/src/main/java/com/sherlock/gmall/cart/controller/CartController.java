@@ -27,10 +27,30 @@ public class CartController {
         return "cartList";
     }
 
+    /**
+     * 添加成功之后重定向到  /addToCartSuccessPage.html 请求  重新获取购物车数据 防止一直刷新页面导致一直添加商品
+     * @param skuId
+     * @param num
+     * @param model
+     * @return
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     @GetMapping("/addToCart")
     public String addToCart(@RequestParam("skuId") Long skuId, @RequestParam("num") Integer num, Model model) throws ExecutionException, InterruptedException {
 
         CartItem cartItem = cartService.addToCart(skuId, num);
+        //model.addAttribute("cartItem", cartItem);
+        // 放入model中的时候重定向会自动拼接参数
+        model.addAttribute("skuId", skuId);
+        return "/addToCartSuccessPage.html";
+    }
+
+    @GetMapping("/addToCartSuccessPage.html")
+    public String addToCartSuccessPage(@RequestParam("skuId") Long skuId,  Model model){
+        // 重定向到成功页面，再次查询购物车数据即可
+
+        CartItem cartItem = cartService.getCartItem(skuId);
         model.addAttribute("cartItem", cartItem);
         return "success";
     }
