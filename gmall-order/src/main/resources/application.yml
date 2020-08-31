@@ -52,6 +52,11 @@ spring:
   application:
     name: gmall-order
 
+  rabbitmq:
+    host: 192.168.1.4
+    port: 5672
+    virtual-host: /
+
 mybatis-plus:
   # 虽然我不知道为啥在源码和自动提示都是config-location，但是这样就报错，需要修改成config-locations(带s)
   config-locations: classpath:/mapper/**/*.xml
@@ -59,7 +64,6 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto
-
 logging:
   level:
     com.sherlock.gmall: debug
