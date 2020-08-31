@@ -279,4 +279,7 @@ com.sherlock.gmall.auth.config.SpringSessionConfig#cookieSerializer()
 spring拦截器 + ThreadLocal对每个线程进行处理
 com.sherlock.gmall.cart.interceptor.CartInterceptor
 
+springBoot + rabbitMQ
+com.sherlock.gmall.order.GmallOrderApplication
+com.sherlock.gmall.order.GmallOrderApplicationTests
 ```
