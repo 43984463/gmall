@@ -4,3 +4,8 @@ spring:
       config:
         server-addr: 120.76.60.77:9848
         namespace: af718973-a057-4105-8a8c-4c12668a69a7
+        file-extension: properties
+        extension-configs[0]:
+          data-id: gmall-product.properties
+          group: dev
+          refrush: true

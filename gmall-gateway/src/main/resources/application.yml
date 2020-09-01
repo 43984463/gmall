@@ -81,3 +81,8 @@ spring:
           uri: lb://gmall-cart    #转到购物车服务
           predicates:
             - Host=cart.gmall.com
+
+        - id: gmall_order_route
+          uri: lb://gmall-order    #转到订单服务
+          predicates:
+            - Host=order.gmall.com

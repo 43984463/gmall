@@ -6,7 +6,7 @@ spring:
         namespace: e023296c-22b7-4904-9410-b7996c6000ad
         file-extension: properties
         extension-configs[0]:
-          data-id: gmall-member.properties
+          data-id: gmall-order.properties
           group: dev
           refrush: true
 

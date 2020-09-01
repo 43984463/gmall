@@ -97,12 +97,15 @@ public class RabbitReceive {
             } else {
                 /**
                  * void basicNack(long deliveryTag, boolean multiple, boolean requeue) throws IOException;
+                 * boolean multiple 是否拒签所有消息
                  * boolean requeue 是否重新入队  true 重新入队 false 丢弃
-                 *
                  */
 
-                channel.basicNack(deliveryTag, false, true);
-                // void basicReject(long deliveryTag, boolean requeue) throws IOException;
+                // channel.basicNack(deliveryTag, false, true);
+                /**
+                 * void basicReject(long deliveryTag, boolean requeue) throws IOException;
+                 * boolean requeue 是否重新入队  true 重新入队 false 丢弃
+                 */
                 channel.basicReject(deliveryTag, false);
             }
         } catch (IOException e) {
