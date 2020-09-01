@@ -283,3 +283,12 @@ springBoot + rabbitMQ
 com.sherlock.gmall.order.GmallOrderApplication
 com.sherlock.gmall.order.GmallOrderApplicationTests
 ```
+
+## windows查看占用端口的进程
+```text
+netstat -aon|findstr 80
+```
+查看占用端口的任务
+```text
+tasklist|findstr 19796
+```

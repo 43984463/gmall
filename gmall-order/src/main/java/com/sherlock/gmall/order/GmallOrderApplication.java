@@ -22,14 +22,16 @@ package com.sherlock.gmall.order;
  * 3、{@link org.springframework.boot.autoconfigure.amqp.RabbitProperties} 有所有关于 rabbitmq 的配置信息
  *
  *
+ *  AmqpAdmin 组件可以用来创建交换机，队列，绑定关系等
+ *  RabbitTemplate 可以用来发送消息
+ *  @RabbitListener 可以用来监听接收消息
  */
 
-import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
-@EnableRabbit
+
 @EnableDiscoveryClient
 @SpringBootApplication
 public class GmallOrderApplication {

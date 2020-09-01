@@ -53,9 +53,13 @@ spring:
     name: gmall-order
 
   rabbitmq:
-    host: 192.168.1.4
+    #host: 192.168.1.4
+    host: 172.188.88.155
     port: 5672
     virtual-host: /
+    username: guest
+    password: guest
+
 
 mybatis-plus:
   # 虽然我不知道为啥在源码和自动提示都是config-location，但是这样就报错，需要修改成config-locations(带s)
