@@ -51,16 +51,8 @@ public class SpringSessionConfig {
         DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
         // 设置session的作用域(Domain)  扩大作用域
         cookieSerializer.setDomainName("gmall.com");
-        // cookieSerializer.setCookieName("GMALLSESSION");
+        cookieSerializer.setCookieName("GMALLSESSION");
         return cookieSerializer;
     }
 
-    /**
-     * 设置redis序列化机制   使用json进行序列化存储
-     * @return
-     */
-    @Bean
-    public RedisSerializer<Object> springSessionDefaultRedisSerializer(){
-        return new GenericJackson2JsonRedisSerializer();
-    }
 }

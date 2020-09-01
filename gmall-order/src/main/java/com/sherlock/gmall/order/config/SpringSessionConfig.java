@@ -1,4 +1,4 @@
-package com.sherlock.gmall.product.config;
+package com.sherlock.gmall.order.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

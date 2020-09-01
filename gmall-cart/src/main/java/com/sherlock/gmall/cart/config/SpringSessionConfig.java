@@ -51,7 +51,7 @@ public class SpringSessionConfig {
         DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
         // 设置session的作用域(Domain)  扩大作用域
         cookieSerializer.setDomainName("gmall.com");
-        // cookieSerializer.setCookieName("GMALLSESSION");
+        cookieSerializer.setCookieName("GMALLSESSION");
         return cookieSerializer;
     }
 
