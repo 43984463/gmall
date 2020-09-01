@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /**
@@ -18,6 +19,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain=true)
 @TableName("oms_order_return_reason")
+@ToString
 public class OrderReturnReasonEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 

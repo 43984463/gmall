@@ -282,6 +282,9 @@ com.sherlock.gmall.cart.interceptor.CartInterceptor
 springBoot + rabbitMQ
 com.sherlock.gmall.order.GmallOrderApplication
 com.sherlock.gmall.order.GmallOrderApplicationTests
+com.sherlock.gmall.order.component.RabbitReceive
+com.sherlock.gmall.order.config.RabbitMQConfig
+
 ```
 
 ## windows查看占用端口的进程

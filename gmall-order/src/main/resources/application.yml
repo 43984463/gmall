@@ -53,13 +53,19 @@ spring:
     name: gmall-order
 
   rabbitmq:
-    #host: 192.168.1.4
-    host: 172.188.88.155
+    host: 192.168.1.4
     port: 5672
     virtual-host: /
     username: guest
     password: guest
-
+    #publisher-confirms: true #开启发送端确认 发送端->rabbitmq服务器
+    publisher-confirm-type: correlated  #配合CorrelationData类使用，发送消息时添加消息的唯一ID
+    publisher-returns: true #开启发送端确认 rabbitmq服务器(交换机)->queue 没有到达才会触发
+    template:
+      mandatory: true #只要消息抵达队列，以异步的方式优先回调 returnConfirm 接口
+    listener:
+      simple:
+        acknowledge-mode: manual #手动确认收货(消息被正确消费)
 
 mybatis-plus:
   # 虽然我不知道为啥在源码和自动提示都是config-location，但是这样就报错，需要修改成config-locations(带s)

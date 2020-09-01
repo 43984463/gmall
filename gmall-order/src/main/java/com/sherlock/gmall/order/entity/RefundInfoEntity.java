@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /**
@@ -19,6 +20,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain=true)
 @TableName("oms_refund_info")
+@ToString
 public class RefundInfoEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
