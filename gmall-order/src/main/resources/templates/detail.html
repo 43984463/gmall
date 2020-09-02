@@ -131,15 +131,19 @@
 						</li>
 					</ul>
 					<ul class="header_ul_right">
-						<li style="border: 0;">
-							<a href="/static/order/detail/denglu.html" class="aa">你好，请登录</a>
+						<li>
+							<a href="http://auth.gmall.com/login.html" style="border: 0; width: 150px">你好，[[${session.loginUser == null ? '请登录' : session.loginUser.nickname}]]</a>
 						</li>
 						<li>
-							<a href="/static/order/detail/javascript:;" style="color: red;">免费注册</a> |</li>
+							<a href="http://auth.gmall.com/reg.html" th:if="${session.loginUser == null}" style="color: red;">免费注册</a>
+						</li>
+						<span>|</span>
+
 						<li>
-							<a href="/static/order/detail/javascript:;" class="aa">我的订单</a> |</li>
+							<a href="http://order.gmall.com/list.html" class="aa">我的订单</a> |</li>
+
 						<li class="jingdong" style="width:95px;">
-							<a href="/static/order/detail/javascript:;">我的谷粒商城</a><span class="glyphicon glyphicon-menu-down">|</span>
+							<a href="http://gmall.com">我的谷粒商城</a><span class="glyphicon glyphicon-menu-down">|</span>
 							<ol class="jingdong_ol">
 								<li>
 									<a href="/static/order/detail/javascript:;">待处理订单</a>
