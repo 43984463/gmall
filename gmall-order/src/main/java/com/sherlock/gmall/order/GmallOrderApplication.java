@@ -27,11 +27,13 @@ package com.sherlock.gmall.order;
  *  @RabbitListener 可以用来监听接收消息
  */
 
+import com.sherlock.common.constants.GmallConstant;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
-
+@EnableFeignClients(GmallConstant.GMALL_ORDER_BASEPATH + GmallConstant.FEIGN)
 @EnableDiscoveryClient
 @SpringBootApplication
 public class GmallOrderApplication {

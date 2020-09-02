@@ -53,7 +53,10 @@ public class Cart {
         BigDecimal amount = new BigDecimal(0);
         if (!CollectionUtils.isEmpty(items)) {
             for (CartItem item : items) {
-                amount = amount.add(item.getTotalPrice());
+                // 只计算被选中的商品
+                if (item.isCheck()) {
+                    amount = amount.add(item.getTotalPrice());
+                }
             }
         }
         // 减去优惠总价

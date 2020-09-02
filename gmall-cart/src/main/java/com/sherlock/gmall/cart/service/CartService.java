@@ -3,6 +3,7 @@ package com.sherlock.gmall.cart.service;
 import com.sherlock.gmall.cart.vo.Cart;
 import com.sherlock.gmall.cart.vo.CartItem;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -50,4 +51,7 @@ public interface CartService {
     void countCartItem(Long skuId, Integer num);
 
     void deleteCartItem(Long skuId);
+
+    List<CartItem> getUserCartItems();
+
 }

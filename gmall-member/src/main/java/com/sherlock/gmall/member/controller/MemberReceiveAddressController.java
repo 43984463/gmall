@@ -1,10 +1,12 @@
 package com.sherlock.gmall.member.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import com.sherlock.common.Annotation.GmallMapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +32,16 @@ import com.sherlock.common.utils.R;
 public class MemberReceiveAddressController {
     @Autowired
     private MemberReceiveAddressService memberReceiveAddressService;
+
+    /**
+     * 根据会员ID获取所有的地址
+     * @param memberId
+     * @return
+     */
+    @GetMapping("/{memberId}/addresses")
+    public List<MemberReceiveAddressEntity> getAddresses(@PathVariable("memberId") Long memberId){
+        return memberReceiveAddressService.getAddresses(memberId);
+    }
 
     /**
      * 列表

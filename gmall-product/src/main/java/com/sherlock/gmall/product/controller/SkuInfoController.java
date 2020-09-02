@@ -1,5 +1,6 @@
 package com.sherlock.gmall.product.controller;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -43,6 +44,15 @@ public class SkuInfoController {
         return R.ok().put("page", page);
     }
 
+    /**
+     * 获取某个商品的价格
+     */
+    @RequestMapping("/{skuId}/price")
+    //@RequiresPermissions("product:skuinfo:info")
+    public BigDecimal getPrice(@PathVariable("skuId") Long skuId){
+        return skuInfoService.getById(skuId).getPrice();
+
+    }
 
     /**
      * 信息

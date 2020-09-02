@@ -168,6 +168,21 @@ public class CartServiceImpl implements CartService {
         cartOps.delete(skuId.toString());
     }
 
+    @Override
+    public List<CartItem> getUserCartItems() {
+        UserInfoTo userInfoTo = CartInterceptor.threadLocal.get();
+        if (userInfoTo.getUserId() == null){
+            return null;
+        } else {
+            List<CartItem> cartItems = getCartItems(GmallCartConstant.GMALL_CART_PREFIX + userInfoTo.getUserId());
+            return cartItems.stream()
+                    .filter(CartItem::isCheck)
+                     //重新获取所有物品的最新价格
+                    .map(item -> item.setPrice(productFeignService.getPrice(item.getSkuId())))
+                    .collect(Collectors.toList());
+        }
+    }
+
     /**
      * 获取购物车的所有购物项
      * @param cartKey
