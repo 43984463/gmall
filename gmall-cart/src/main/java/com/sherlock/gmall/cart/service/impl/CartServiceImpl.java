@@ -114,7 +114,7 @@ public class CartServiceImpl implements CartService {
             // 登录了
             // 如果临时购物车有数据需要合并并且清空临时购物车
             // 临时购物车
-            String tempCartKey = GmallCartConstant.GMALL_CART_PREFIX + userInfoTo.getUserId();
+            String tempCartKey = GmallCartConstant.GMALL_CART_PREFIX + userInfoTo.getUserKey();
             List<CartItem> tempCartItems = getCartItems(tempCartKey);
             if (!CollectionUtils.isEmpty(tempCartItems)) {
                 // 临时购物车有商品，需要合并
