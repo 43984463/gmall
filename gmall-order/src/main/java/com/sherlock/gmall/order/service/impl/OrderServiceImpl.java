@@ -46,6 +46,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     @Override
     public OrderConfirmVo confirmOder() {
+        // TODO 使用线程池调用
         // 获取用户
         MemberRespVo memberRespVo = LoginUserInterceptor.loginUser.get();
 
