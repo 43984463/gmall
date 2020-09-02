@@ -1,12 +1,14 @@
 package com.sherlock.gmall.order.service.impl;
 
 import com.sherlock.common.vo.MemberRespVo;
+import com.sherlock.gmall.order.config.GmallFeignConfig;
 import com.sherlock.gmall.order.feign.CartFeignService;
 import com.sherlock.gmall.order.feign.MemberFeignService;
 import com.sherlock.gmall.order.interceptor.LoginUserInterceptor;
 import com.sherlock.gmall.order.vo.MemberAddressVo;
 import com.sherlock.gmall.order.vo.OrderConfirmVo;
 import com.sherlock.gmall.order.vo.OrderItemVo;
+import feign.RequestInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +58,15 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         confirmVo.setItems(currentUserCartItems);
         // 3、查询用户的积分信息
         confirmVo.setIntegration(memberRespVo.getIntegration());
+        /**
+         * Feign远程调用丢失请求头 (Header)
+         *
+         * Feign在远程调用之前需要构造请求，调用很多的拦截器
+         * @see RequestInterceptor interceptor
+         *
+         * 解决办法
+         * @see GmallFeignConfig#requestInterceptor()
+         */
 
         // 4、其他数据自动计算
 

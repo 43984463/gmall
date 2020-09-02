@@ -286,6 +286,13 @@ com.sherlock.gmall.order.component.RabbitReceive
 com.sherlock.gmall.order.config.RabbitMQConfig
 com.sherlock.gmall.order.controller.RabbitController
 
+远程Feign请求丢失请求头等信息解决办法
+com.sherlock.gmall.order.config.GmallFeignConfig#requestInterceptor()
+
+在spring框架中获取某个线程的请求
+com.sherlock.gmall.order.config.GmallFeignConfig#requestInterceptor()
+或者参考    RequestContextHolder.class
+ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 ```
 
 ## windows查看占用端口的进程
