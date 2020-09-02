@@ -20,6 +20,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -178,7 +179,10 @@ public class CartServiceImpl implements CartService {
             return cartItems.stream()
                     .filter(CartItem::isCheck)
                      //重新获取所有物品的最新价格
-                    .map(item -> item.setPrice(productFeignService.getPrice(item.getSkuId())))
+                    .map(item -> {
+                        BigDecimal price = productFeignService.getPrice(item.getSkuId());
+                        return item.setPrice(price);
+                    })
                     .collect(Collectors.toList());
         }
     }

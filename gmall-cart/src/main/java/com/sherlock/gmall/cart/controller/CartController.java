@@ -87,9 +87,10 @@ public class CartController {
     }
 
     @ApiOperation("从登陆的用户获取所有被选中的购物项")
-    @GetMapping("currentUserCartItems")
+    @GetMapping("/currentUserCartItems")
     public List<CartItem> getCurrentUserCartItems(){
-        return cartService.getUserCartItems();
+        List<CartItem> userCartItems = cartService.getUserCartItems();
+        return userCartItems;
     }
 
 }

@@ -19,6 +19,6 @@ public class OrderItemVo {
     private List<String> skuAttr;
     private BigDecimal price;
     private BigDecimal totalPrice;
-    private Integer count = 0;
+    private Integer count;
 
 }
