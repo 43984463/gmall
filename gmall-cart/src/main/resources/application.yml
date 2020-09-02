@@ -13,7 +13,6 @@ spring:
     host: 120.76.60.77
     port: 7379
     password: sherlock
-    database: 1
   session:
     store-type: redis
   thymeleaf:

@@ -3,7 +3,6 @@ package com.sherlock.gmall.cart.controller;
 import com.sherlock.gmall.cart.service.CartService;
 import com.sherlock.gmall.cart.vo.Cart;
 import com.sherlock.gmall.cart.vo.CartItem;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -25,8 +25,8 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
-    @GetMapping({"/cart.html","/cartList"})
-    public String cartListPage(Model model) throws ExecutionException, InterruptedException {
+    @GetMapping({"/cart.html","/cartList",""})
+    public String cartListPage(Model model, HttpSession session) throws ExecutionException, InterruptedException {
         Cart cart = cartService.getCart();
         model.addAttribute("cart", cart);
         return "cartList";
