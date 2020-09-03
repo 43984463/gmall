@@ -59,7 +59,7 @@ public class SkuInfoController {
      */
     @RequestMapping("/info/{skuId}")
     //@RequiresPermissions("product:skuinfo:info")
-    public R<SkuInfoEntity> info(@PathVariable("skuId") Long skuId){
+    public R<SkuInfoEntity> getSkuInfo(@PathVariable("skuId") Long skuId){
 		SkuInfoEntity skuInfo = skuInfoService.getById(skuId);
 
         return R.ok().put("skuInfo", skuInfo);

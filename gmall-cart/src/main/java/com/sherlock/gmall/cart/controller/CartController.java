@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
@@ -88,6 +90,7 @@ public class CartController {
 
     @ApiOperation("从登陆的用户获取所有被选中的购物项")
     @GetMapping("/currentUserCartItems")
+    @ResponseBody
     public List<CartItem> getCurrentUserCartItems(){
         List<CartItem> userCartItems = cartService.getUserCartItems();
         return userCartItems;

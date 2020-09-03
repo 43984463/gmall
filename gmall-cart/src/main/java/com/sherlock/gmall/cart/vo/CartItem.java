@@ -23,71 +23,63 @@ public class CartItem {
         return skuId;
     }
 
-    public CartItem setSkuId(Long skuId) {
+    public void setSkuId(Long skuId) {
         this.skuId = skuId;
-        return this;
     }
 
     public boolean isCheck() {
         return check;
     }
 
-    public CartItem setCheck(boolean check) {
+    public void setCheck(boolean check) {
         this.check = check;
-        return this;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public CartItem setTitle(String title) {
+    public void setTitle(String title) {
         this.title = title;
-        return this;
     }
 
     public String getImage() {
         return image;
     }
 
-    public CartItem setImage(String image) {
+    public void setImage(String image) {
         this.image = image;
-        return this;
     }
 
     public List<String> getSkuAttr() {
         return skuAttr;
     }
 
-    public CartItem setSkuAttr(List<String> skuAttr) {
+    public void setSkuAttr(List<String> skuAttr) {
         this.skuAttr = skuAttr;
-        return this;
     }
 
     public BigDecimal getPrice() {
         return price;
     }
 
-    public CartItem setPrice(BigDecimal price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
-        return this;
     }
 
     public BigDecimal getTotalPrice() {
         return this.price.multiply(new BigDecimal(count));
     }
 
-    public CartItem setTotalPrice(BigDecimal totalPrice) {
+    public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
-        return this;
     }
 
     public Integer getCount() {
         return count;
     }
 
-    public CartItem setCount(Integer count) {
+    public void setCount(Integer count) {
         this.count = count;
-        return this;
     }
 }

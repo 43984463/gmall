@@ -178,11 +178,8 @@ public class CartServiceImpl implements CartService {
             List<CartItem> cartItems = getCartItems(GmallCartConstant.GMALL_CART_PREFIX + userInfoTo.getUserId());
             return cartItems.stream()
                     .filter(CartItem::isCheck)
-                     //重新获取所有物品的最新价格
-                    .map(item -> {
-                        BigDecimal price = productFeignService.getPrice(item.getSkuId());
-                        return item.setPrice(price);
-                    })
+                    //重新获取所有物品的最新价格
+                    .peek(item -> item.setPrice(productFeignService.getPrice(item.getSkuId())))
                     .collect(Collectors.toList());
         }
     }
