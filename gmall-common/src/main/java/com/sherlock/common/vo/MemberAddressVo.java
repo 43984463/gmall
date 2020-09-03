@@ -1,4 +1,4 @@
-package com.sherlock.gmall.order.vo;
+package com.sherlock.common.vo;
 
 import lombok.Data;
 

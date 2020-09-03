@@ -1,10 +1,14 @@
 package com.sherlock.gmall.ware.controller;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Map;
 
 import com.sherlock.common.Annotation.GmallMapping;
+import com.sherlock.gmall.ware.vo.FareVo;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +46,17 @@ public class WareInfoController {
         return R.ok().put("page", page);
     }
 
+    /**
+     * 返回数据包含地址信息 + 运费
+     * @param addrId
+     * @return
+     */
+    @ApiOperation("根据收货地址计算运费")
+    @GetMapping("/fare")
+    public R getFare(@RequestParam("addrId") Long addrId){
+        FareVo fare = wareInfoService.getFare(addrId);
+        return R.ok().setData(fare);
+    }
 
     /**
      * 信息

@@ -1,6 +1,6 @@
 package com.sherlock.gmall.order.feign;
 
-import com.sherlock.gmall.order.vo.MemberAddressVo;
+import com.sherlock.common.vo.MemberAddressVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

@@ -360,6 +360,10 @@ com.sherlock.gmall.order.config.GmallFeignConfig#requestInterceptor()
 com.sherlock.gmall.order.config.GmallFeignConfig#requestInterceptor()
 或者参考    RequestContextHolder.class
 ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+
+使用ajax发送请求并且经过网关最后到达真正的请求
+gmall/gmall-order/src/main/resources/templates/confirm.html  $(".addr-item p").click(){}
+
 ```
 
 ## windows查看占用端口的进程

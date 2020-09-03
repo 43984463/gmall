@@ -7,7 +7,7 @@ import com.sherlock.gmall.order.feign.CartFeignService;
 import com.sherlock.gmall.order.feign.MemberFeignService;
 import com.sherlock.gmall.order.feign.WmsFeignService;
 import com.sherlock.gmall.order.interceptor.LoginUserInterceptor;
-import com.sherlock.gmall.order.vo.MemberAddressVo;
+import com.sherlock.common.vo.MemberAddressVo;
 import com.sherlock.gmall.order.vo.OrderConfirmVo;
 import com.sherlock.gmall.order.vo.OrderItemVo;
 import feign.RequestInterceptor;
