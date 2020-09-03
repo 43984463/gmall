@@ -58,6 +58,15 @@ public class GmallFeignConfig {
                     if (headerNames != null){
                         while (headerNames.hasMoreElements()){
                             String headName = headerNames.nextElement();
+                            /**
+                             *  Feign 调用报错 java.io.IOException: too many bytes written
+                             *
+                             *  复制的时候是所有头都复制的,可能导致Content-length长度跟body不一致. 所以只需要判断如果是Content-length就跳过
+                             *
+                             */
+                            if (headName.equals("content-length")){
+                                continue;
+                            }
                             template.header(headName, request.getHeader(headName));
                         }
                     }

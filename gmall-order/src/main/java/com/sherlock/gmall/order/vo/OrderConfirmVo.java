@@ -1,12 +1,12 @@
 package com.sherlock.gmall.order.vo;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @auther Sherlock
@@ -37,6 +37,15 @@ public class OrderConfirmVo {
     // 应付价格
     // private BigDecimal payPrice;
 
+    /**
+     * 订单的防重令牌
+     */
+    @Getter @Setter
+    private String orderToken;
+
+    @Getter @Setter
+    private Map<Long, Boolean> stocks;
+
     public Integer getCount(){
         Integer count = 0;
         if (!CollectionUtils.isEmpty(items)){
@@ -47,12 +56,6 @@ public class OrderConfirmVo {
         return count;
     }
 
-
-    /**
-     * 订单的防重令牌
-     */
-    @Getter @Setter
-    private String orderToken;
 
     public BigDecimal getTotal() {
         BigDecimal totalPrice = new BigDecimal(0);

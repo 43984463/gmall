@@ -353,6 +353,8 @@ com.sherlock.gmall.order.config.GmallFeignConfig#requestInterceptor()
 异步请求多线程情况下远程Feign请求丢失请求头等信息解决办法
 com.sherlock.gmall.order.config.GmallFeignConfig#requestInterceptor()
 com.sherlock.gmall.order.service.impl.OrderServiceImpl#confirmOder()
+Feign 调用报错 java.io.IOException: too many bytes written
+com.sherlock.gmall.order.config.GmallFeignConfig#requestInterceptor()
 
 在spring框架中获取某个线程的请求
 com.sherlock.gmall.order.config.GmallFeignConfig#requestInterceptor()

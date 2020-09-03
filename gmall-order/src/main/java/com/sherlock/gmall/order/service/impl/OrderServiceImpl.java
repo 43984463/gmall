@@ -1,15 +1,19 @@
 package com.sherlock.gmall.order.service.impl;
 
+import com.sherlock.common.to.SkuHasStockVo;
 import com.sherlock.common.vo.MemberRespVo;
 import com.sherlock.gmall.order.config.GmallFeignConfig;
 import com.sherlock.gmall.order.feign.CartFeignService;
 import com.sherlock.gmall.order.feign.MemberFeignService;
+import com.sherlock.gmall.order.feign.WmsFeignService;
 import com.sherlock.gmall.order.interceptor.LoginUserInterceptor;
 import com.sherlock.gmall.order.vo.MemberAddressVo;
 import com.sherlock.gmall.order.vo.OrderConfirmVo;
 import com.sherlock.gmall.order.vo.OrderItemVo;
 import feign.RequestInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +21,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -27,6 +32,7 @@ import com.sherlock.common.utils.Query;
 import com.sherlock.gmall.order.dao.OrderDao;
 import com.sherlock.gmall.order.entity.OrderEntity;
 import com.sherlock.gmall.order.service.OrderService;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
@@ -39,6 +45,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     @Autowired
     private CartFeignService cartFeignService;
+
+    @Autowired
+    private WmsFeignService wmsFeignService;
 
     @Autowired
     private ThreadPoolExecutor executor;
@@ -85,8 +94,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         OrderConfirmVo confirmVo = new OrderConfirmVo();
         // 1、远程查询所有的收货地址
         CompletableFuture<Void> getAddresses = CompletableFuture.runAsync(() -> {
-            // 在Feign异步调用之前，把主线程的请求信息同步过来
-            RequestContextHolder.setRequestAttributes(requestAttributes);
+            // 在Feign异步调用之前，把主线程的请求信息同步过来 (这个请求暂时不需要请求头)
+            // RequestContextHolder.setRequestAttributes(requestAttributes);
             List<MemberAddressVo> addresses = memberFeignService.getAddresses(memberRespVo.getId());
             confirmVo.setAddresses(addresses);
         }, executor);
@@ -98,6 +107,19 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
             RequestContextHolder.setRequestAttributes(requestAttributes);
             List<OrderItemVo> currentUserCartItems = cartFeignService.getCurrentUserCartItems();
             confirmVo.setItems(currentUserCartItems);
+        }, executor).thenRunAsync(() -> {
+            // 查询库存
+
+            // 在Feign异步调用之前，把主线程的请求信息同步过来 (这个请求暂时不需要请求头)
+            // RequestContextHolder.setRequestAttributes(requestAttributes);
+
+            List<OrderItemVo> items = confirmVo.getItems();
+            List<Long> skuIds = items.stream().map(OrderItemVo::getSkuId).collect(Collectors.toList());
+            ResponseEntity<List<SkuHasStockVo>> skuHasStock = wmsFeignService.getSkuHasStock(skuIds);
+            if (skuHasStock.getStatusCode() == HttpStatus.OK && !CollectionUtils.isEmpty(skuHasStock.getBody())) {
+                Map<Long, Boolean> hasStocks = skuHasStock.getBody().stream().collect(Collectors.toMap(SkuHasStockVo::getSkuId, SkuHasStockVo::getHasStock));
+                confirmVo.setStocks(hasStocks);
+            }
         }, executor);
 
         // 3、查询用户的积分信息
