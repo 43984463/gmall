@@ -88,7 +88,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
             // 在Feign异步调用之前，把主线程的请求信息同步过来
             RequestContextHolder.setRequestAttributes(requestAttributes);
             List<MemberAddressVo> addresses = memberFeignService.getAddresses(memberRespVo.getId());
-            confirmVo.setAddress(addresses);
+            confirmVo.setAddresses(addresses);
         }, executor);
 
         // 2、远程查询购物车所有选中的购物项

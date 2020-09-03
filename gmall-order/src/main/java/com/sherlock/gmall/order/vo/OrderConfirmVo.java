@@ -17,7 +17,7 @@ public class OrderConfirmVo {
 
     // 收货地址
     @Setter @Getter
-    private List<MemberAddressVo> address;
+    private List<MemberAddressVo> addresses;
 
     // 所有选中的购物项
     @Setter @Getter
@@ -36,6 +36,17 @@ public class OrderConfirmVo {
 
     // 应付价格
     // private BigDecimal payPrice;
+
+    public Integer getCount(){
+        Integer count = 0;
+        if (!CollectionUtils.isEmpty(items)){
+            for (OrderItemVo item : items) {
+                count += item.getCount();
+            }
+        }
+        return count;
+    }
+
 
     /**
      * 订单的防重令牌
