@@ -1,11 +1,10 @@
 package com.sherlock.gmall.ware.controller;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Map;
 
 import com.sherlock.common.Annotation.GmallMapping;
-import com.sherlock.gmall.ware.vo.FareVo;
+import com.sherlock.common.vo.FareVo;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

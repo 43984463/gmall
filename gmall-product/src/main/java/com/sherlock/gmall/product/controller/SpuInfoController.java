@@ -5,9 +5,11 @@ import java.util.Map;
 
 
 import com.sherlock.common.Annotation.GmallMapping;
+import com.sherlock.common.vo.SpuInfoVo;
 import com.sherlock.gmall.product.vo.SpuSaveVo;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,6 +56,11 @@ public class SpuInfoController {
         return R.ok().put("page", page);
     }
 
+    @GetMapping("/skuId/{id}")
+    public R getSpuInfoBySkuId(@PathVariable("id") Long skuId){
+        SpuInfoVo spuInfoVo = spuInfoService.getSpuInfoBySkuId(skuId);
+        return R.ok().setData(spuInfoVo);
+    }
 
     /**
      * 信息

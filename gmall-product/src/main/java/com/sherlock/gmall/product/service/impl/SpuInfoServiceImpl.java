@@ -12,6 +12,7 @@ import com.sherlock.common.to.es.SkuEsModel;
 import com.sherlock.common.utils.PageUtils;
 import com.sherlock.common.utils.Query;
 import com.sherlock.common.utils.R;
+import com.sherlock.common.vo.SpuInfoVo;
 import com.sherlock.gmall.product.dao.SpuInfoDao;
 import com.sherlock.gmall.product.entity.AttrEntity;
 import com.sherlock.gmall.product.entity.BrandEntity;
@@ -323,6 +324,21 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
             throw new RuntimeException();
             // TODO 远程调用失败，重新调用，保持幂等性， 重试机制
         }
+    }
+
+    @Override
+    public SpuInfoVo getSpuInfoBySkuId(Long skuId) {
+        SpuInfoVo spuInfoVo = new SpuInfoVo();
+        SkuInfoEntity skuInfo = skuInfoService.getById(skuId);
+        Long spuId = skuInfo.getSpuId();
+        SpuInfoEntity spuInfoEntity = getById(spuId);
+
+        BeanUtils.copyProperties(spuInfoEntity, spuInfoVo);
+        BrandEntity brandEntity = brandService.getById(spuInfoEntity.getBrandId());
+
+        spuInfoVo.setBrandName(brandEntity.getName());
+        spuInfoVo.setSkuPrice(skuInfo.getPrice());
+        return spuInfoVo;
     }
 
 }

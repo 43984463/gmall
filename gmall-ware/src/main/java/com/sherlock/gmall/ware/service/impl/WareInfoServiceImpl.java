@@ -4,7 +4,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.sherlock.common.utils.R;
 import com.sherlock.common.vo.MemberAddressVo;
 import com.sherlock.gmall.ware.feign.MemberFeignService;
-import com.sherlock.gmall.ware.vo.FareVo;
+import com.sherlock.common.vo.FareVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
