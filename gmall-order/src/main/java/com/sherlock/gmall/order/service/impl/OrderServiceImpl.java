@@ -1,5 +1,10 @@
 package com.sherlock.gmall.order.service.impl;
 
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.RandomUtil;
+import com.alibaba.nacos.common.util.UuidUtils;
+import com.sherlock.common.constants.GmallConstant;
+import com.sherlock.common.constants.GmallOrderConstant;
 import com.sherlock.common.to.SkuHasStockVo;
 import com.sherlock.common.vo.MemberRespVo;
 import com.sherlock.gmall.order.config.GmallFeignConfig;
@@ -12,6 +17,7 @@ import com.sherlock.gmall.order.vo.OrderConfirmVo;
 import com.sherlock.gmall.order.vo.OrderItemVo;
 import feign.RequestInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,6 +27,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -51,6 +58,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     @Autowired
     private ThreadPoolExecutor executor;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -136,7 +146,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
         // 4、其他数据自动计算
 
+        /**
+         * 订单生成token redis一份， 页面一份， 页面提交时带着然后和redis中的对比，一样就把redis中的删掉， 第二次提交的就说明是重复提交的
+         */
         // 5、订单防重令牌
+        String token = IdUtil.simpleUUID();
+        redisTemplate.opsForValue().set(GmallOrderConstant.GMALL_ORDER_TOKEN_PREFIX + memberRespVo.getId(), token, 30, TimeUnit.MINUTES);
+        confirmVo.setOrderToken(token);
 
         CompletableFuture.allOf(getAddresses, getCurrentUserCartItems).get();
         return confirmVo;
