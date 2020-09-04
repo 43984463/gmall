@@ -746,7 +746,12 @@
         </p>
         <p class="yfze_b">寄送至：<span id="recieveAddressEle"></span> 收货人： <span id="recieverEle"></span> </p>
     </div>
-    <button class="tijiao">提交订单</button>
+    <form action="http://order.gmall.com/submitOrder" method="post">
+        <input type="hidden" id="addrIdInput" name="addrId">
+        <input type="hidden" id="payPriceInput" name="payPrice">
+        <input name="orderToken" type="hidden" th:value="${orderConfirmData.orderToken}">
+        <button type="submit" class="tijiao">提交订单</button>
+    </form>
 </div>
 </div>
 
@@ -1003,6 +1008,8 @@
 
     // 获取运费
     function getFare(addrId) {
+        // 给提交表单回填选择的地址
+        $("#addrIdInput").val(addrId);
         /**
          * 使用ajax发送请求并且经过网关最后到达真正的请求
          */
@@ -1011,8 +1018,11 @@
             $("#fareEle").text(data.data.fare);
             // JS直接获取model中的thymeleaf写法的值 *1是为了转换为数字
             var total = [[${orderConfirmData.total}]];
-            // 设置运费
-            $("#payPriceEle").text(total*1 + data.data.fare*1);
+            // 设置运费 + 物品价格
+            var payPrice = total*1 + data.data.fare*1;
+            $("#payPriceEle").text(payPrice);
+            $("#payPriceInput").val(payPrice);
+
             // 设置收货人地址信息
             $("#recieveAddressEle").text(data.data.address.province + " " + data.data.address.detailAddress);
             // 设置收货人
