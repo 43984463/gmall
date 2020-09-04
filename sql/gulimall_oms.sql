@@ -62,6 +62,7 @@ create table oms_order
    comment_time         datetime comment '评价时间',
    modify_time          datetime comment '修改时间',
    primary key (id)
+   unique key(`order_sn`)
 );
 
 alter table oms_order comment '订单';
