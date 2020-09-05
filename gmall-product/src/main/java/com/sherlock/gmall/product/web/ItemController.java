@@ -15,6 +15,8 @@ import java.util.concurrent.ExecutionException;
  * @auther Sherlock
  * @date 2020/8/8 20:23
  * @Description:
+ *
+ * TODO skuItem的请求路径会导致swagger-ui无法访问  暂时修改了item.html 1062行
  */
 @Controller
 @Slf4j
@@ -28,7 +30,7 @@ public class ItemController {
      * @param skuId
      * @return
      */
-    @GetMapping("/{skuId}.html")
+    @GetMapping("/{skuId}/html")
     public String skuItem (@PathVariable("skuId") Long skuId, Model model) throws ExecutionException, InterruptedException {
 
         log.info("查询商品的skuId是：{}", skuId);

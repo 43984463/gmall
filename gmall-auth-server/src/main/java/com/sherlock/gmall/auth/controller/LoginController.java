@@ -4,7 +4,7 @@ import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.TypeReference;
 import com.sherlock.common.constants.GmallAuthConstant;
 import com.sherlock.common.constants.GmallRedisKeysConstant;
-import com.sherlock.common.exception.BizCodeEnume;
+import com.sherlock.common.exception.GmallBizCodeEnume;
 import com.sherlock.common.utils.R;
 import com.sherlock.common.vo.MemberRespVo;
 import com.sherlock.gmall.auth.config.GmallAuthWebConfig;
@@ -87,7 +87,7 @@ public class LoginController {
             long l = Long.parseLong(redisCode.split("_")[1]);
             // System.currentTimeMillis() - l 获得的是毫秒  <60000是60S之内只能发送1次
             if (System.currentTimeMillis() - l < 60000) {
-                return R.error(BizCodeEnume.SMS_CODE_EXCEPTION.getCode(), BizCodeEnume.SMS_CODE_EXCEPTION.getMsg());
+                return R.error(GmallBizCodeEnume.SMS_CODE_EXCEPTION.getCode(), GmallBizCodeEnume.SMS_CODE_EXCEPTION.getMsg());
             }
         }
 

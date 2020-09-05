@@ -90,7 +90,7 @@ logging:
 #是否开启 swagger-ui
 #暂时先关闭了，不然每次启动的时候会比较慢
 swagger:
-  enabled: false
+  enabled: true
 
 #自定义线程池配置
 gmall:

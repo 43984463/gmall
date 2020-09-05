@@ -36,6 +36,9 @@ public class LoginUserInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession();
         MemberRespVo member = (MemberRespVo)session.getAttribute(GmallAuthConstant.GMALL_LOGIN_USER);
 
+        if (request.getRequestURL().toString().endsWith("swagger-ui.html")) {
+            return true;
+        }
 
         if (member != null){
             // 用户登录了

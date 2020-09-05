@@ -1,6 +1,7 @@
 package com.sherlock.gmall.order.vo;
 
 import com.sherlock.common.vo.MemberAddressVo;
+import com.sherlock.common.vo.OrderItemVo;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.CollectionUtils;

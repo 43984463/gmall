@@ -2,6 +2,8 @@ package com.sherlock.gmall.ware.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sherlock.common.utils.PageUtils;
+import com.sherlock.common.vo.LockStockResultVo;
+import com.sherlock.common.vo.WareSkuLockVo;
 import com.sherlock.gmall.ware.entity.WareSkuEntity;
 import com.sherlock.common.to.SkuHasStockVo;
 
@@ -22,5 +24,7 @@ public interface WareSkuService extends IService<WareSkuEntity> {
     void updateStock(Long skuId, Long wareId, Integer skuNum);
 
     List<SkuHasStockVo> getSkuHasStock(List<Long> skuIds);
+
+    Boolean orderLockStock(WareSkuLockVo lockVo);
 }
 

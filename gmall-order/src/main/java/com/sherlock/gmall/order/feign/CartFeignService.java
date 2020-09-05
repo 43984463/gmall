@@ -1,6 +1,6 @@
 package com.sherlock.gmall.order.feign;
 
-import com.sherlock.gmall.order.vo.OrderItemVo;
+import com.sherlock.common.vo.OrderItemVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 

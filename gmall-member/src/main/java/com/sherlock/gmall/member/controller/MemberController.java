@@ -1,11 +1,10 @@
 package com.sherlock.gmall.member.controller;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 import com.sherlock.common.Annotation.GmallMapping;
-import com.sherlock.common.exception.BizCodeEnume;
+import com.sherlock.common.exception.GmallBizCodeEnume;
 import com.sherlock.common.to.SocialUserVo;
 import com.sherlock.gmall.member.exception.PhoneExistException;
 import com.sherlock.gmall.member.exception.UserNameExistException;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sherlock.gmall.member.entity.MemberEntity;
@@ -60,9 +58,9 @@ public class MemberController {
             MemberEntity memberEntity = memberService.regist(vo);
             return R.ok().setData(memberEntity);
         } catch (PhoneExistException phoneExist){
-            return R.error(BizCodeEnume.PHONE_EXIST_EXCEPTION.getCode(), BizCodeEnume.PHONE_EXIST_EXCEPTION.getMsg());
+            return R.error(GmallBizCodeEnume.PHONE_EXIST_EXCEPTION.getCode(), GmallBizCodeEnume.PHONE_EXIST_EXCEPTION.getMsg());
         } catch (UserNameExistException userNameExist){
-            return R.error(BizCodeEnume.USER_EXIST_EXCEPTION.getCode(), BizCodeEnume.USER_EXIST_EXCEPTION.getMsg());
+            return R.error(GmallBizCodeEnume.USER_EXIST_EXCEPTION.getCode(), GmallBizCodeEnume.USER_EXIST_EXCEPTION.getMsg());
         }
     }
 
@@ -72,7 +70,7 @@ public class MemberController {
          if (memberEntity != null) {
              return R.ok().setData(memberEntity);
          } else {
-            return R.error(BizCodeEnume.LOGINACC_PASSWORD_INVAILD_EXCEPTION.getCode(),BizCodeEnume.LOGINACC_PASSWORD_INVAILD_EXCEPTION.getMsg());
+            return R.error(GmallBizCodeEnume.LOGINACC_PASSWORD_INVAILD_EXCEPTION.getCode(), GmallBizCodeEnume.LOGINACC_PASSWORD_INVAILD_EXCEPTION.getMsg());
          }
     }
 
@@ -82,7 +80,7 @@ public class MemberController {
         if (memberEntity != null) {
             return R.ok().setData(memberEntity);
         } else {
-            return R.error(BizCodeEnume.LOGINACC_PASSWORD_INVAILD_EXCEPTION.getCode(),BizCodeEnume.LOGINACC_PASSWORD_INVAILD_EXCEPTION.getMsg());
+            return R.error(GmallBizCodeEnume.LOGINACC_PASSWORD_INVAILD_EXCEPTION.getCode(), GmallBizCodeEnume.LOGINACC_PASSWORD_INVAILD_EXCEPTION.getMsg());
         }
     }
 

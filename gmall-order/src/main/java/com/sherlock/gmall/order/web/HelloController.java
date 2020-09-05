@@ -12,9 +12,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class HelloController {
 
-    @RequestMapping("/{page}.html")
+    /**
+     * /*@RequestMapping("/{page}.html")中的路径变量
+     * 这样请求会导致swagger-ui访问出错
+     *
+     * @param page
+     * @return
+     */
+    /*@RequestMapping("/{page}.html")
     public String listpage(@PathVariable("page") String page){
         return page;
-    }
+    }*/
 
 }

@@ -108,7 +108,7 @@ create table wms_ware_sku
    ware_id              bigint comment '²Ö¿âid',
    stock                int comment '¿â´æÊı',
    sku_name             varchar(200) comment 'sku_name',
-   stock_locked         int comment 'Ëø¶¨¿â´æ',
+   stock_locked         int default 0 comment 'Ëø¶¨¿â´æ',
    primary key (id)
 );
 

@@ -16,9 +16,9 @@ import org.apache.http.HttpStatus;
  *  13: 购物车
  *  14: 物流
  *  15: 用户
- *
+ *  21: 库存
  */
-public enum BizCodeEnume {
+public enum GmallBizCodeEnume {
     UNKNOW_EXCEPTION(GmallHttpStatus.UNKNOW_EXCEPTION,"系统未知异常"),
     VALID_EXCEPTION(GmallHttpStatus.VALID_EXCEPTION,"参数格式校验失败"),
     NOT_FOUND_EXCEPTION(HttpStatus.SC_NOT_FOUND,"404 Not Found"),
@@ -27,11 +27,12 @@ public enum BizCodeEnume {
     USER_EXIST_EXCEPTION(GmallHttpStatus.USER_EXIST_EXCEPTION,"用户已存在"),
     PHONE_EXIST_EXCEPTION(GmallHttpStatus.PHONE_EXIST_EXCEPTION,"手机号已存在"),
     LOGINACC_PASSWORD_INVAILD_EXCEPTION(GmallHttpStatus.LOGINACC_PASSWORD_INVAILD_EXCEPTION,"账号密码错误"),
-    GMALL_SYSTEM_OK(GmallHttpStatus.RESPONSE_OK, "OK");
+    GMALL_SYSTEM_OK(GmallHttpStatus.RESPONSE_OK, "OK"),
+    NO_STOCK_EXCEPTION(GmallHttpStatus.NO_STOCK_EXCEPTION, "库存不足");
 
     private int code;
     private String msg;
-    BizCodeEnume(int code,String msg){
+    GmallBizCodeEnume(int code, String msg){
         this.code = code;
         this.msg = msg;
     }

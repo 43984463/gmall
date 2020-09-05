@@ -1,18 +1,15 @@
 package com.sherlock.gmall.order.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.TypeReference;
-import com.alibaba.nacos.common.util.UuidUtils;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
-import com.sherlock.common.constants.GmallConstant;
 import com.sherlock.common.constants.GmallOrderConstant;
 import com.sherlock.common.to.SkuHasStockVo;
 import com.sherlock.common.utils.R;
 import com.sherlock.common.vo.FareVo;
 import com.sherlock.common.vo.MemberRespVo;
 import com.sherlock.common.vo.SpuInfoVo;
+import com.sherlock.common.vo.WareSkuLockVo;
 import com.sherlock.gmall.order.config.GmallFeignConfig;
 import com.sherlock.gmall.order.entity.OrderItemEntity;
 import com.sherlock.gmall.order.feign.CartFeignService;
@@ -21,9 +18,10 @@ import com.sherlock.gmall.order.feign.ProductFeignService;
 import com.sherlock.gmall.order.feign.WmsFeignService;
 import com.sherlock.gmall.order.interceptor.LoginUserInterceptor;
 import com.sherlock.common.vo.MemberAddressVo;
+import com.sherlock.gmall.order.service.OrderItemService;
 import com.sherlock.gmall.order.to.OrderCreateTo;
 import com.sherlock.gmall.order.vo.OrderConfirmVo;
-import com.sherlock.gmall.order.vo.OrderItemVo;
+import com.sherlock.common.vo.OrderItemVo;
 import com.sherlock.gmall.order.vo.OrderSubmitVo;
 import com.sherlock.gmall.order.vo.SubmitOrderResponseVo;
 import feign.RequestInterceptor;
@@ -36,6 +34,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -75,6 +74,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     @Autowired
     private ProductFeignService productFeignService;
+
+    @Autowired
+    private OrderItemService orderItemService;
 
     @Autowired
     private ThreadPoolExecutor executor;
@@ -183,7 +185,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
     {
         MemberRespVo memberRespVo = LoginUserInterceptor.loginUser.get();
 
-        SubmitOrderResponseVo responseVo = new SubmitOrderResponseVo();
+        SubmitOrderResponseVo response = new SubmitOrderResponseVo();
+        response.setCode(0);
         confirmVoThreadLocal.set(vo);
 
         // 下单步骤: 验证令牌，创建订单，验价格，锁库存。。。
@@ -196,24 +199,48 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         Long result = redisTemplate.execute(new DefaultRedisScript<Long>(script, Long.class), Arrays.asList(GmallOrderConstant.GMALL_ORDER_TOKEN_PREFIX + memberRespVo.getId()), orderToken);
 
         if (result == 0L) {
-            return responseVo.setCode(1);
+            return response.setCode(1);
         } else {
             // 创建订单
-            OrderCreateTo orderTo = createOrder();
+            OrderCreateTo orderCreateTo = createOrder();
             // 验价
-            BigDecimal payAmount = orderTo.getOrder().getPayAmount();
+            BigDecimal payAmount = orderCreateTo.getOrder().getPayAmount();
             BigDecimal payPrice = vo.getPayPrice();
             if (Math.abs(payAmount.subtract(payPrice).doubleValue()) < 0.01) {
-
+                // 金额对比成功
+                // 保存订单到数据库
+                saveOrder(orderCreateTo);
+                // 库存锁定
+                // 需要订单号，所有订单项(skuId, skuName, num) WareSkuLockVo中都包含
+                WareSkuLockVo lockVo = new WareSkuLockVo();
+                lockVo.setOrderSn(orderCreateTo.getOrder().getOrderSn());
+                List<OrderItemVo> locks = orderCreateTo.getOrderItems().stream().map(orderItemEntity -> {
+                    OrderItemVo itemVo = new OrderItemVo();
+                    itemVo.setSkuId(orderItemEntity.getSkuId());
+                    itemVo.setCount(orderItemEntity.getSkuQuantity());
+                    itemVo.setTitle(orderItemEntity.getSkuName());
+                    return itemVo;
+                }).collect(Collectors.toList());
+                lockVo.setLocks(locks);
+                // TODO 远程锁定库存
+                R r = wmsFeignService.orderLockStock(lockVo);
+                if (r.getCode() == 0) {
+                    // 锁定成功
+                    response.setOrder(orderCreateTo.getOrder());
+                    return response;
+                } else {
+                    // 锁定失败
+                    response.setCode(3);
+                    return response;
+                }
             } else {
                 // 验价失败
-                return responseVo.setCode(2);
+                return response.setCode(2);
             }
 
         }
-
-        return null;
     }
+
 
     private OrderCreateTo createOrder(){
         OrderCreateTo orderCreateTo = new OrderCreateTo();
@@ -241,9 +268,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
      * @return
      */
     private OrderEntity buildOrder(String orderSn) {
+        MemberRespVo memberRespVo = LoginUserInterceptor.loginUser.get();
         OrderEntity orderEntity = new OrderEntity();
 
         orderEntity.setOrderSn(orderSn);
+        orderEntity.setMemberId(memberRespVo.getId());
         // 收货信息
         OrderSubmitVo orderSubmitVo = confirmVoThreadLocal.get();
         R fare = wmsFeignService.getFare(orderSubmitVo.getAddrId());
@@ -363,5 +392,18 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         orderEntity.setGrowth(giftGrowth.intValue());
         orderEntity.setIntegration(giftIntegration.intValue());
 
+    }
+
+    /**
+     * 保存订单数据
+     * @param orderTo
+     */
+    private void saveOrder(OrderCreateTo orderTo) {
+        OrderEntity order = orderTo.getOrder();
+        order.setModifyTime(new Date());
+        save(order);
+
+        List<OrderItemEntity> orderItems = orderTo.getOrderItems();
+        orderItemService.saveBatch(orderItems);
     }
 }

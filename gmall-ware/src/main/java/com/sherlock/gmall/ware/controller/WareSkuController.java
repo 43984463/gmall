@@ -5,7 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.sherlock.common.Annotation.GmallMapping;
+import com.sherlock.common.exception.GmallBizCodeEnume;
 import com.sherlock.common.to.SkuHasStockVo;
+import com.sherlock.common.vo.WareSkuLockVo;
+import com.sherlock.gmall.ware.exception.NoStockException;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +50,18 @@ public class WareSkuController {
         ok.setData(vos);
         return ok;
     }*/
+
+    @ApiOperation("为某个订单锁定库存")
+    @PostMapping("/lock/order")
+    public R orderLockStock(@RequestBody WareSkuLockVo lockVo){
+        try{
+            Boolean locked = wareSkuService.orderLockStock(lockVo);
+            return R.ok();
+        } catch (NoStockException e){
+            return R.error(GmallBizCodeEnume.NO_STOCK_EXCEPTION.getCode(), GmallBizCodeEnume.NO_STOCK_EXCEPTION.getMsg());
+        }
+
+    }
 
     /**
      * 使用ResponseEntity封装的类型返回

@@ -1,7 +1,7 @@
 package com.sherlock.gmall.product.exception;
 
 import com.sherlock.common.constants.GmallConstant;
-import com.sherlock.common.exception.BizCodeEnume;
+import com.sherlock.common.exception.GmallBizCodeEnume;
 import com.sherlock.common.utils.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -26,7 +26,7 @@ public class GmallProductExceptionHandler {
         Map errorMaps = new HashMap();
         if (e.getBindingResult().hasErrors()) {
             e.getBindingResult().getFieldErrors().stream().forEach(item -> errorMaps.put(item.getField(), item.getDefaultMessage()));
-            return R.error(BizCodeEnume.VALID_EXCEPTION.getCode(), BizCodeEnume.VALID_EXCEPTION.getMsg()).put("errors", errorMaps);
+            return R.error(GmallBizCodeEnume.VALID_EXCEPTION.getCode(), GmallBizCodeEnume.VALID_EXCEPTION.getMsg()).put("errors", errorMaps);
         } else {
             return R.ok();
         }
@@ -35,6 +35,6 @@ public class GmallProductExceptionHandler {
     @ExceptionHandler(value = Throwable.class)
     public R handleProductException(Throwable e) {
         log.error("handleProductException错误：",e);
-        return R.error(BizCodeEnume.UNKNOW_EXCEPTION.getCode(), BizCodeEnume.UNKNOW_EXCEPTION.getMsg());
+        return R.error(GmallBizCodeEnume.UNKNOW_EXCEPTION.getCode(), GmallBizCodeEnume.UNKNOW_EXCEPTION.getMsg());
     }
 }
