@@ -241,4 +241,4 @@ CREATE TABLE `undo_log` (
   UNIQUE KEY `ux_undo_log` (`xid`,`branch_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
-alter table oms_refund_info comment 'seata日志表';
+alter table undo_log comment 'seata日志表';
