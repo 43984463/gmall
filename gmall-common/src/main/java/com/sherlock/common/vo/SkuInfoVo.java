@@ -4,6 +4,8 @@ package com.sherlock.common.vo;
  * @auther Sherlock
  * @date 2020/8/30 23:21
  * @Description:
+ *
+ * @see com.sherlock.gmall.product.controller.SkuInfoController#getSkuInfo(java.lang.Long)
  */
 
 import lombok.Data;

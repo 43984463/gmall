@@ -2,26 +2,34 @@ package com.sherlock.gmall.order.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.TypeReference;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sherlock.common.constants.GmallOrderConstant;
 import com.sherlock.common.to.SkuHasStockVo;
+import com.sherlock.common.utils.PageUtils;
+import com.sherlock.common.utils.Query;
 import com.sherlock.common.utils.R;
 import com.sherlock.common.vo.FareVo;
+import com.sherlock.common.vo.MemberAddressVo;
 import com.sherlock.common.vo.MemberRespVo;
+import com.sherlock.common.vo.OrderItemVo;
 import com.sherlock.common.vo.SpuInfoVo;
 import com.sherlock.common.vo.WareSkuLockVo;
 import com.sherlock.gmall.order.config.GmallFeignConfig;
+import com.sherlock.gmall.order.dao.OrderDao;
+import com.sherlock.gmall.order.entity.OrderEntity;
 import com.sherlock.gmall.order.entity.OrderItemEntity;
 import com.sherlock.gmall.order.feign.CartFeignService;
 import com.sherlock.gmall.order.feign.MemberFeignService;
 import com.sherlock.gmall.order.feign.ProductFeignService;
 import com.sherlock.gmall.order.feign.WmsFeignService;
 import com.sherlock.gmall.order.interceptor.LoginUserInterceptor;
-import com.sherlock.common.vo.MemberAddressVo;
 import com.sherlock.gmall.order.service.OrderItemService;
+import com.sherlock.gmall.order.service.OrderService;
 import com.sherlock.gmall.order.to.OrderCreateTo;
 import com.sherlock.gmall.order.vo.OrderConfirmVo;
-import com.sherlock.common.vo.OrderItemVo;
 import com.sherlock.gmall.order.vo.OrderSubmitVo;
 import com.sherlock.gmall.order.vo.SubmitOrderResponseVo;
 import feign.RequestInterceptor;
@@ -31,6 +39,10 @@ import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -42,20 +54,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sherlock.common.utils.PageUtils;
-import com.sherlock.common.utils.Query;
-
-import com.sherlock.gmall.order.dao.OrderDao;
-import com.sherlock.gmall.order.entity.OrderEntity;
-import com.sherlock.gmall.order.service.OrderService;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
 
 
 @Service("orderService")
@@ -324,8 +322,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
     private OrderItemEntity buildOrderItem(OrderItemVo cartItem, String orderSn) {
         OrderItemEntity orderItemEntity = new OrderItemEntity();
 
-        R infoBySkuId = productFeignService.getSpuInfoBySkuId(cartItem.getSkuId());
-        SpuInfoVo data = (SpuInfoVo) infoBySkuId.getData(new TypeReference<SpuInfoVo>() {});
+        R<SpuInfoVo> infoBySkuId = productFeignService.getSpuInfoBySkuId(cartItem.getSkuId());
+        SpuInfoVo data = infoBySkuId.getData(new TypeReference<SpuInfoVo>() {});
 
         // 1、订单信息：订单号
          orderItemEntity.setOrderSn(orderSn)
