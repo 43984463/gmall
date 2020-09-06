@@ -7,6 +7,7 @@
 ## [https://github.com/medcl/elasticsearch-analysis-ik] Elasticsearch的中文文档github地址
 ## [https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS]跨域中文讲解地址
 ## [https://open.weibo.com/wiki/%E6%8E%88%E6%9D%83%E6%9C%BA%E5%88%B6%E8%AF%B4%E6%98%8E]微博oauth2
+## [http://seata.io/zh-cn/docs/user/quickstart.html]seata 分布式事务
 
 ## tips:
 * 本地访问gmall-product时把/resources/templates/index2.html替换掉index.html
