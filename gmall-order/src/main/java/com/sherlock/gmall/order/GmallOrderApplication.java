@@ -67,7 +67,8 @@ package com.sherlock.gmall.order;
  *   alter table undo_log comment 'seata日志表';
  *
  *   2）、安装事务协调器
- *   从 https://github.com/seata/seata/releases ,下载服务器软件包，将其解压缩。
+ *   从 https://github.com/seata/seata/releases ,下载服务器软件包，将其解压缩。  我这个是1.0版本 老师的是0.7.1版本
+ *
  *
  *
  */
