@@ -39,6 +39,11 @@
                     <groupId>io.springfox</groupId>
                     <artifactId>springfox-swagger-ui</artifactId>
                 </exclusion>
+                <!--gateway不需要seata-->
+                <exclusion>
+                        <groupId>com.alibaba.cloud</groupId>
+                        <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <!--<dependency>

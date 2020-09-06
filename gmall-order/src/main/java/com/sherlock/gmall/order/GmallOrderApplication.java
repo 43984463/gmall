@@ -69,7 +69,21 @@ package com.sherlock.gmall.order;
  *   2）、安装事务协调器
  *   从 https://github.com/seata/seata/releases ,下载服务器软件包，将其解压缩。  我这个是1.0版本 老师的是0.7.1版本
  *
+ *   registry.conf :注册中心配置修改 registry type = "nacos"
+ *   file.conf
  *
+ *   3）、所有想要用到分布式事务的微服务使用seata DataSourceProxy代理自己的数据源
+ *   @see com.sherlock.gmall.order.config.MySeataConfig#datasource(org.springframework.boot.autoconfigure.jdbc.DataSourceProperties)
+ *
+ *   在 org.springframework.cloud:spring-cloud-starter-alibaba-seata
+ *   的 org.springframework.cloud.alibaba.seata.GlobalTransactionAutoConfiguration类中，
+ *   默认会使用 ${spring.application.name}-fescar-service-group作为服务名注册到 Seata Server上，如果和file.conf中的配置不一致，会提示 no available server to connect错误
+ *
+ *   也可以通过配置 spring.cloud.alibaba.seata.tx-service-group修改后缀，但是必须和file.conf中的配置保持一致
+ *
+ *   4）、修改 file.conf 的 vgroup_mapping.my_test_tx_group = "default" 为 ${spring.application.name}-fescar-service-group = "default"
+ *   5）、给分布式事务大事务的入口标注 @GlobalTransactional
+ *   6）、给每个远程的小事务用spring的@Transactional即可
  *
  */
 

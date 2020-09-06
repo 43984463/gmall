@@ -33,6 +33,7 @@ import com.sherlock.gmall.order.vo.OrderConfirmVo;
 import com.sherlock.gmall.order.vo.OrderSubmitVo;
 import com.sherlock.gmall.order.vo.SubmitOrderResponseVo;
 import feign.RequestInterceptor;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -179,6 +180,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         return confirmVo;
     }
 
+    @GlobalTransactional
     @Transactional
     @Override
     public SubmitOrderResponseVo submitOrder(OrderSubmitVo vo)
