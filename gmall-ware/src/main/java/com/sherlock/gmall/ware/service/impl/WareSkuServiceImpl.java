@@ -101,6 +101,14 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
      * @param lockVo
      * @return
      *
+     *
+     * 锁定某个订单的库存
+     *  <p>
+     *      库存解锁场景：
+     *      1)、下单成功，订单过期没有支付被系统自动取消、被用户手动取消
+     *      2)、下订单成功，库存锁定成功，但是后面的业务调用失败了，导致订单回滚，那么之前锁定的库存就要解锁
+     *  <p>
+     *
      * 默认运行时异常全都回滚
      */
     @Transactional(rollbackFor = NoStockException.class)
@@ -120,7 +128,6 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
             return stock;
         }).collect(Collectors.toList());
 
-        Boolean allLocked = true;
         // 2、锁定库存
         for (SkuWareHasStock hasStock : collect) {
             Boolean skuLocked = false;

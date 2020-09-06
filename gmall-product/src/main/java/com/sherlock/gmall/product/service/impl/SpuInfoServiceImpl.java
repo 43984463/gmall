@@ -244,7 +244,6 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
     @Transactional
     @Override
     public void up(Long spuId) {
-        List<SkuEsModel> upProducts = new ArrayList<>();
 
         // 查出当前spuId对应的所有sku信息
         List<SkuInfoEntity> entities = skuInfoService.getSkuBySpuId(spuId);
