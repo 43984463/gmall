@@ -375,5 +375,5 @@ netstat -aon|findstr 80
 tasklist|findstr 19796
 ```
 
-主键生成问题 TODO
-com.baomidou.mybatisplus.core.MybatisDefaultParameterHandler.processParameter 
+#主键生成问题 seata导致mybatis plus配置失效 需要设置所有的 com.sherlock.gmall.order.config.MySeataConfig.sqlSessionFactory  其他属性待设置
+com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration#sqlSessionFactory()

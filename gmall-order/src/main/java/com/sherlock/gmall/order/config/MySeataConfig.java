@@ -1,17 +1,15 @@
 package com.sherlock.gmall.order.config;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
+import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
-import com.zaxxer.hikari.HikariDataSource;
-import io.seata.rm.datasource.DataSourceProxy;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
 
@@ -38,16 +36,26 @@ public class MySeataConfig {
     }*/
 
 
+    /**
+     * @see MybatisPlusAutoConfiguration#sqlSessionFactory(javax.sql.DataSource)
+     *
+     * @param dataSource
+     * @return
+     * @throws Exception
+     */
     @Bean
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
         MybatisSqlSessionFactoryBean bean = new MybatisSqlSessionFactoryBean();
         bean.setDataSource(dataSource);
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         bean.setMapperLocations(resolver.getResources("classpath*:mapper/**/*.xml"));
+        GlobalConfig.DbConfig dbConfig = new GlobalConfig.DbConfig().setIdType(IdType.AUTO);
+        bean.setGlobalConfig(new GlobalConfig().setDbConfig(dbConfig));
 
         SqlSessionFactory factory = null;
         try {
             factory = bean.getObject();
+            factory.getConfiguration().setUseGeneratedKeys(true);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
