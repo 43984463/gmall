@@ -379,3 +379,8 @@ http {
 redirectAttributes.addAttribute("skuId", skuId);        将数据放在拼接在url后面
 redirectAttributes.addFlashAttribute("skuId", skuId);   将数据放在session里面可以在页面中取出，但是只能取一次
 ```
+
+## 分布式事务
+```text
+非高并发下可以使用seata 的AT模式进行处理
+```

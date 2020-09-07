@@ -83,6 +83,10 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto
+  # 主键生成问题 不加这个可能在seata分布式事务下使用雪花算法返回ID (待检测)
+  configuration:
+    use-generated-keys: true
+mybatis
 logging:
   level:
     com.sherlock.gmall: debug

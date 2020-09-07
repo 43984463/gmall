@@ -48,7 +48,7 @@ public class SkuFullReductionController {
 
     @PostMapping("/saveinfo")
     //@RequiresPermissions("coupon:skufullreduction:list")
-    public R list(@RequestBody SkuReductionTo skuReductionTo){
+    public R saveSkuReduction(@RequestBody SkuReductionTo skuReductionTo){
         skuFullReductionService.saveSkuReduction(skuReductionTo);
         return R.ok();
     }

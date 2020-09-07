@@ -9,6 +9,8 @@ import java.util.List;
  * @Author xueshuai
  * @Description: TODO
  * @Date 2020/6/8
+ *
+ * @see com.sherlock.gmall.coupon.controller.SkuFullReductionController#saveSkuReduction(com.sherlock.common.to.SkuReductionTo)
  **/
 @Data
 public class SkuReductionTo {

@@ -24,6 +24,7 @@ import com.sherlock.common.utils.Query;
 import com.sherlock.gmall.coupon.dao.SkuFullReductionDao;
 import com.sherlock.gmall.coupon.entity.SkuFullReductionEntity;
 import com.sherlock.gmall.coupon.service.SkuFullReductionService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 商品满减信息
@@ -47,6 +48,7 @@ public class SkuFullReductionServiceImpl extends ServiceImpl<SkuFullReductionDao
         return new PageUtils(page);
     }
 
+    @Transactional
     @Override
     public void saveSkuReduction(SkuReductionTo skuReductionTo) {
         // 1、保存满减打折
