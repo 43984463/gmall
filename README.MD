@@ -384,3 +384,5 @@ redirectAttributes.addFlashAttribute("skuId", skuId);   将数据放在session�
 ```text
 非高并发下可以使用seata 的AT模式进行处理
 ```
+
+## docker设置容器自启 docker update --restart=always + 容器ID
