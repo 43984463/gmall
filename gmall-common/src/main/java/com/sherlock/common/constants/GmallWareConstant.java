@@ -7,6 +7,15 @@ package com.sherlock.common.constants;
  */
 public interface GmallWareConstant {
 
+    public static final String STOCK_EVENT_EXCHANGE_NAME = "stock-event-exchange";
+    public static final String STOCK_RELEASE_QUEUE_NAME = "stock.release.stock.queue";
+    public static final String STOCK_LOCKED_QUEUE_NAME = "stock.locked.queue";
+
+    public static final String X_MESSAGE_TTL = "x-message-ttl";
+    public static final String X_DEAD_LETTER_EXCHANGE = "x-dead-letter-exchange";
+    public static final String X_DEAD_LETTER_ROUTING_KEY = "x-dead-letter-routing-key";
+    public static final int X_MESSAGE_TTL_TIME = 1000 * 60 * 2;
+
     public enum PurchaseStatusEnum {
         CREATED(0, "新建"),
         ASSIGNED(1, "已分配"),
@@ -40,6 +49,27 @@ public interface GmallWareConstant {
         private String message;
 
         PurchaseDetailStatusEnum(int code, String message) {
+            this.code = code;
+            this.message = message;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+    }
+
+    public enum WareOrderTaskDetailStatusEnum {
+        LOCKED(1, "已锁定"),
+        UNLOCK(2, "已解锁"),
+        DEDUCTION(3, "已扣减");
+        private int code;
+        private String message;
+
+        WareOrderTaskDetailStatusEnum(int code, String message) {
             this.code = code;
             this.message = message;
         }

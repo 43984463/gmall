@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.sherlock.common.Annotation.GmallMapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,16 @@ import com.sherlock.common.utils.R;
 public class OrderController {
     @Autowired
     private OrderService orderService;
+
+
+    /**
+     * 信息
+     */
+    @GetMapping("/getOrderInfoByOrderSn/{orderSn}")
+    public R getOrderInfoByOrderSn(@PathVariable("orderSn") String orderSn){
+        OrderEntity order = orderService.getOrderInfoByOrderSn(orderSn);
+        return R.ok().setData(order);
+    }
 
     /**
      * 列表

@@ -1,5 +1,6 @@
 package com.sherlock.gmall.member.feign;
 
+import com.sherlock.common.constants.GmallConstant;
 import com.sherlock.common.utils.R;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @Description:
  */
 @Service
-@FeignClient("gmall-coupon")
+@FeignClient(GmallConstant.GMALL_COUPON)
 public interface CouponFeignService {
 
     @RequestMapping("/coupon/coupon/member/list")

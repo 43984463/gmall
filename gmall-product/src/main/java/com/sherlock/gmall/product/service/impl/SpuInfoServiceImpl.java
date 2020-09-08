@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sherlock.common.constants.GmallProductConstant;
+import com.sherlock.common.exception.GmallHttpStatus;
 import com.sherlock.common.to.SkuHasStockVo;
 import com.sherlock.common.to.SkuReductionTo;
 import com.sherlock.common.to.SpuBoundTo;
@@ -321,7 +322,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
         // 把sku信息发送给gmall-search进行保存到ES
         R booleanR = searchFeignService.productStatusUp(skuEsModels);
-        if (booleanR.getCode() == 0) {
+        if (booleanR.getCode() == GmallHttpStatus.RESPONSE_OK) {
             // 远程调用成功， 修改上架状态
             log.info("远程调用成功");
             baseMapper.updateSpuStatus(spuId, GmallProductConstant.ProductStatusEnum.SPU_UP.getCode());

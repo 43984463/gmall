@@ -3,6 +3,7 @@ package com.sherlock.gmall.search.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.sherlock.common.constants.GmallSearchConstant;
+import com.sherlock.common.exception.GmallHttpStatus;
 import com.sherlock.common.to.es.SkuEsModel;
 import com.sherlock.common.utils.R;
 import com.sherlock.gmall.search.config.GmallElasticConfig;
@@ -365,7 +366,7 @@ public class MallSearchServiceImpl implements MallSearchService {
                     R<AttrResponseVo> r = productFeignService.info(Long.parseLong(s[0]));
                     // 前端遍历面包屑导航属性时用到
                     result.getAttrIds().add(Long.parseLong(s[0]));
-                    if (r.getCode() == 0) {
+                    if (r.getCode() == GmallHttpStatus.RESPONSE_OK) {
                         AttrResponseVo attrVo = r.getData("attr", new TypeReference<AttrResponseVo>(){});
                         navVo.setNavName(attrVo.getAttrName());
                     } else {
@@ -416,7 +417,7 @@ public class MallSearchServiceImpl implements MallSearchService {
 
                 /*R<List<BrandVo>> r = productFeignService.brandsInfo(param.getBrandId());
 
-                if (r.getCode() == 0) {
+                if (r.getCode() == GmallHttpStatus.RESPONSE_OK) {
                     List<BrandVo> brandIds = r.getData("brands", new TypeReference<List<BrandVo>>() {});
                     StringBuffer sb = new StringBuffer();
                     String replace = "";

@@ -1,5 +1,6 @@
 package com.sherlock.gmall.product.feign;
 
+import com.sherlock.common.constants.GmallConstant;
 import com.sherlock.common.to.SkuHasStockVo;
 import com.sherlock.common.utils.R;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -14,7 +15,7 @@ import java.util.List;
  * @date 2020/6/17 21:20
  * @Description: 所有的方法头和方法签名需要和远程的保持一致
  */
-@FeignClient("gmall-ware")
+@FeignClient(GmallConstant.GMALL_WARE)
 public interface WareFeignService {
 
     /*@PostMapping("/ware/waresku/hasstock")

@@ -16,6 +16,16 @@ public interface GmallConstant {
     public static final String GMALL_THIRDPARTY_BASEPATH = "com.sherlock.gmall.thirdparty";
     public static final String GMALL_CART_BASEPATH = "com.sherlock.gmall.cart";
 
+    public static final String GMALL_COUPON = "gmall-coupon";
+    public static final String GMALL_MEMBER = "gmall-member";
+    public static final String GMALL_ORDER = "gmall-order";
+    public static final String GMALL_PRODUCT = "gmall-product";
+    public static final String GMALL_WARE = "gmall-ware";
+    public static final String GMALL_AUTH = "gmall-auth";
+    public static final String GMALL_SEARCH = "gmall-search";
+    public static final String GMALL_THIRDPARTY = "gmall-thirdparty";
+    public static final String GMALL_CART = "gmall-cart";
+
 
     public static final String CONTROLLER = ".controller";
     public static final String WEB = ".web";

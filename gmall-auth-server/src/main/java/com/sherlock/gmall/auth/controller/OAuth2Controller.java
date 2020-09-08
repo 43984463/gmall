@@ -3,6 +3,7 @@ package com.sherlock.gmall.auth.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.sherlock.common.constants.GmallAuthConstant;
+import com.sherlock.common.exception.GmallHttpStatus;
 import com.sherlock.common.to.SocialUserVo;
 import com.sherlock.common.utils.HttpUtils;
 import com.sherlock.common.utils.R;
@@ -74,7 +75,7 @@ public class OAuth2Controller {
 
             R<MemberRespVo> r = memberFeignService.oauthLogin(socialUserVo);
 
-            if (r.getCode() == 0) {
+            if (r.getCode() == GmallHttpStatus.RESPONSE_OK) {
                 MemberRespVo respVo = r.getData(new TypeReference<MemberRespVo>(){});
                 log.info("登录成功：用户信息: {}", respVo.toString());
                 httpSession.setAttribute(GmallAuthConstant.GMALL_LOGIN_USER, respVo);

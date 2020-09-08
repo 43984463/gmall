@@ -4,6 +4,7 @@ import com.sherlock.common.constants.GmallAuthConstant;
 import com.sherlock.common.vo.MemberRespVo;
 import com.sherlock.gmall.order.config.GmallOrderWebConfiguration;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +33,16 @@ public class LoginUserInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
+        /**
+         * 解锁库存需要查询订单信息，防止被拦截，需要直接放行
+         *
+         * @see com.sherlock.gmall.ware.rabbitListenComponent.ReleaseLockStock#handStockLockedRelease(com.sherlock.common.to.mq.StockLockedTo, org.springframework.amqp.core.Message, com.rabbitmq.client.Channel)
+         */
+        StringBuffer requestURL = request.getRequestURL();
+        boolean match = new AntPathMatcher().match("/order/order/stauts/**", requestURL.toString());
+        if (match){
+            return true;
+        }
 
         HttpSession session = request.getSession();
         MemberRespVo member = (MemberRespVo)session.getAttribute(GmallAuthConstant.GMALL_LOGIN_USER);

@@ -1,5 +1,6 @@
 package com.sherlock.gmall.product.feign;
 
+import com.sherlock.common.constants.GmallConstant;
 import com.sherlock.common.to.SkuReductionTo;
 import com.sherlock.common.to.SpuBoundTo;
 import com.sherlock.common.utils.R;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @Description: TODO
  * @Date 2020/6/8
  **/
-@FeignClient("gmall-coupon")
+@FeignClient(GmallConstant.GMALL_COUPON)
 public interface CouponFeignService {
     /**
      * 1、CouponFeignService.saveSpuBounds(spuBoundTo);

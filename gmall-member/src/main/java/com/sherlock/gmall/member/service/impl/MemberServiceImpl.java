@@ -4,6 +4,7 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.sherlock.common.exception.GmallHttpStatus;
 import com.sherlock.common.to.SocialUserVo;
 import com.sherlock.common.utils.HttpUtils;
 import com.sherlock.gmall.member.entity.MemberLevelEntity;
@@ -137,7 +138,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
             query.put("uid", socialUserVo.getUid());
             try {
                 HttpResponse response = HttpUtils.doGet("https://api.weibo.com", "/2/users/show.json", "get", new HashMap<>(), query);
-                if (response.getStatusLine().getStatusCode() == 200) {
+                if (response.getStatusLine().getStatusCode() == GmallHttpStatus.SC_OK) {
                     String json = EntityUtils.toString(response.getEntity());
                     log.info("oauth 获得用户信息: {}", json);
                     JSONObject jsonObject = JSON.parseObject(json);

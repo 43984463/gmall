@@ -1,9 +1,13 @@
 package com.sherlock.gmall.ware.config;
 
+import com.sherlock.common.constants.GmallWareConstant;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Exchange;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,7 +24,9 @@ import java.util.Map;
  * MQ中如果有就不会再重新创建
  */
 @Configuration
-public class MyMQConfig {
+@Slf4j
+public class WareMQConfig {
+
 
     /**
      * 死信（延时）队列
@@ -38,10 +44,10 @@ public class MyMQConfig {
     @Bean
     public Queue stockDelayQueue() {
         Map<String, Object> arguments = new HashMap<>();
-        arguments.put("x-dead-letter-exchange", "stock-event-exchange"); // 死信路由
-        arguments.put("x-dead-letter-routing-key", "stock.release"); // 死信路由键
-        arguments.put("x-message-ttl", 1000 * 60 * 2); // 消息过期时间 2分钟
-        return new Queue("stock.locked.queue", true, false, false, arguments);
+        arguments.put(GmallWareConstant.X_DEAD_LETTER_EXCHANGE, GmallWareConstant.STOCK_EVENT_EXCHANGE_NAME); // 死信路由
+        arguments.put(GmallWareConstant.X_DEAD_LETTER_ROUTING_KEY, "stock.release"); // 死信路由键
+        arguments.put(GmallWareConstant.X_MESSAGE_TTL, GmallWareConstant.X_MESSAGE_TTL_TIME); // 消息过期时间 2分钟
+        return new Queue(GmallWareConstant.STOCK_LOCKED_QUEUE_NAME, true, false, false, arguments);
     }
 
     /**
@@ -51,7 +57,7 @@ public class MyMQConfig {
      */
     @Bean
     public Queue stockReleaseStockQueue() {
-        return new Queue("stock.release.stock.queue", true, false, false);
+        return new Queue(GmallWareConstant.STOCK_RELEASE_QUEUE_NAME, true, false, false);
     }
 
 
@@ -62,7 +68,7 @@ public class MyMQConfig {
      */
     @Bean
     public Exchange stockEventExchange() {
-        return new TopicExchange("stock-event-exchange", true, false);
+        return new TopicExchange(GmallWareConstant.STOCK_EVENT_EXCHANGE_NAME, true, false);
     }
 
     /**
@@ -79,9 +85,9 @@ public class MyMQConfig {
          * String routingKey,
          * Map<String, Object> arguments
          * */
-        return new Binding("stock.locked.queue",
+        return new Binding(GmallWareConstant.STOCK_LOCKED_QUEUE_NAME,
                 Binding.DestinationType.QUEUE,
-                "stock-event-exchange",
+                GmallWareConstant.STOCK_EVENT_EXCHANGE_NAME,
                 "stock.locked.#",
                 null);
     }
@@ -93,10 +99,15 @@ public class MyMQConfig {
      */
     @Bean
     public Binding stockReleaseBinding() {
-        return new Binding("stock.release.stock.queue",
+        return new Binding(GmallWareConstant.STOCK_RELEASE_QUEUE_NAME,
                 Binding.DestinationType.QUEUE,
-                "stock-event-exchange",
+                GmallWareConstant.STOCK_EVENT_EXCHANGE_NAME,
                 "stock.release.#",
                 null);
     }
+
+    /*@RabbitListener(queues = GmallWareConstant.STOCK_RELEASE_QUEUE_NAME)
+    public void stockHandle(Message message){
+        log.info("message: {}", message);
+    }*/
 }

@@ -20,7 +20,7 @@ import java.util.Map;
  * MQ中如果有就不会再重新创建
  */
 @Configuration
-public class MyMQConfig {
+public class OrderMQConfig {
 
     /**
      *    死信队列

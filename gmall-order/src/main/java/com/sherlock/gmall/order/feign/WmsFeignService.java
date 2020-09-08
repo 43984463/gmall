@@ -1,5 +1,6 @@
 package com.sherlock.gmall.order.feign;
 
+import com.sherlock.common.constants.GmallConstant;
 import com.sherlock.common.to.SkuHasStockVo;
 import com.sherlock.common.utils.R;
 import com.sherlock.common.vo.WareSkuLockVo;
@@ -17,7 +18,7 @@ import java.util.List;
  * @date 2020/9/3 20:16
  * @Description:
  */
-@FeignClient("gmall-ware")
+@FeignClient(GmallConstant.GMALL_WARE)
 public interface WmsFeignService {
 
     @PostMapping("/ware/waresku/hasstock")

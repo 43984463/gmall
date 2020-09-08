@@ -5,6 +5,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.sherlock.common.constants.GmallAuthConstant;
 import com.sherlock.common.constants.GmallRedisKeysConstant;
 import com.sherlock.common.exception.GmallBizCodeEnume;
+import com.sherlock.common.exception.GmallHttpStatus;
 import com.sherlock.common.utils.R;
 import com.sherlock.common.vo.MemberRespVo;
 import com.sherlock.gmall.auth.config.GmallAuthWebConfig;
@@ -174,7 +175,7 @@ public class LoginController {
                 // 调用会员远程服务进行注册
                 R<MemberRespVo> r = memberFeignService.regist(vo);
                 // 调用成功
-                if (r.getCode() == 0) {
+                if (r.getCode() == GmallHttpStatus.RESPONSE_OK) {
                     session.setAttribute(GmallAuthConstant.GMALL_LOGIN_USER, r.getData(new TypeReference<MemberRespVo>(){}));
                     return "redirect:http://auth.gmall.com/login.html";
                 } else {
@@ -202,7 +203,7 @@ public class LoginController {
     public String login(UserLoginVo loginVo, RedirectAttributes redirectAttributes, HttpSession session){
         // 调用远程服务进行验证账号和密码
         R<MemberRespVo> r = memberFeignService.login(loginVo);
-        if (r.getCode() == 0) {
+        if (r.getCode() == GmallHttpStatus.RESPONSE_OK) {
             session.setAttribute(GmallAuthConstant.GMALL_LOGIN_USER, r.getData(new TypeReference<MemberRespVo>(){}));
             return "redirect:http://gmall.com";
         } else {

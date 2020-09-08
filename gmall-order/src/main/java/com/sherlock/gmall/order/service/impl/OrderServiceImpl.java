@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sherlock.common.constants.GmallOrderConstant;
+import com.sherlock.common.exception.GmallHttpStatus;
 import com.sherlock.common.to.SkuHasStockVo;
 import com.sherlock.common.utils.PageUtils;
 import com.sherlock.common.utils.Query;
@@ -226,7 +227,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
                 lockVo.setLocks(locks);
                 // TODO 远程锁定库存
                 R r = wmsFeignService.orderLockStock(lockVo);
-                if (r.getCode() == 0) {
+                if (r.getCode() == GmallHttpStatus.RESPONSE_OK) {
                     // 锁定成功
                     response.setOrder(orderCreateTo.getOrder());
                     return response;
@@ -241,6 +242,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
             }
 
         }
+    }
+
+    @Override
+    public OrderEntity getOrderInfoByOrderSn(String orderSn) {
+        return getOne(new QueryWrapper<OrderEntity>().eq("order_sn", orderSn));
     }
 
 

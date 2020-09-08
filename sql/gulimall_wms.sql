@@ -93,6 +93,8 @@ create table wms_ware_order_task_detail
    sku_name             varchar(255) comment 'sku_name',
    sku_num              int comment '购买个数',
    task_id              bigint comment '工作单id',
+   ware_id              bigint comment '仓库id',
+   lock_status          int comment '锁定状态 1:锁定 2:解锁 3:扣减',
    primary key (id)
 );
 

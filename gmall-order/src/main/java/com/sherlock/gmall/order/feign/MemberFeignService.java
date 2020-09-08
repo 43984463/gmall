@@ -1,5 +1,6 @@
 package com.sherlock.gmall.order.feign;
 
+import com.sherlock.common.constants.GmallConstant;
 import com.sherlock.common.vo.MemberAddressVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +13,7 @@ import java.util.List;
  * @date 2020/9/2 22:30
  * @Description:
  */
-@FeignClient("gmall-member")
+@FeignClient(GmallConstant.GMALL_MEMBER)
 public interface MemberFeignService {
 
     @GetMapping("/member/memberreceiveaddress/{memberId}/addresses")

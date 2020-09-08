@@ -1,5 +1,6 @@
 package com.sherlock.gmall.order.web;
 
+import com.sherlock.common.exception.GmallHttpStatus;
 import com.sherlock.gmall.order.service.OrderService;
 import com.sherlock.gmall.order.vo.OrderConfirmVo;
 import com.sherlock.gmall.order.vo.OrderSubmitVo;
@@ -46,7 +47,7 @@ public class OrderWebController {
 
         // 下单步骤: 创建订单，验证令牌，验价格，锁库存。。。
         SubmitOrderResponseVo submitOrderResp = orderService.submitOrder(vo);
-        if (submitOrderResp.getCode() == 0) {
+        if (submitOrderResp.getCode() == GmallHttpStatus.RESPONSE_OK) {
             // 下单成功去支付页
             model.addAttribute("submitOrderResp", submitOrderResp);
             return "pay";

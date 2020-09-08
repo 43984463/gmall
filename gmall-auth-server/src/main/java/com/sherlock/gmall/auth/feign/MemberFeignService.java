@@ -1,5 +1,6 @@
 package com.sherlock.gmall.auth.feign;
 
+import com.sherlock.common.constants.GmallConstant;
 import com.sherlock.common.to.SocialUserVo;
 import com.sherlock.common.utils.R;
 import com.sherlock.common.vo.MemberRespVo;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @date 2020/8/16 23:21
  * @Description:
  */
-@FeignClient("gmall-member")
+@FeignClient(GmallConstant.GMALL_MEMBER)
 public interface MemberFeignService {
 
     @PostMapping("/member/member/regist")

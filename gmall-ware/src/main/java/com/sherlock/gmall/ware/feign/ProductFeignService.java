@@ -1,5 +1,6 @@
 package com.sherlock.gmall.ware.feign;
 
+import com.sherlock.common.constants.GmallConstant;
 import com.sherlock.common.utils.R;
 import com.sherlock.common.vo.SkuInfoVo;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @Description: TODO
  * @Date 2020/6/11
  **/
-@FeignClient("gmall-product")
+@FeignClient(GmallConstant.GMALL_PRODUCT)
 public interface ProductFeignService {
     /**
      *      /product/skuinfo/info/{skuId}

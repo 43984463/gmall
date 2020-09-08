@@ -1,5 +1,6 @@
 package com.sherlock.gmall.search.feign;
 
+import com.sherlock.common.constants.GmallConstant;
 import com.sherlock.common.utils.R;
 import com.sherlock.gmall.search.vo.AttrResponseVo;
 import com.sherlock.gmall.search.vo.BrandVo;
@@ -16,7 +17,7 @@ import java.util.List;
  * @date 2020/7/28 20:46
  * @Description:
  */
-@FeignClient("gmall-product")
+@FeignClient(GmallConstant.GMALL_PRODUCT)
 public interface ProductFeignService {
 
     /**
