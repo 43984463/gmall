@@ -1,5 +1,8 @@
 package com.sherlock.gmall.ware.config;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
+import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -33,16 +36,26 @@ public class MySeataConfig {
     }*/
 
 
+    /**
+     * @see MybatisPlusAutoConfiguration#sqlSessionFactory(DataSource)
+     *
+     * @param dataSource
+     * @return
+     * @throws Exception
+     */
     @Bean
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
         MybatisSqlSessionFactoryBean bean = new MybatisSqlSessionFactoryBean();
         bean.setDataSource(dataSource);
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         bean.setMapperLocations(resolver.getResources("classpath*:mapper/**/*.xml"));
+        GlobalConfig.DbConfig dbConfig = new GlobalConfig.DbConfig().setIdType(IdType.AUTO);
+        bean.setGlobalConfig(new GlobalConfig().setDbConfig(dbConfig));
 
         SqlSessionFactory factory = null;
         try {
             factory = bean.getObject();
+            factory.getConfiguration().setUseGeneratedKeys(true);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
