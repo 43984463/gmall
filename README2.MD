@@ -345,7 +345,8 @@ springBoot + rabbitMQ
 com.sherlock.gmall.order.GmallOrderApplication
 com.sherlock.gmall.order.GmallOrderApplicationTests
 com.sherlock.gmall.order.rabbitListener.RabbitReceive
-com.sherlock.gmall.order.config.RabbitMQConfig
+com.sherlock.gmall.order.config.OrderRabbitMQConfig
+com.sherlock.gmall.order.config.OrderMQConfig
 com.sherlock.gmall.order.controller.RabbitController
 
 普通单线程远程Feign请求丢失请求头等信息解决办法
