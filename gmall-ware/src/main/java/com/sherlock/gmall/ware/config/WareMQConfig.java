@@ -1,5 +1,6 @@
 package com.sherlock.gmall.ware.config;
 
+import com.sherlock.common.constants.GmallConstant;
 import com.sherlock.common.constants.GmallWareConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Binding;
@@ -44,9 +45,9 @@ public class WareMQConfig {
     @Bean
     public Queue stockDelayQueue() {
         Map<String, Object> arguments = new HashMap<>();
-        arguments.put(GmallWareConstant.X_DEAD_LETTER_EXCHANGE, GmallWareConstant.STOCK_EVENT_EXCHANGE_NAME); // 死信路由
-        arguments.put(GmallWareConstant.X_DEAD_LETTER_ROUTING_KEY, "stock.release"); // 死信路由键
-        arguments.put(GmallWareConstant.X_MESSAGE_TTL, GmallWareConstant.X_MESSAGE_TTL_TIME); // 消息过期时间 2分钟
+        arguments.put(GmallConstant.X_DEAD_LETTER_EXCHANGE, GmallWareConstant.STOCK_EVENT_EXCHANGE_NAME); // 死信路由
+        arguments.put(GmallConstant.X_DEAD_LETTER_ROUTING_KEY, "stock.release"); // 死信路由键
+        arguments.put(GmallConstant.X_MESSAGE_TTL, GmallWareConstant.X_MESSAGE_TTL_TIME); // 消息过期时间 2分钟
         return new Queue(GmallWareConstant.STOCK_LOCKED_QUEUE_NAME, true, false, false, arguments);
     }
 

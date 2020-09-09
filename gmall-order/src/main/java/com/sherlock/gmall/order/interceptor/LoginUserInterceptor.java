@@ -36,7 +36,7 @@ public class LoginUserInterceptor implements HandlerInterceptor {
         /**
          * 解锁库存需要查询订单信息，防止被拦截，需要直接放行
          *
-         * @see com.sherlock.gmall.ware.rabbitListenComponent.ReleaseLockStock#handStockLockedRelease(com.sherlock.common.to.mq.StockLockedTo, org.springframework.amqp.core.Message, com.rabbitmq.client.Channel)
+         * @see com.sherlock.gmall.ware.rabbitListener.ReleaseLockStock#handStockLockedRelease(com.sherlock.common.to.mq.StockLockedTo, org.springframework.amqp.core.Message, com.rabbitmq.client.Channel)
          */
         StringBuffer requestURL = request.getRequestURL();
         boolean match = new AntPathMatcher().match("/order/order/stauts/**", requestURL.toString());

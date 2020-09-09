@@ -11,9 +11,6 @@ public interface GmallWareConstant {
     public static final String STOCK_RELEASE_QUEUE_NAME = "stock.release.stock.queue";
     public static final String STOCK_LOCKED_QUEUE_NAME = "stock.locked.queue";
 
-    public static final String X_MESSAGE_TTL = "x-message-ttl";
-    public static final String X_DEAD_LETTER_EXCHANGE = "x-dead-letter-exchange";
-    public static final String X_DEAD_LETTER_ROUTING_KEY = "x-dead-letter-routing-key";
     public static final int X_MESSAGE_TTL_TIME = 1000 * 60 * 2;
 
     public enum PurchaseStatusEnum {

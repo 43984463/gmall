@@ -1,4 +1,4 @@
-package com.sherlock.gmall.ware.rabbitListenComponent;
+package com.sherlock.gmall.ware.rabbitListener;
 
 import com.rabbitmq.client.Channel;
 import com.sherlock.common.constants.GmallWareConstant;
@@ -21,7 +21,7 @@ import java.io.IOException;
 @Component
 @Slf4j
 @RabbitListener(queues = GmallWareConstant.STOCK_RELEASE_QUEUE_NAME)
-public class ReleaseLockStock {
+public class WareReleaseLockStockListener {
 
     @Autowired
     private WareSkuService wareSkuService;

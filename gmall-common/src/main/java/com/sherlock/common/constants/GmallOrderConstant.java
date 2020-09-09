@@ -7,7 +7,18 @@ package com.sherlock.common.constants;
  **/
 public interface GmallOrderConstant {
 
+
     public static final String GMALL_ORDER_TOKEN_PREFIX = "order:token:";
+
+    public static final String ORDER_EVENT_EXCHANGE = "order-event-exchange";
+    public static final String ORDER_RELEASE_ORDER_QUEUE_NAME = "order.release.order.queue";
+    public static final String ORDER_DELAY_QUEUE_NAME = "order.delay.queue";
+    public static final String ORDER_RELEASE_ORDER_ROUTING_KEY_NAME = "order.release.order";
+    public static final String ORDER_CREATE_ORDER_ROUTING_KEY_NAME = "order.create.order";
+
+
+    public static final int X_MESSAGE_TTL_TIME = 1000 * 60 * 1;
+
     // 订单自动收货时间
     public static final int GMALL_ORDER_AUTO_CONFIRM_DAY = 7;
 

@@ -21,7 +21,7 @@ import javax.annotation.PostConstruct;
 @EnableRabbit
 @Configuration
 @Slf4j
-public class RabbitMQConfig {
+public class OrderRabbitMQConfig {
 
 
     @Autowired

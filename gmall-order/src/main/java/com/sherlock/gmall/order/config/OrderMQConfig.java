@@ -1,5 +1,7 @@
 package com.sherlock.gmall.order.config;
 
+import com.sherlock.common.constants.GmallConstant;
+import com.sherlock.common.constants.GmallOrderConstant;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Exchange;
 import org.springframework.amqp.core.Queue;
@@ -37,10 +39,10 @@ public class OrderMQConfig {
     @Bean
     public Queue orderDelayQueue(){
         Map<String, Object> arguments = new HashMap<>();
-        arguments.put("x-dead-letter-exchange", "order-event-exchange"); // 死信路由
-        arguments.put("x-dead-letter-routing-key", "order.release.order"); // 死信路由键
-        arguments.put("x-message-ttl", 60000); // 消息过期时间 1分钟
-        return new Queue("order.delay.queue", true, false, false, arguments);
+        arguments.put(GmallConstant.X_DEAD_LETTER_EXCHANGE, GmallOrderConstant.ORDER_EVENT_EXCHANGE); // 死信路由
+        arguments.put(GmallConstant.X_DEAD_LETTER_ROUTING_KEY, GmallOrderConstant.ORDER_RELEASE_ORDER_ROUTING_KEY_NAME); // 死信路由键
+        arguments.put(GmallConstant.X_MESSAGE_TTL, GmallOrderConstant.X_MESSAGE_TTL_TIME); // 消息过期时间 1分钟
+        return new Queue(GmallOrderConstant.ORDER_DELAY_QUEUE_NAME, true, false, false, arguments);
     }
 
     /**
@@ -49,7 +51,7 @@ public class OrderMQConfig {
      */
     @Bean
     public Queue orderReleaseOrderQueue(){
-        return new Queue("order.release.order.queue", true, false, false);
+        return new Queue(GmallOrderConstant.ORDER_RELEASE_ORDER_QUEUE_NAME, true, false, false);
     }
 
 
@@ -59,7 +61,7 @@ public class OrderMQConfig {
      */
     @Bean
     public Exchange orderEventExchange(){
-        return new TopicExchange("order-event-exchange",true,false);
+        return new TopicExchange(GmallOrderConstant.ORDER_EVENT_EXCHANGE,true,false);
     }
 
     /**
@@ -75,10 +77,10 @@ public class OrderMQConfig {
          * String routingKey,
          * Map<String, Object> arguments
          * */
-        return new Binding("order.delay.queue",
+        return new Binding(GmallOrderConstant.ORDER_DELAY_QUEUE_NAME,
                 Binding.DestinationType.QUEUE,
-                "order-event-exchange",
-                "order.create.order",
+                GmallOrderConstant.ORDER_EVENT_EXCHANGE,
+                GmallOrderConstant.ORDER_CREATE_ORDER_ROUTING_KEY_NAME,
                 null);
     }
 
@@ -88,10 +90,10 @@ public class OrderMQConfig {
      */
     @Bean
     public Binding orderReleaseOrderBinding(){
-        return new Binding("order.release.order.queue",
+        return new Binding(GmallOrderConstant.ORDER_RELEASE_ORDER_QUEUE_NAME,
                 Binding.DestinationType.QUEUE,
-                "order-event-exchange",
-                "order.release.order",
+                GmallOrderConstant.ORDER_EVENT_EXCHANGE,
+                GmallOrderConstant.ORDER_RELEASE_ORDER_ROUTING_KEY_NAME,
                 null);
     }
 }
