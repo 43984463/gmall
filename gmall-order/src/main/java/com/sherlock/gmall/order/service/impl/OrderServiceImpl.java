@@ -249,6 +249,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         return getOne(new QueryWrapper<OrderEntity>().eq("order_sn", orderSn));
     }
 
+    @Override
+    public void closeOrder() {
+
+    }
+
 
     private OrderCreateTo createOrder(){
         OrderCreateTo orderCreateTo = new OrderCreateTo();

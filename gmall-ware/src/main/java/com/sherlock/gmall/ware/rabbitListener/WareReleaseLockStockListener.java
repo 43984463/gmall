@@ -37,7 +37,7 @@ public class WareReleaseLockStockListener {
      */
     @RabbitHandler
     public void handStockLockedRelease(StockLockedTo stockLockedTo, Message message, Channel channel) throws IOException {
-
+        log.info("WareReleaseLockStockListener, hand Stock Locked Release, {}", stockLockedTo);
 
         try {
             wareSkuService.orderUnLockStock(stockLockedTo);
