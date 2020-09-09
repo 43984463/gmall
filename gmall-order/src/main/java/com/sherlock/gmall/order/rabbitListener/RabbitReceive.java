@@ -1,4 +1,4 @@
-package com.sherlock.gmall.order.component;
+package com.sherlock.gmall.order.rabbitListener;
 
 import com.rabbitmq.client.Channel;
 import com.sherlock.gmall.order.entity.OrderReturnReasonEntity;
