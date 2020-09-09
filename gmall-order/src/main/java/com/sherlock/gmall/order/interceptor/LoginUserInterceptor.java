@@ -3,6 +3,7 @@ package com.sherlock.gmall.order.interceptor;
 import com.sherlock.common.constants.GmallAuthConstant;
 import com.sherlock.common.vo.MemberRespVo;
 import com.sherlock.gmall.order.config.GmallOrderWebConfiguration;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -26,6 +27,7 @@ import javax.servlet.http.HttpSession;
  *
  */
 @Component
+@Slf4j
 public class LoginUserInterceptor implements HandlerInterceptor {
 
     public static ThreadLocal<MemberRespVo> loginUser = new ThreadLocal<>();
@@ -39,6 +41,7 @@ public class LoginUserInterceptor implements HandlerInterceptor {
          * @see com.sherlock.gmall.ware.rabbitListener.ReleaseLockStock#handStockLockedRelease(com.sherlock.common.to.mq.StockLockedTo, org.springframework.amqp.core.Message, com.rabbitmq.client.Channel)
          */
         StringBuffer requestURL = request.getRequestURL();
+        log.info("request Url is {}", requestURL);
         boolean match = new AntPathMatcher().match("/order/order/stauts/**", requestURL.toString());
         if (match){
             return true;

@@ -1,14 +1,14 @@
 package com.sherlock.gmall.ware.controller;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
 import com.sherlock.common.Annotation.GmallMapping;
 import com.sherlock.common.exception.GmallBizCodeEnume;
+import com.sherlock.common.exception.NoStockException;
 import com.sherlock.common.to.SkuHasStockVo;
+import com.sherlock.common.utils.PageUtils;
+import com.sherlock.common.utils.R;
 import com.sherlock.common.vo.WareSkuLockVo;
-import com.sherlock.gmall.ware.exception.NoStockException;
+import com.sherlock.gmall.ware.entity.WareSkuEntity;
+import com.sherlock.gmall.ware.service.WareSkuService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,10 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sherlock.gmall.ware.entity.WareSkuEntity;
-import com.sherlock.gmall.ware.service.WareSkuService;
-import com.sherlock.common.utils.PageUtils;
-import com.sherlock.common.utils.R;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 
 /**

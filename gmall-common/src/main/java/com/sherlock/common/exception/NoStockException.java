@@ -1,4 +1,4 @@
-package com.sherlock.gmall.ware.exception;
+package com.sherlock.common.exception;
 
 /**
  * @auther Sherlock
