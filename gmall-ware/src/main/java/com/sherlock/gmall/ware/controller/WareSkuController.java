@@ -57,7 +57,7 @@ public class WareSkuController {
             Boolean locked = wareSkuService.orderLockStock(lockVo);
             return R.ok();
         } catch (NoStockException e){
-            return R.error(GmallBizCodeEnume.NO_STOCK_EXCEPTION.getCode(), GmallBizCodeEnume.NO_STOCK_EXCEPTION.getMsg());
+            return R.error(GmallBizCodeEnume.NO_STOCK_EXCEPTION.getCode(), e.getMessage());
         }
 
     }

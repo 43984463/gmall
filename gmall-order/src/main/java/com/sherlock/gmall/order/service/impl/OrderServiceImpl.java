@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sherlock.common.constants.GmallOrderConstant;
+import com.sherlock.common.exception.CheckPriceDiffException;
 import com.sherlock.common.exception.GmallHttpStatus;
 import com.sherlock.common.exception.NoStockException;
 import com.sherlock.common.to.SkuHasStockVo;
@@ -36,6 +37,7 @@ import com.sherlock.gmall.order.vo.OrderSubmitVo;
 import com.sherlock.gmall.order.vo.SubmitOrderResponseVo;
 import feign.RequestInterceptor;
 import io.seata.spring.annotation.GlobalTransactional;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -190,7 +192,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         MemberRespVo memberRespVo = LoginUserInterceptor.loginUser.get();
 
         SubmitOrderResponseVo response = new SubmitOrderResponseVo();
-        response.setCode(0);
+        response.setCode(GmallHttpStatus.RESPONSE_OK);
         confirmVoThreadLocal.set(vo);
 
         // 下单步骤: 验证令牌，创建订单，验价格，锁库存。。。
@@ -234,12 +236,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
                     return response;
                 } else {
                     // 锁定失败
-                    response.setCode(3);
-                    return response;
+                    String msg = (String) r.get("msg");
+                    throw new NoStockException(msg);
                 }
             } else {
                 // 验价失败
-                return response.setCode(2);
+                throw new CheckPriceDiffException("订单商品价格发生变化，请确认后再次提交");
             }
 
         }
