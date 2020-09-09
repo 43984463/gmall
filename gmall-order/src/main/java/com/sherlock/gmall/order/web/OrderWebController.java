@@ -63,20 +63,20 @@ public class OrderWebController {
                 }
                 // 下单失败回到订单确认页重新确认订单
                 redirectAttributes.addFlashAttribute("msg", msg);
-                return "redirect:http://cart.gmall.com/toTrade";
+                return "redirect:http://order.gmall.com/toTrade";
             }
         } catch (NoStockException e) {
             msg += e.getMsg();
             redirectAttributes.addFlashAttribute("msg", msg);
-            return "redirect:http://cart.gmall.com/toTrade";
+            return "redirect:http://order.gmall.com/toTrade";
         } catch (CheckPriceDiffException e) {
             msg += e.getMsg();
             redirectAttributes.addFlashAttribute("msg", msg);
-            return "redirect:http://cart.gmall.com/toTrade";
+            return "redirect:http://order.gmall.com/toTrade";
         } catch (Exception e) {
             msg += "未知错误";
             redirectAttributes.addFlashAttribute("msg", msg);
-            return "redirect:http://cart.gmall.com/toTrade";
+            return "redirect:http://order.gmall.com/toTrade";
         }
 
     }

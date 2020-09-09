@@ -42,7 +42,7 @@ public class LoginUserInterceptor implements HandlerInterceptor {
          */
         StringBuffer requestURL = request.getRequestURL();
         log.info("request Url is {}", requestURL);
-        boolean match = new AntPathMatcher().match("/order/order/stauts/**", requestURL.toString());
+        boolean match = new AntPathMatcher().match("**/order/order/getOrderInfoByOrderSn/**", requestURL.toString());
         if (match){
             return true;
         }

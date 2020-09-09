@@ -10,6 +10,7 @@ import com.sherlock.common.constants.GmallWareConstant;
 import com.sherlock.common.exception.GmallHttpStatus;
 import com.sherlock.common.exception.NoStockException;
 import com.sherlock.common.to.SkuHasStockVo;
+import com.sherlock.common.to.mq.OrderTo;
 import com.sherlock.common.to.mq.StockLockedTo;
 import com.sherlock.common.to.mq.WareOrderStockLockedDetailTo;
 import com.sherlock.common.utils.PageUtils;
@@ -31,9 +32,15 @@ import com.sherlock.gmall.ware.vo.OrderVo;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.aop.config.AopConfigUtils;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -203,7 +210,8 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
                     BeanUtils.copyProperties(detailEntity, wareOrderStockLockedDetailTo);
                     stockLockedTo.setId(wareSkuEntity.getId()).setDetail(wareOrderStockLockedDetailTo);
                     // 发送给MQ的死信路由 2分钟之后到锁仓库的queue
-                    rabbitTemplate.convertAndSend(GmallWareConstant.STOCK_EVENT_EXCHANGE_NAME, "stock.locked", stockLockedTo);
+                    CorrelationData correlationData = new CorrelationData(lockVo.getOrderSn());
+                    rabbitTemplate.convertAndSend(GmallWareConstant.STOCK_EVENT_EXCHANGE_NAME, "stock.locked", stockLockedTo, correlationData);
                     break;
                 } else {
                     // 当前仓库锁失败(没有足够的货)，重试下一个仓库
@@ -221,6 +229,8 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
         return true;
     }
 
+
+    @Transactional
     @Override
     public void unLockStock(StockLockedTo stockLockedTo) {
 
@@ -232,6 +242,32 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
         detailEntity.setId(detail.getId());
         detailEntity.setLockStatus(GmallWareConstant.WareOrderTaskDetailStatusEnum.UNLOCK.getCode());
         wareOrderTaskDetailService.updateById(detailEntity);
+    }
+
+    @Transactional
+    @Override
+    public void orderUnLockStock(OrderTo orderTo) {
+        String orderSn = orderTo.getOrderSn();
+        // 解锁库存
+        WareOrderTaskEntity taskEntity = wareOrderTaskService.getOrderTaskByOrderSn(orderSn);
+        // 按照工作单找到所有的没有解锁的库存， 进行解锁
+        List<WareOrderTaskDetailEntity> detailEntities = wareOrderTaskDetailService.list(new QueryWrapper<WareOrderTaskDetailEntity>()
+                .eq("task_id", taskEntity.getId())
+                .eq("lock_status", GmallWareConstant.WareOrderTaskDetailStatusEnum.LOCKED.getCode()));
+
+        for (WareOrderTaskDetailEntity detailEntity : detailEntities) {
+            StockLockedTo stockLockedTo = new StockLockedTo();
+            WareOrderStockLockedDetailTo detail = new WareOrderStockLockedDetailTo();
+            detail.setSkuId(detailEntity.getSkuId());
+            detail.setId(detailEntity.getId());
+            detail.setWareId(detailEntity.getWareId());
+            detail.setSkuNum(detailEntity.getSkuNum());
+            stockLockedTo.setDetail(detail);
+            // 本类调用
+            WareSkuService wareSkuService = (WareSkuService) AopContext.currentProxy();
+            wareSkuService.unLockStock(stockLockedTo);
+        }
+
     }
 
     @Override

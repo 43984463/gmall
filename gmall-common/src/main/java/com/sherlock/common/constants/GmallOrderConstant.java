@@ -15,6 +15,8 @@ public interface GmallOrderConstant {
     public static final String ORDER_DELAY_QUEUE_NAME = "order.delay.queue";
     public static final String ORDER_RELEASE_ORDER_ROUTING_KEY_NAME = "order.release.order";
     public static final String ORDER_CREATE_ORDER_ROUTING_KEY_NAME = "order.create.order";
+    public static final String ORDER_RELEASE_OTHER_ROUTING_KEY_NAME = "order.release.other.#";
+    public static final String ORDER_RELEASE_OTHER_ROUTING_KEY = "order.release.other";
 
 
     public static final int X_MESSAGE_TTL_TIME = 1000 * 60 * 1;

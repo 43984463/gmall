@@ -27,6 +27,6 @@ public interface OrderService extends IService<OrderEntity> {
 
     OrderEntity getOrderInfoByOrderSn(String orderSn);
 
-    void closeOrder();
+    void closeOrder(OrderEntity orderEntity);
 }
 

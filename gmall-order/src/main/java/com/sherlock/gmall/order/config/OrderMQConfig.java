@@ -2,6 +2,7 @@ package com.sherlock.gmall.order.config;
 
 import com.sherlock.common.constants.GmallConstant;
 import com.sherlock.common.constants.GmallOrderConstant;
+import com.sherlock.common.constants.GmallWareConstant;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Exchange;
 import org.springframework.amqp.core.Queue;
@@ -94,6 +95,21 @@ public class OrderMQConfig {
                 Binding.DestinationType.QUEUE,
                 GmallOrderConstant.ORDER_EVENT_EXCHANGE,
                 GmallOrderConstant.ORDER_RELEASE_ORDER_ROUTING_KEY_NAME,
+                null);
+    }
+
+    /**
+     *
+     * 订单释放之后  直接释放库存
+     * 订单的交换机绑定解锁库存的消息队列
+     * @return
+     */
+    @Bean
+    public Binding orderReleaseOtherBinding(){
+        return new Binding(GmallWareConstant.STOCK_RELEASE_QUEUE_NAME,
+                Binding.DestinationType.QUEUE,
+                GmallOrderConstant.ORDER_EVENT_EXCHANGE,
+                GmallOrderConstant.ORDER_RELEASE_OTHER_ROUTING_KEY_NAME,
                 null);
     }
 }

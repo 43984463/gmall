@@ -376,5 +376,22 @@ netstat -aon|findstr 80
 tasklist|findstr 19796
 ```
 
-#主键生成问题 seata导致mybatis plus配置失效 需要设置所有的 com.sherlock.gmall.order.config.MySeataConfig.sqlSessionFactory  其他属性待设置
+##主键生成问题 seata导致mybatis plus配置失效 需要设置所有的 com.sherlock.gmall.order.config.MySeataConfig.sqlSessionFactory  其他属性待设置
 com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration#sqlSessionFactory()
+
+##mysql小知识
+```text
+设置mysql可以查看读未提交(默认可重复读)
+仅仅设置当前session
+
+SELECT @@tx_isolation;
+
+set session transaction isolation level read uncommitted;
+
+查看mysql的所有默认信息
+SHOW VARIABLES
+查看mysql的某一个默认信息(隔离级别)
+SHOW VARIABLES WHERE variable_name like '%tx_isolation%'
+
+业务service层数据异常之后回滚，但是数据库的主键还是会自增，因为这个ID是保存在内存中
+```

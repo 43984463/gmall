@@ -11,6 +11,7 @@ import com.sherlock.common.exception.CheckPriceDiffException;
 import com.sherlock.common.exception.GmallHttpStatus;
 import com.sherlock.common.exception.NoStockException;
 import com.sherlock.common.to.SkuHasStockVo;
+import com.sherlock.common.to.mq.OrderTo;
 import com.sherlock.common.utils.PageUtils;
 import com.sherlock.common.utils.Query;
 import com.sherlock.common.utils.R;
@@ -21,6 +22,7 @@ import com.sherlock.common.vo.OrderItemVo;
 import com.sherlock.common.vo.SpuInfoVo;
 import com.sherlock.common.vo.WareSkuLockVo;
 import com.sherlock.gmall.order.config.GmallFeignConfig;
+import com.sherlock.gmall.order.config.OrderMQConfig;
 import com.sherlock.gmall.order.dao.OrderDao;
 import com.sherlock.gmall.order.entity.OrderEntity;
 import com.sherlock.gmall.order.entity.OrderItemEntity;
@@ -38,6 +40,9 @@ import com.sherlock.gmall.order.vo.SubmitOrderResponseVo;
 import feign.RequestInterceptor;
 import io.seata.spring.annotation.GlobalTransactional;
 import net.bytebuddy.implementation.bytecode.Throw;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -87,6 +92,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     @Autowired
     private StringRedisTemplate redisTemplate;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -233,6 +241,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
                 if (r.getCode() == GmallHttpStatus.RESPONSE_OK) {
                     // 锁定成功
                     response.setOrder(orderCreateTo.getOrder());
+                    // 订单创建成功则发送消息给MQ
+                    CorrelationData correlationData = new CorrelationData(orderCreateTo.getOrder().getOrderSn());
+                    rabbitTemplate.convertAndSend(GmallOrderConstant.ORDER_EVENT_EXCHANGE, GmallOrderConstant.ORDER_CREATE_ORDER_ROUTING_KEY_NAME, orderCreateTo.getOrder(), correlationData);
                     return response;
                 } else {
                     // 锁定失败
@@ -253,8 +264,27 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
     }
 
     @Override
-    public void closeOrder() {
+    public void closeOrder(OrderEntity orderEntity) {
+        // 查询订单的最新状态
+        OrderEntity entity = getById(orderEntity.getId());
+        if (entity.getStatus() == GmallOrderConstant.OrderStatusEnum.CREATE_NEW.getCode()) {
+            OrderEntity updateEntity = new OrderEntity();
+            updateEntity.setId(orderEntity.getId());
+            updateEntity.setStatus(GmallOrderConstant.OrderStatusEnum.CANCLED.getCode());
+            updateById(updateEntity);
+        }
+        /**
+         * 发送到订单的交换机， 通过这个路由关系会发送到解锁库存的交换机，直接进行解锁
+         *
+         * @see com.sherlock.gmall.order.config.OrderMQConfig#orderEventExchange()   交换机
+         * @see com.sherlock.gmall.order.config.OrderMQConfig#orderReleaseOtherBinding()  绑定关系
+         * @see com.sherlock.gmall.ware.config.WareMQConfig#stockReleaseStockQueue()  队列
+         *
+          */
+        OrderTo orderTo = new OrderTo();
+        BeanUtils.copyProperties(entity, orderTo);
 
+        rabbitTemplate.convertAndSend(GmallOrderConstant.ORDER_EVENT_EXCHANGE, GmallOrderConstant.ORDER_RELEASE_OTHER_ROUTING_KEY, orderTo, new CorrelationData(orderEntity.getOrderSn()));
     }
 
 

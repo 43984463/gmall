@@ -68,6 +68,10 @@ spring:
     listener:
       simple:
         acknowledge-mode: manual #手动确认收货(消息被正确消费)
+        retry:
+          enabled: true
+          max-attempts: 5 #最大重试5次
+          initial-interval: 20000 #失败重试的时间间隔
 
 mybatis-plus:
   # 虽然我不知道为啥在源码和自动提示都是config-location，但是这样就报错，需要修改成config-locations(带s)
