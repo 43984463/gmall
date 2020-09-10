@@ -442,3 +442,32 @@ org.springframework.amqp.rabbit.core.RabbitTemplate.ReturnCallback#returnedMessa
 1）、增加消费者
 2）、把消息先都取出来存到数据库，后边慢慢消费
 ```
+
+##过滤器(javax.servlet.Filter)，  依赖servlet容器 不属于spring
+##拦截器(org.springframework.web.servlet.HandlerInterceptor)， springMVC的东西
+##切面的区别(org.aspectj.lang.annotation.Aspect) AOP
+```text
+过滤器是服务端的一个组件，是基于servlet实现从客户端访问服务端web资源的一种拦截机制，对请求request和响应response都进行过滤，依赖于serverlet容器
+定义过滤器后会重写三个方法，分别是init(),doFilter(),和destory(),
+
+init方法是过滤器的初始化方法，当web容器创建这个bean的时候就会执行，这个方法可以读取web.xml里面的参数
+doFilter方法是执行过滤的请求的核心，当客户端请求访问web资源时，这个时候我们可以拿到request里面的参数，对数据进行处理后，通过filterChain方法将请求将请求放行，放行后我们也可以通过response对响应进行处理（比如压缩响应），然后会传递到下一个过滤器
+destory方法是当web容器中的过滤器实例被销毁时，会被执行，释放资源
+```
+```text
+过滤器依赖serverlet容器，获取request和response处理，是基于函数回调，简单说就是“去取你想取的”，拦截器是通过java反射机制，动态代理来拦截web请求，是“拒你想拒绝的”
+拦截器请求起作用，而过滤器则可以对几乎所有的请求起作用
+
+
+
+
+
+
+
+
+
+
+
+
+
+```
