@@ -6,6 +6,7 @@ import com.sherlock.gmall.order.config.GmallOrderWebConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +35,9 @@ public class LoginUserInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
+        log.info("调用类为：{}", ((HandlerMethod)handler).getBean().getClass().getName());
+        log.info("调用方法为：{}", ((HandlerMethod)handler).getMethod().getName());
 
         /**
          * 解锁库存需要查询订单信息，防止被拦截，需要直接放行
@@ -89,6 +93,6 @@ public class LoginUserInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        threadLocal.remove();
+        loginUser.remove();
     }*/
 }

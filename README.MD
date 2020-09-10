@@ -1,13 +1,14 @@
 # 采坑记录
-## [https://docs.spring.io/spring/docs/] spring所有版本的文档地址
-## [https://docs.spring.io/spring/docs/current/spring-framework-reference/] spring当前最新版本文档目录
-## [https://www.cs.usfca.edu/~galles/visualization/Algorithms.html] 数据结构图形化演示地址
-## [https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-search.html] Elasticsearch与java API文档地址
-## [https://www.elastic.co/guide/en/elasticsearch/reference/current/search.html] Elasticsearch在kibana中的操作API文档地址
-## [https://github.com/medcl/elasticsearch-analysis-ik] Elasticsearch的中文文档github地址
-## [https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS]跨域中文讲解地址
-## [https://open.weibo.com/wiki/%E6%8E%88%E6%9D%83%E6%9C%BA%E5%88%B6%E8%AF%B4%E6%98%8E]微博oauth2
-## [http://seata.io/zh-cn/docs/user/quickstart.html]seata 分布式事务
+## 各个文档参考地址
+### [https://docs.spring.io/spring/docs/] spring所有版本的文档地址
+### [https://docs.spring.io/spring/docs/current/spring-framework-reference/] spring当前最新版本文档目录
+### [https://www.cs.usfca.edu/~galles/visualization/Algorithms.html] 数据结构图形化演示地址
+### [https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-search.html] Elasticsearch与java API文档地址
+### [https://www.elastic.co/guide/en/elasticsearch/reference/current/search.html] Elasticsearch在kibana中的操作API文档地址
+### [https://github.com/medcl/elasticsearch-analysis-ik] Elasticsearch的中文文档github地址
+### [https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS]跨域中文讲解地址
+### [https://open.weibo.com/wiki/%E6%8E%88%E6%9D%83%E6%9C%BA%E5%88%B6%E8%AF%B4%E6%98%8E]微博oauth2
+### [http://seata.io/zh-cn/docs/user/quickstart.html]seata 分布式事务
 
 ## tips:
 * 本地访问gmall-product时把/resources/templates/index2.html替换掉index.html
@@ -123,7 +124,7 @@ mybatis-plus:
 ```
 依赖转移到gmall-third-party中,否则会在启动时报找不到endpoint错误。
 
-# 解决远程调用时需要强制转换返回值类型
+## 解决远程调用时需要强制转换返回值类型
 * 在设计公共返回对象R时应该加上泛型限制，可以在远程调用获取结果时不需要强制转换。
 ```java
 public class R<T> extends HashMap<String, Object> {
@@ -164,7 +165,9 @@ public class WareSkuController {
 ```
 * <b>或者直接返回org.springframework.http.ResponseEntity(这个对象封装了数据和状态码)<b>
 
-## spring-Cache的不足
+
+## spring-Cache
+### spring-Cache的不足
 ```text
 1）、读模式：
      缓存穿透： 查询一个null数据。  解决：缓存空数据。  spring.cache.redis.cache-null-values: true
@@ -173,7 +176,7 @@ public class WareSkuController {
      @Cacheable(value = {"category"}, key = "#root.method.name", sync = true)
      使用sync = true加锁(源码中为加的本地锁)
      缓存雪崩： 大量key同时过期。  解决：加随机时间的过期时间。 spring.cache.redis.time-to-live
-```  
+```
 ```java
     
     public class RedisCache extends AbstractValueAdaptingCache {
@@ -202,7 +205,7 @@ public class WareSkuController {
         }
         
     }
-```     
+```
 ```text
   2）、写模式：（缓存与数据库一致）
      1）、读写加锁。(加读写锁)
@@ -213,10 +216,10 @@ public class WareSkuController {
     常规数据(读多写少，即时性，一致性要求不高的数据); 完全可以使用Spring-Cache;  写模式（只要缓存的数据有过期时间就足够）
     特殊数据： 特殊处理
 ```
-    
-## spring-Cache的原理    
+
+### spring-Cache的原理    
   CacheManager(RedisCacheManager) -> Cache(RedisCache) ->Cache进行操作
-  
+
 ## nginx配置
 ### 请求的原理
 ```text
@@ -373,7 +376,7 @@ http {
 
 ```
 
-##springMVC中重定向的时候添加数据
+## springMVC中重定向的时候添加数据
 参考 com.sherlock.gmall.cart.controller.CartController#addToCart()
 ```text
 redirectAttributes.addAttribute("skuId", skuId);        将数据放在拼接在url后面
@@ -387,9 +390,9 @@ redirectAttributes.addFlashAttribute("skuId", skuId);   将数据放在session�
 
 ## docker设置容器自启 docker update --restart=always + 容器ID
 
-#消息队列常遇到的问题   (CorrelationId 消息发送的时候携带上这个， 在整个消息的周期都可以获取到)
-##业务完成之后需要发送消息到MQ可以使用切面进行每个微服务的统一配置(便于管理)
-###  保证消息的可靠性 -- 消息丢失
+## MQ消息队列常遇到的问题   (CorrelationId 消息发送的时候携带上这个， 在整个消息的周期都可以获取到)
+### 业务完成之后需要发送消息到MQ可以使用切面进行每个微服务的统一配置(便于管理)
+####  保证消息的可靠性 -- 消息丢失
 ```text
 1.将业务订单数据和生成的Message进行持久化操作（一般情况下插入数据库，这里如果分库的话可能涉及到分布式事务）
 2.将Message发送到Broker服务器中
@@ -421,7 +424,7 @@ org.springframework.amqp.rabbit.core.RabbitTemplate.ReturnCallback#returnedMessa
 消息消费(从queue到消费者)
 开启手动ACK模式 保证消息被完全正确消费之后才从queue中丢弃 消费完之后
 ```
-###  保证消息的可靠性 -- 消息重复
+####  保证消息的可靠性 -- 消息重复
 ```text
 保证幂等性(重复消费)
 要保证消息的幂等性，这个要结合业务的类型来进行处理。下面提供几个思路供参考：
@@ -432,7 +435,7 @@ org.springframework.amqp.rabbit.core.RabbitTemplate.ReturnCallback#returnedMessa
 （5）、数据库操作可以设置唯一键，防止重复数据的插入，这样插入只会报错而不会插入重复数据。
 ```
 
-###  保证消息的可靠性 -- 消息积压
+####  保证消息的可靠性 -- 消息积压
 ```text
 原因: 
 1）、消费端能力不足(宕机或者消费端太少)
@@ -443,12 +446,14 @@ org.springframework.amqp.rabbit.core.RabbitTemplate.ReturnCallback#returnedMessa
 2）、把消息先都取出来存到数据库，后边慢慢消费
 ```
 
-##过滤器(javax.servlet.Filter)，  依赖servlet容器 不属于spring
-##拦截器(org.springframework.web.servlet.HandlerInterceptor)， springMVC的东西
-##切面的区别(org.aspectj.lang.annotation.Aspect) AOP
+## 过滤器，拦截器，切面的区别
+### 过滤器(javax.servlet.Filter)，  依赖servlet容器 不属于spring
+### 拦截器(org.springframework.web.servlet.HandlerInterceptor)， springMVC的东西
+### 切面的区别(org.aspectj.lang.annotation.Aspect) AOP
+
 ```text
 过滤器是服务端的一个组件，是基于servlet实现从客户端访问服务端web资源的一种拦截机制，对请求request和响应response都进行过滤，依赖于serverlet容器
-定义过滤器后会重写三个方法，分别是init(),doFilter(),和destory(),
+定义过滤器后会重写三个方法，分别是init(),doFilter(),和destory()
 
 init方法是过滤器的初始化方法，当web容器创建这个bean的时候就会执行，这个方法可以读取web.xml里面的参数
 doFilter方法是执行过滤的请求的核心，当客户端请求访问web资源时，这个时候我们可以拿到request里面的参数，对数据进行处理后，通过filterChain方法将请求将请求放行，放行后我们也可以通过response对响应进行处理（比如压缩响应），然后会传递到下一个过滤器
@@ -457,17 +462,98 @@ destory方法是当web容器中的过滤器实例被销毁时，会被执行，�
 ```text
 过滤器依赖serverlet容器，获取request和response处理，是基于函数回调，简单说就是“去取你想取的”，拦截器是通过java反射机制，动态代理来拦截web请求，是“拒你想拒绝的”
 拦截器请求起作用，而过滤器则可以对几乎所有的请求起作用
+定义拦截器后会重写三个方法，分别是preHandler(),postHandler(),和afterCompletion()
+preHandler(): 这个方法是在controller调用之前调用，通过返回true或者false决定是否进入Controller层(返回false则不继续请求具体业务直接返回)
+postHandler()：在请求进入控制层之后调用，但是在处理请求抛出异常时不会调用
+afterCompletion(): 在请求处理完成之后，也就是在DispatherServlet渲染了视图之后执行，也就是说这个方法必定是执行，包含异常信息，它的主要作用就是清理资源
+```
+```java
+protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		HttpServletRequest processedRequest = request;
+		HandlerExecutionChain mappedHandler = null;
+		boolean multipartRequestParsed = false;
 
+		WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);
 
+		try {
+			ModelAndView mv = null;
+			Exception dispatchException = null;
 
+			try {
+				processedRequest = checkMultipart(request);
+				multipartRequestParsed = (processedRequest != request);
 
+				// Determine handler for the current request.
+				mappedHandler = getHandler(processedRequest);
+				if (mappedHandler == null) {
+					noHandlerFound(processedRequest, response);
+					return;
+				}
 
+				// Determine handler adapter for the current request.
+				HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
 
+				// Process last-modified header, if supported by the handler.
+				String method = request.getMethod();
+				boolean isGet = "GET".equals(method);
+				if (isGet || "HEAD".equals(method)) {
+					long lastModified = ha.getLastModified(request, mappedHandler.getHandler());
+					if (new ServletWebRequest(request, response).checkNotModified(lastModified) && isGet) {
+						return;
+					}
+				}
+				// 正式请求之前先进入拦截器进行处理
+				if (!mappedHandler.applyPreHandle(processedRequest, response)) {
+					return;
+				}
+				
+                // 调用真实请求进行业务处理
+				// Actually invoke the handler.
+				mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
 
+				if (asyncManager.isConcurrentHandlingStarted()) {
+					return;
+				}
 
-
-
-
+				applyDefaultViewName(processedRequest, mv);
+                // 所有请求完成之后执行拦截器的后置方法
+				mappedHandler.applyPostHandle(processedRequest, response, mv);
+			}
+			catch (Exception ex) {
+				dispatchException = ex;
+			}
+			catch (Throwable err) {
+				// As of 4.3, we're processing Errors thrown from handler methods as well,
+				// making them available for @ExceptionHandler methods and other scenarios.
+				dispatchException = new NestedServletException("Handler dispatch failed", err);
+			}
+			processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);
+		}
+		catch (Exception ex) {
+			triggerAfterCompletion(processedRequest, response, mappedHandler, ex);
+		}
+		catch (Throwable err) {
+			triggerAfterCompletion(processedRequest, response, mappedHandler,
+					new NestedServletException("Handler processing failed", err));
+		}
+		finally {
+			if (asyncManager.isConcurrentHandlingStarted()) {
+				// Instead of postHandle and afterCompletion
+				if (mappedHandler != null) {
+					mappedHandler.applyAfterConcurrentHandlingStarted(processedRequest, response);
+				}
+			}
+			else {
+				// Clean up any resources used by a multipart request.
+				if (multipartRequestParsed) {
+					cleanupMultipart(processedRequest);
+				}
+			}
+		}
+	}
+```
+```text
+切片编程，面对的是处理过程中的方法或者阶段，以获得各部分的低耦合性的隔离效果，它是基于动态代理，它关注的是行为和过程
 
 
 ```
