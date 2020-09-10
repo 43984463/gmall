@@ -388,6 +388,7 @@ redirectAttributes.addFlashAttribute("skuId", skuId);   将数据放在session�
 ## docker设置容器自启 docker update --restart=always + 容器ID
 
 #消息队列常遇到的问题   (CorrelationId 消息发送的时候携带上这个， 在整个消息的周期都可以获取到)
+##业务完成之后需要发送消息到MQ可以使用切面进行每个微服务的统一配置(便于管理)
 ###  保证消息的可靠性 -- 消息丢失
 ```text
 1.将业务订单数据和生成的Message进行持久化操作（一般情况下插入数据库，这里如果分库的话可能涉及到分布式事务）
