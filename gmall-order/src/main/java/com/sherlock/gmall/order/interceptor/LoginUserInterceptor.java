@@ -36,8 +36,12 @@ public class LoginUserInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        log.info("调用类为：{}", ((HandlerMethod)handler).getBean().getClass().getName());
-        log.info("调用方法为：{}", ((HandlerMethod)handler).getMethod().getName());
+        try{
+            log.info("调用类为：{}", ((HandlerMethod)handler).getBean().getClass().getName());
+            log.info("调用方法为：{}", ((HandlerMethod)handler).getMethod().getName());
+        } catch (Exception e){
+            log.info("com.sherlock.gmall.order.interceptor.LoginUserInterceptor#preHandle have Exception, msg is {}", e.getMessage());
+        }
 
         /**
          * 解锁库存需要查询订单信息，防止被拦截，需要直接放行
@@ -46,17 +50,19 @@ public class LoginUserInterceptor implements HandlerInterceptor {
          */
         StringBuffer requestURL = request.getRequestURL();
         log.info("request Url is {}", requestURL);
+
+        // 远程调用本系统的系统，只要进行的Feign的配置，就会携带请求的session信息，可以获取到登录信息，则这块不需要过滤任何请求, 但是这个请求是gmall-ware的MQ发的，所以还是需要直接过滤掉，不要拦截
         boolean match = new AntPathMatcher().match("**/order/order/getOrderInfoByOrderSn/**", requestURL.toString());
         if (match){
             return true;
         }
 
-        HttpSession session = request.getSession();
-        MemberRespVo member = (MemberRespVo)session.getAttribute(GmallAuthConstant.GMALL_LOGIN_USER);
-
         if (request.getRequestURL().toString().endsWith("swagger-ui.html")) {
             return true;
         }
+
+        HttpSession session = request.getSession();
+        MemberRespVo member = (MemberRespVo)session.getAttribute(GmallAuthConstant.GMALL_LOGIN_USER);
 
         if (member != null){
             // 用户登录了

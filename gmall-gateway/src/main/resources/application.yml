@@ -86,3 +86,8 @@ spring:
           uri: lb://gmall-order    #转到订单服务
           predicates:
             - Host=order.gmall.com
+
+        - id: gmall_member_route
+          uri: lb://gmall-member    #转到会员服务
+          predicates:
+            - Host=member.gmall.com

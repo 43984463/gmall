@@ -5,6 +5,7 @@ import com.sherlock.common.utils.PageUtils;
 import com.sherlock.gmall.order.entity.OrderEntity;
 import com.sherlock.gmall.order.vo.OrderConfirmVo;
 import com.sherlock.gmall.order.vo.OrderSubmitVo;
+import com.sherlock.gmall.order.vo.PayVo;
 import com.sherlock.gmall.order.vo.SubmitOrderResponseVo;
 
 import java.util.Map;
@@ -28,5 +29,7 @@ public interface OrderService extends IService<OrderEntity> {
     OrderEntity getOrderInfoByOrderSn(String orderSn);
 
     void closeOrder(OrderEntity orderEntity);
+
+    PayVo getOrderPayInfo(String orderSn);
 }
 

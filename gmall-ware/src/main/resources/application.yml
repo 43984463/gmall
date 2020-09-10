@@ -54,6 +54,16 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
 
+  # redis相关信息配置
+  redis:
+    host: 120.76.60.77
+    password: sherlock
+    port: 7379
+
+  session:
+    store-type: redis #springSession使用redis作为缓存
+
+
   rabbitmq:
     host: 192.168.1.4
     port: 5672
@@ -87,3 +97,10 @@ logging:
 
 swagger:
   enabled: false
+
+#自定义线程池配置
+gmall:
+  thread:
+    core-pool-size: 10
+    maximum-pool-size: 200
+    keep-alive-time: 10

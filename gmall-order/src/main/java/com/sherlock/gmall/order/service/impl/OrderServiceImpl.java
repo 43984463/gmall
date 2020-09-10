@@ -36,6 +36,7 @@ import com.sherlock.gmall.order.service.OrderService;
 import com.sherlock.gmall.order.to.OrderCreateTo;
 import com.sherlock.gmall.order.vo.OrderConfirmVo;
 import com.sherlock.gmall.order.vo.OrderSubmitVo;
+import com.sherlock.gmall.order.vo.PayVo;
 import com.sherlock.gmall.order.vo.SubmitOrderResponseVo;
 import feign.RequestInterceptor;
 import io.seata.spring.annotation.GlobalTransactional;
@@ -139,7 +140,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         // 1、远程查询所有的收货地址
         CompletableFuture<Void> getAddresses = CompletableFuture.runAsync(() -> {
             // 在Feign异步调用之前，把主线程的请求信息同步过来 (这个请求暂时不需要请求头)
-            // RequestContextHolder.setRequestAttributes(requestAttributes);
+            RequestContextHolder.setRequestAttributes(requestAttributes);
             List<MemberAddressVo> addresses = memberFeignService.getAddresses(memberRespVo.getId());
             confirmVo.setAddresses(addresses);
         }, executor);
@@ -285,6 +286,25 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         BeanUtils.copyProperties(entity, orderTo);
 
         rabbitTemplate.convertAndSend(GmallOrderConstant.ORDER_EVENT_EXCHANGE, GmallOrderConstant.ORDER_RELEASE_OTHER_ROUTING_KEY, orderTo, new CorrelationData(orderEntity.getOrderSn()));
+    }
+
+    /**
+     * 获取订单的支付信息
+     * @param orderSn
+     * @return
+     */
+    @Override
+    public PayVo getOrderPayInfo(String orderSn) {
+        PayVo payVo = new PayVo();
+
+        OrderEntity orderEntity = getOrderInfoByOrderSn(orderSn);
+        payVo.setTotal_amount(orderEntity.getPayAmount().setScale(2, BigDecimal.ROUND_UP).toString());
+        payVo.setOut_trade_no(orderSn);
+
+        List<OrderItemEntity> orderItem = orderItemService.list(new QueryWrapper<OrderItemEntity>().eq("order_sn", orderSn));
+        payVo.setSubject(orderItem.get(0).getSkuName());
+        payVo.setBody(orderItem.get(0).getSkuAttrsVals());
+        return payVo;
     }
 
 
