@@ -121,7 +121,7 @@ create table oms_order_return_apply
    id                   bigint not null auto_increment comment 'id',
    order_id             bigint comment 'order_id',
    sku_id               bigint comment '退货商品id',
-   order_sn             char(32) comment '订单编号',
+   order_sn             char(64) comment '订单编号',
    create_time          datetime comment '申请时间',
    member_username      varchar(64) comment '会员用户名',
    return_amount        decimal(18,4) comment '退款金额',
@@ -189,7 +189,7 @@ alter table oms_order_setting comment '订单配置信息';
 create table oms_payment_info
 (
    id                   bigint not null auto_increment comment 'id',
-   order_sn             char(32) comment '订单号（对外业务号）',
+   order_sn             char(64) comment '订单号（对外业务号）',
    order_id             bigint comment '订单id',
    alipay_trade_no      varchar(50) comment '支付宝交易流水号',
    total_amount         decimal(18,4) comment '支付总金额',
@@ -199,6 +199,8 @@ create table oms_payment_info
    confirm_time         datetime comment '确认时间',
    callback_content     varchar(4000) comment '回调内容',
    callback_time        datetime comment '回调时间',
+   unique key(`order_sn`),
+   unique key(`alipay_trade_no`),
    primary key (id)
 );
 

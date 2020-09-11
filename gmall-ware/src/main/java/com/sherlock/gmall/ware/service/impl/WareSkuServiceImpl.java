@@ -264,8 +264,8 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
             detail.setSkuNum(detailEntity.getSkuNum());
             stockLockedTo.setDetail(detail);
             // 本类调用
-            WareSkuService wareSkuService = (WareSkuService) AopContext.currentProxy();
-            wareSkuService.unLockStock(stockLockedTo);
+            WareSkuServiceImpl wareSkuServiceImpl = (WareSkuServiceImpl) AopContext.currentProxy();
+            wareSkuServiceImpl.unLockStock(stockLockedTo);
         }
 
     }

@@ -5,6 +5,7 @@ import com.sherlock.common.utils.PageUtils;
 import com.sherlock.gmall.order.entity.OrderEntity;
 import com.sherlock.gmall.order.vo.OrderConfirmVo;
 import com.sherlock.gmall.order.vo.OrderSubmitVo;
+import com.sherlock.gmall.order.vo.PayAsyncVo;
 import com.sherlock.gmall.order.vo.PayVo;
 import com.sherlock.gmall.order.vo.SubmitOrderResponseVo;
 
@@ -33,5 +34,9 @@ public interface OrderService extends IService<OrderEntity> {
     PayVo getOrderPayInfo(String orderSn);
 
     PageUtils queryPageWithItem(Map<String, Object> params);
+
+    String handPayResult(PayAsyncVo vo);
+
+    void updateOrderStatus(String outTradeNo, Integer code);
 }
 

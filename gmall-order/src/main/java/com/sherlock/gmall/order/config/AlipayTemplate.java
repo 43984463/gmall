@@ -42,7 +42,12 @@ public class AlipayTemplate {
     // 支付宝网关； https://openapi.alipaydev.com/gateway.do
     private String gatewayUrl;
 
-    // 该笔订单允许的最晚付款时间，逾期将关闭交易
+    /**
+     * 该笔订单允许的最晚付款时间，逾期将关闭交易
+     *
+     * 防止订单一直没有支付，等待过期，自动解锁了库存之后，再去支付，导致支付了一个已经关了的订单出现错误的问题
+      */
+
     private String timeout_express;
 
     public String pay(PayVo vo) throws AlipayApiException {

@@ -255,7 +255,7 @@ predicates:
 ```text
 server {
     listen       80;
-    server_name  gmall.com *.gmall.com;    # 监听*.gmall.com和gmall.com的请求
+    server_name  gmall.com *.gmall.com  3yn4118934.zicp.vip;    # 监听*.gmall.com和gmall.com的请求  最后一个是支付宝回调是内网穿透的域名
     large_client_header_buffers 4 16k;     # 读取大型客户端请求头的缓冲区的最大数量和大小
     client_max_body_size 300m;             # 设置nginx能处理的最大请求主体大小。
     client_body_buffer_size 128k;          # 请求主体的缓冲区大小。 
@@ -274,6 +274,16 @@ server {
     location /static/ {
        root   /usr/share/nginx/html;
     }
+
+
+    location /payed/notify {
+     uwsgi_send_timeout 600;        # 指定向uWSGI传送请求的超时时间，完成握手后向uWSGI传送请求的超时时间。
+     uwsgi_connect_timeout 600;   # 指定连接到后端uWSGI的超时时间。
+     uwsgi_read_timeout 600;        # 指定接收uWSGI应答的超时时间，完成握手后接收uWSGI应答的超时时间。
+     proxy_set_header Host order.gmall.com;  #精确配置3yn4118934.zicp.vip域名的/payed/notify请求，并且给他重新设置请求头，使其可以访问电脑上的支付成功回调接口
+     proxy_pass http://gmall;
+    }
+
 
     # 拦截所有请求，并转发请求（proxy_pass属性）
     # 配置请求要转到哪里和超时时间

@@ -14,7 +14,10 @@ public abstract class GmallOrderConstant {
     public static final List<String> ORDER_REQUEST_WHITE_LIST = new ArrayList();
 
     static {
+        // MQ关单时调用的接口，因为是直接调用接口，没有请求头等信息，所以放行
         ORDER_REQUEST_WHITE_LIST.add("**/order/order/getOrderInfoByOrderSn/**");
+        // 支付宝支付成功回调的接口
+        ORDER_REQUEST_WHITE_LIST.add("**/payed/notify/**");
     }
 
     public static final String GMALL_ORDER_TOKEN_PREFIX = "order:token:";

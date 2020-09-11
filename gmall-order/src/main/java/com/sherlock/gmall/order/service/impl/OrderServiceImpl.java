@@ -26,6 +26,7 @@ import com.sherlock.gmall.order.config.OrderMQConfig;
 import com.sherlock.gmall.order.dao.OrderDao;
 import com.sherlock.gmall.order.entity.OrderEntity;
 import com.sherlock.gmall.order.entity.OrderItemEntity;
+import com.sherlock.gmall.order.entity.PaymentInfoEntity;
 import com.sherlock.gmall.order.feign.CartFeignService;
 import com.sherlock.gmall.order.feign.MemberFeignService;
 import com.sherlock.gmall.order.feign.ProductFeignService;
@@ -33,9 +34,11 @@ import com.sherlock.gmall.order.feign.WmsFeignService;
 import com.sherlock.gmall.order.interceptor.LoginUserInterceptor;
 import com.sherlock.gmall.order.service.OrderItemService;
 import com.sherlock.gmall.order.service.OrderService;
+import com.sherlock.gmall.order.service.PaymentInfoService;
 import com.sherlock.gmall.order.to.OrderCreateTo;
 import com.sherlock.gmall.order.vo.OrderConfirmVo;
 import com.sherlock.gmall.order.vo.OrderSubmitVo;
+import com.sherlock.gmall.order.vo.PayAsyncVo;
 import com.sherlock.gmall.order.vo.PayVo;
 import com.sherlock.gmall.order.vo.SubmitOrderResponseVo;
 import feign.RequestInterceptor;
@@ -43,6 +46,7 @@ import io.seata.spring.annotation.GlobalTransactional;
 import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -74,6 +78,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
     private ThreadLocal<OrderSubmitVo> confirmVoThreadLocal = new ThreadLocal<>();
 
     @Autowired
+    private OrderDao orderDao;
+
+    @Autowired
     private MemberFeignService memberFeignService;
 
     @Autowired
@@ -87,6 +94,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     @Autowired
     private OrderItemService orderItemService;
+
+    @Autowired
+    private PaymentInfoService paymentInfoService;
 
     @Autowired
     private ThreadPoolExecutor executor;
@@ -319,6 +329,40 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         page.setRecords(orderEntities);
 
         return new PageUtils(page);
+    }
+
+    /**
+     * 处理支付宝的支付结果
+     * @param vo
+     * @return
+     */
+    @Transactional
+    @Override
+    public String handPayResult(PayAsyncVo vo) {
+        // 保存交易流水
+        PaymentInfoEntity infoEntity = new PaymentInfoEntity();
+        infoEntity.setAlipayTradeNo(vo.getTrade_no());
+        infoEntity.setOrderSn(vo.getOut_trade_no());
+        infoEntity.setPaymentStatus(vo.getTrade_status());
+        infoEntity.setCallbackTime(vo.getNotify_time());
+        paymentInfoService.save(infoEntity);
+
+        // 修改订单状态
+        if (vo.getTrade_status().equals("TRADE_SUCCESS") || vo.getTrade_status().equals("TRADE_FINISHED")) {
+            // 支付成功
+            String outTradeNo = vo.getOut_trade_no();
+            OrderServiceImpl orderServiceImpl = (OrderServiceImpl) AopContext.currentProxy();
+            orderServiceImpl.updateOrderStatus(outTradeNo, GmallOrderConstant.OrderStatusEnum.PAYED.getCode());
+        }
+
+        // TODO 从购物车中删除已经购买的商品(发送给MQ去处理吧)
+        return "success";
+    }
+
+    @Transactional
+    @Override
+    public void updateOrderStatus(String outTradeNo, Integer code) {
+        orderDao.updateOrderStatus(outTradeNo, code);
     }
 
 
