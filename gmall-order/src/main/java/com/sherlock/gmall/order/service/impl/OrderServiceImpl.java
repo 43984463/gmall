@@ -307,6 +307,20 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         return payVo;
     }
 
+    @Override
+    public PageUtils queryPageWithItem(Map<String, Object> params) {
+        MemberRespVo memberRespVo = LoginUserInterceptor.loginUser.get();
+        IPage<OrderEntity> page = this.page(
+                new Query<OrderEntity>().getPage(params),
+                new QueryWrapper<OrderEntity>().eq("member_id", memberRespVo.getId()).orderByDesc("id")
+        );
+
+        List<OrderEntity> orderEntities = page.getRecords().stream().map(order -> order.setItemEntities(orderItemService.list(new QueryWrapper<OrderItemEntity>().eq("order_sn", order.getOrderSn())))).collect(Collectors.toList());
+        page.setRecords(orderEntities);
+
+        return new PageUtils(page);
+    }
+
 
     private OrderCreateTo createOrder(){
         OrderCreateTo orderCreateTo = new OrderCreateTo();

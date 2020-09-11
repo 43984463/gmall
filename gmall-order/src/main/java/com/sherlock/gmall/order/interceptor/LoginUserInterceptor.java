@@ -52,6 +52,7 @@ public class LoginUserInterceptor implements HandlerInterceptor {
         log.info("request Url is {}", requestURL);
 
         // 远程调用本系统的系统，只要进行的Feign的配置，就会携带请求的session信息，可以获取到登录信息，则这块不需要过滤任何请求, 但是这个请求是gmall-ware的MQ发的，所以还是需要直接过滤掉，不要拦截
+        // 查询订单信息， 主要是为了查询订单此时的状态
         boolean match = new AntPathMatcher().match("**/order/order/getOrderInfoByOrderSn/**", requestURL.toString());
         if (match){
             return true;
