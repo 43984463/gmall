@@ -5,7 +5,7 @@ package com.sherlock.common.constants;
  * @date 2020/6/10 22:56
  * @Description:
  */
-public interface GmallWareConstant {
+public abstract class GmallWareConstant {
 
     public static final String STOCK_EVENT_EXCHANGE_NAME = "stock-event-exchange";
     public static final String STOCK_RELEASE_QUEUE_NAME = "stock.release.stock.queue";

@@ -5,7 +5,7 @@ package com.sherlock.common.constants;
  * @date 2020/8/28 22:14
  * @Description:
  */
-public interface GmallCartConstant {
+public abstract class GmallCartConstant {
 
     public static final String GMALL_TEMP_USER_COOKIE_NAME = "uer-key";
     public static final String GMALL_CART_PREFIX = "gmall:cart:";

@@ -115,5 +115,5 @@ alipay:
   charset: utf-8
   gateway-url: https://openapi.alipaydev.com/gateway.do
   timeout-express: 10
-  notify-url: http://member.gmall.com/memberOrderList  # 会访问 com.sherlock.gmall.member.web.MemberWebController#memberOrderListPage
-  return-url: baidu.com
+  notify-url:   # 会访问 com.sherlock.gmall.member.web.MemberWebController#memberOrderListPage
+  return-url: http://member.gmall.com/memberOrderList

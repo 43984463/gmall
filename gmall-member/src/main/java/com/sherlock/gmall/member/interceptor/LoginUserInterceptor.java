@@ -1,6 +1,7 @@
 package com.sherlock.gmall.member.interceptor;
 
 import com.sherlock.common.constants.GmallAuthConstant;
+import com.sherlock.common.constants.GmallMemberConstant;
 import com.sherlock.common.vo.MemberRespVo;
 import com.sherlock.gmall.member.config.GmallMemberWebConfiguration;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -57,10 +60,10 @@ public class LoginUserInterceptor implements HandlerInterceptor {
 
         // 远程调用本系统的系统，只要进行的Feign的配置，就会携带请求的session信息，可以获取到登录信息
         // 但是 这个请求是从 com.sherlock.gmall.ware.service.impl.WareInfoServiceImpl#getFare是这个的远程调用， 这个是从confirm.html发过来的get请求，在请求头中没有包含session信息，所以需要过滤掉
-
-        boolean match = new AntPathMatcher().match("**/member/memberreceiveaddress/info/**", requestURL.toString());
-        if (match){
-            return true;
+        for (String whiteUrl : GmallMemberConstant.MEMBER_REQUEST_WHITE_LIST) {
+            if(new AntPathMatcher().match(whiteUrl, requestURL.toString())){
+                return true;
+            }
         }
 
         if (request.getRequestURL().toString().endsWith("swagger-ui.html")) {

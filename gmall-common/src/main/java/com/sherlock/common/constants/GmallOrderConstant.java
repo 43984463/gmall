@@ -1,12 +1,21 @@
 package com.sherlock.common.constants;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @Author xueshuai
  * @Description: Gmall常量类
  * @Date 2020/9/4
  **/
-public interface GmallOrderConstant {
+public abstract class GmallOrderConstant {
 
+
+    public static final List<String> ORDER_REQUEST_WHITE_LIST = new ArrayList();
+
+    static {
+        ORDER_REQUEST_WHITE_LIST.add("**/order/order/getOrderInfoByOrderSn/**");
+    }
 
     public static final String GMALL_ORDER_TOKEN_PREFIX = "order:token:";
 

@@ -5,7 +5,7 @@ package com.sherlock.common.constants;
  * @date 2020/8/24 21:42
  * @Description:
  */
-public interface GmallRedisKeysConstant {
+public abstract class GmallRedisKeysConstant {
 
     public static final String GMALL_PRODUCT_REDISKEY_PRIFIX = "product:";
     public static final String GMALL_PRODUCT_REDISKEY_CATELOGJSON = GMALL_PRODUCT_REDISKEY_PRIFIX + "catelogJson";
