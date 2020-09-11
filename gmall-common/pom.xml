@@ -87,7 +87,7 @@
             <artifactId>hutool-all</artifactId>
         </dependency>
 
-
+        <!--com.sherlock.common.utils.HttpUtils-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>

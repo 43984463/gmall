@@ -67,12 +67,18 @@ public class AlipayTemplate {
         //商品描述，可空
         String body = vo.getBody();
 
-        alipayRequest.setBizContent("{\"out_trade_no\":\"" + out_trade_no + "\","
+        alipayRequest.setBizContent("{\"out_trade_no\":\""+ out_trade_no +"\","
+                + "\"total_amount\":\""+ total_amount +"\","
+                + "\"subject\":\""+ subject +"\","
+                + "\"body\":\""+ body +"\","
+                + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
+
+        /*alipayRequest.setBizContent("{\"out_trade_no\":\"" + out_trade_no + "\","
                 + "\"total_amount\":\"" + total_amount + "\","
                 + "\"subject\":\"" + subject + "\","
                 + "\"body\":\"" + body + "\","
                 + "\"timeout_express\":\"" + timeout_express + "\","
-                + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
+                + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");*/
 
         String result = alipayClient.pageExecute(alipayRequest).getBody();
 
