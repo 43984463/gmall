@@ -1,7 +1,10 @@
 package com.sherlock.gmall.coupon.service.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+
 import java.util.Map;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -18,10 +21,13 @@ public class SeckillSkuRelationServiceImpl extends ServiceImpl<SeckillSkuRelatio
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        IPage<SeckillSkuRelationEntity> page = this.page(
-                new Query<SeckillSkuRelationEntity>().getPage(params),
-                new QueryWrapper<SeckillSkuRelationEntity>()
-        );
+        QueryWrapper<SeckillSkuRelationEntity> wrapper = new QueryWrapper<>();
+        String sessionId = params.get("promotionSessionId").toString();
+        if (StringUtils.isNotEmpty(sessionId)) {
+            wrapper.eq("promotionSessionId", sessionId);
+        }
+
+        IPage<SeckillSkuRelationEntity> page = this.page(new Query<SeckillSkuRelationEntity>().getPage(params), wrapper);
 
         return new PageUtils(page);
     }
