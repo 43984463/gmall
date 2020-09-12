@@ -1,0 +1,12 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        server-addr: 120.76.60.77:9848
+        namespace: 15300b1a-dda2-4ed3-9ea4-70c26c779a36
+        file-extension: properties
+        extension-configs[0]:
+          data-id: gmall-seckill.properties
+          group: dev
+          refrush: true
+

@@ -15,6 +15,7 @@ public abstract class GmallConstant {
     public static final String GMALL_SEARCH_BASEPATH = "com.sherlock.gmall.search";
     public static final String GMALL_THIRDPARTY_BASEPATH = "com.sherlock.gmall.thirdparty";
     public static final String GMALL_CART_BASEPATH = "com.sherlock.gmall.cart";
+    public static final String GMALL_SECKILL_BASEPATH = "com.sherlock.gmall.seckill";
 
     public static final String GMALL_COUPON = "gmall-coupon";
     public static final String GMALL_MEMBER = "gmall-member";
@@ -40,6 +41,6 @@ public abstract class GmallConstant {
     // 获取发送MQ消息是所携带的唯一 correlation
     public static final String SPRING_RETURNED_MESSAGE_CORRELATION = "spring_returned_message_correlation";
 
-
+    public static final String DATE_TIME_FORMATTER_STRING = "yyyy-MM-dd HH:mm:ss";
 
 }

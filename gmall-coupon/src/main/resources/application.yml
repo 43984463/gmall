@@ -1,7 +1,19 @@
 swagger:
   enabled: false
+
 server:
   port: 1001
+
 spring:
   application:
     name: gmall-coupon
+
+mybatis-plus:
+  # 虽然我不知道为啥在源码和自动提示都是config-location，但是这样就报错，需要修改成config-locations(带s)
+  config-locations: classpath:/mapper/**/*.xml
+  # 所有的实体主键自增
+  global-config:
+    db-config:
+      id-type: auto
+      #logic-delete-value: 0 #逻辑已经删除
+      #logic-not-delete-value: 1 #逻辑未删除(1表示已经逻辑未删除)

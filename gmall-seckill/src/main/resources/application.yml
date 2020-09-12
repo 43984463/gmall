@@ -1,21 +1,14 @@
 server:
-  port: 1801
-
-
+  port: 1901
 
 spring:
   application:
-    name: gmall-cart
-
-  cloud:
-    nacos:
-      discovery:
-      server-addr: 120.76.60.77:9848
+    name: gmall-seckill
 
   redis:
     host: 120.76.60.77
-    port: 7379
     password: sherlock
+    port: 7379
     timeout: 1000 #超时时间(毫秒)
     jedis:
       pool:
@@ -24,18 +17,29 @@ spring:
         max-idle: 8    #连接池中的最大空闲连接
         min-idle: 2    #连接池中的最小空闲连接
 
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 120.76.60.77:9848
+
   session:
     store-type: redis
 
-  thymeleaf:
-    cache: false
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
 
+  thymeleaf:
+    cache: true
 
 
 logging:
   level:
     com.sherlock.gmall: debug
     com.alibaba.nacos.client.naming: error
+
+#是否开启 swagger-ui
+#暂时先关闭了，不然每次启动的时候会比较慢
 swagger:
   enabled: false
 
@@ -45,3 +49,4 @@ gmall:
     core-pool-size: 10
     maximum-pool-size: 200
     keep-alive-time: 10
+

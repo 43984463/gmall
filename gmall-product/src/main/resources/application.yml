@@ -59,6 +59,15 @@ spring:
     host: 120.76.60.77
     password: sherlock
     port: 7379
+    timeout: 1000 #超时时间(毫秒)
+    jedis:
+      pool:
+        max-active: 20 #连接池最大连接数（使用负值表示没有限制）
+        max-wait: 2    #连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-idle: 8    #连接池中的最大空闲连接
+        min-idle: 2    #连接池中的最小空闲连接
+
+
   # springCache与redis结合的相关配置
   cache:
     type: redis
@@ -90,7 +99,7 @@ logging:
 #是否开启 swagger-ui
 #暂时先关闭了，不然每次启动的时候会比较慢
 swagger:
-  enabled: true
+  enabled: false
 
 #自定义线程池配置
 gmall:
