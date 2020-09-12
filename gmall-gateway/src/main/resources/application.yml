@@ -91,3 +91,8 @@ spring:
           uri: lb://gmall-member    #转到会员服务
           predicates:
             - Host=member.gmall.com
+
+        - id: gmall_seckill_route
+          uri: lb://gmall-seckill    #转到秒杀服务
+          predicates:
+            - Host=seckill.gmall.com

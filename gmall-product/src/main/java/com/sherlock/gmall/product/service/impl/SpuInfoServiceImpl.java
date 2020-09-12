@@ -34,7 +34,6 @@ import com.sherlock.gmall.product.vo.Bounds;
 import com.sherlock.gmall.product.vo.Images;
 import com.sherlock.gmall.product.vo.Skus;
 import com.sherlock.gmall.product.vo.SpuSaveVo;
-import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -108,7 +107,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
      * 适用于seata AT模式  不是高并发但是需要全局事务
      * @param spuInfoVo
      */
-    @GlobalTransactional
+    //@GlobalTransactional
     @Transactional
     @Override
     public void saveSpuInfo(SpuSaveVo spuInfoVo) {

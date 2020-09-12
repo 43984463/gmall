@@ -43,27 +43,27 @@ public class MySeataConfig {
      * @return
      * @throws Exception
      */
-    @Bean
-    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
-        MybatisSqlSessionFactoryBean bean = new MybatisSqlSessionFactoryBean();
-        bean.setDataSource(dataSource);
-        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        bean.setMapperLocations(resolver.getResources("classpath*:mapper/**/*.xml"));
-        GlobalConfig.DbConfig dbConfig = new GlobalConfig.DbConfig().setIdType(IdType.AUTO);
-        bean.setGlobalConfig(new GlobalConfig().setDbConfig(dbConfig));
+//    @Bean
+//    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
+//        MybatisSqlSessionFactoryBean bean = new MybatisSqlSessionFactoryBean();
+//        bean.setDataSource(dataSource);
+//        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+//        bean.setMapperLocations(resolver.getResources("classpath*:mapper/**/*.xml"));
+//        GlobalConfig.DbConfig dbConfig = new GlobalConfig.DbConfig().setIdType(IdType.AUTO);
+//        bean.setGlobalConfig(new GlobalConfig().setDbConfig(dbConfig));
+//
+//        SqlSessionFactory factory = null;
+//        try {
+//            factory = bean.getObject();
+//            factory.getConfiguration().setUseGeneratedKeys(true);
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//        return factory;
+//    }
 
-        SqlSessionFactory factory = null;
-        try {
-            factory = bean.getObject();
-            factory.getConfiguration().setUseGeneratedKeys(true);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return factory;
-    }
-
-    @Bean
+    /*@Bean
     public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
-    }
+    }*/
 }

@@ -104,8 +104,7 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
             try {
                 if (info.getCode() == GmallHttpStatus.RESPONSE_OK) {
                     //Map<String, Object> skuInfo = (Map<String, Object>) info.get("skuInfo");
-                    SkuInfoVo skuInfo = info.getData("skuInfo", new TypeReference<SkuInfoVo>() {
-                    });
+                    SkuInfoVo skuInfo = info.getData(new TypeReference<SkuInfoVo>() {});
                     wareSkuEntity.setSkuName(skuInfo.getSkuName());
                 }
             } catch (Exception e) {

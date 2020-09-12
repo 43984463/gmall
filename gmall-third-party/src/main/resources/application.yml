@@ -22,4 +22,4 @@ spring:
         skin: 1
 
 swagger:
-  enabled: true
+  enabled: false

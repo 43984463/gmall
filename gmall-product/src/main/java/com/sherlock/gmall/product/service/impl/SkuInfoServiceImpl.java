@@ -1,7 +1,12 @@
 package com.sherlock.gmall.product.service.impl;
 
+import com.alibaba.fastjson.TypeReference;
+import com.sherlock.common.exception.GmallHttpStatus;
+import com.sherlock.common.to.SecKillSkuRedisTo;
+import com.sherlock.common.utils.R;
 import com.sherlock.gmall.product.entity.SkuImagesEntity;
 import com.sherlock.gmall.product.entity.SpuInfoDescEntity;
+import com.sherlock.gmall.product.feign.SeckillFeignService;
 import com.sherlock.gmall.product.service.AttrGroupService;
 import com.sherlock.gmall.product.service.SkuImagesService;
 import com.sherlock.gmall.product.service.SkuSaleAttrValueService;
@@ -9,7 +14,6 @@ import com.sherlock.gmall.product.service.SpuInfoDescService;
 import com.sherlock.gmall.product.vo.SkuItemSaleAttrVo;
 import com.sherlock.gmall.product.vo.SkuItemVo;
 import com.sherlock.gmall.product.vo.SpuItemAttrGroupVo;
-import jdk.internal.org.objectweb.asm.tree.TryCatchBlockNode;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +50,9 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
 
     @Autowired
     private SkuSaleAttrValueService skuSaleAttrValueService;
+
+    @Autowired
+    private SeckillFeignService seckillFeignService;
 
     @Autowired
     private ThreadPoolExecutor threadPoolExecutor;
@@ -149,8 +156,17 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
             skuItemVo.setGroupAttrs(attrGroupVos);
         }, threadPoolExecutor);
 
+        CompletableFuture<Void> secKillSkuFuture = infoFuture.thenAcceptAsync(res -> {
+            // 5、查询当前sku是否参与秒杀优惠
+            R skuSeckillInfo = seckillFeignService.getSkuSeckillInfo(skuId);
+            if (skuSeckillInfo.getCode() == GmallHttpStatus.RESPONSE_OK) {
+                SecKillSkuRedisTo data = (SecKillSkuRedisTo) skuSeckillInfo.getData(new TypeReference<SecKillSkuRedisTo>() {});
+                skuItemVo.setSecKillSkuRedisTo(data);
+            }
+        }, threadPoolExecutor);
+
         // infoFuture 可加可不加， 因为3,4,5需要获取1的返回值
-        CompletableFuture.allOf(infoFuture, imagesFuture, saleAttrFuture, infoDescFuture, attrGroupFuture).get();
+        CompletableFuture.allOf(infoFuture, imagesFuture, saleAttrFuture, infoDescFuture, attrGroupFuture, secKillSkuFuture).get();
 
         return skuItemVo;
     }

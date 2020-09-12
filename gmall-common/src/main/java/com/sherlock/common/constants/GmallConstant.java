@@ -26,6 +26,7 @@ public abstract class GmallConstant {
     public static final String GMALL_SEARCH = "gmall-search";
     public static final String GMALL_THIRDPARTY = "gmall-thirdparty";
     public static final String GMALL_CART = "gmall-cart";
+    public static final String GMALL_SECKILL = "gmall-seckill";
 
 
     public static final String CONTROLLER = ".controller";

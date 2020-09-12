@@ -1,5 +1,6 @@
 package com.sherlock.gmall.product.vo;
 
+import com.sherlock.common.to.SecKillSkuRedisTo;
 import com.sherlock.gmall.product.entity.SkuImagesEntity;
 import com.sherlock.gmall.product.entity.SkuInfoEntity;
 import com.sherlock.gmall.product.entity.SpuInfoDescEntity;
@@ -28,5 +29,7 @@ public class SkuItemVo {
     private SpuInfoDescEntity desc;
     // 5、获取spu的规格参数信息
     private List<SpuItemAttrGroupVo> groupAttrs;
+
+    private SecKillSkuRedisTo secKillSkuRedisTo;
 
 }

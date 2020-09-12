@@ -6,6 +6,7 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.session.config.annotation.web.http.SpringHttpSessionConfiguration;
 import org.springframework.session.data.redis.RedisIndexedSessionRepository;
+import org.springframework.session.data.redis.config.ConfigureRedisAction;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration;
 import org.springframework.session.web.http.CookieSerializer;
@@ -54,5 +55,14 @@ public class SpringSessionConfig {
         cookieSerializer.setCookieName("GMALLSESSION");
         return cookieSerializer;
     }
+
+    /**
+     * Error creating bean with name 'enableRedisKeyspaceNotificationsInitializer' defined in class path re
+     * @return
+     */
+//    @Bean
+//    public ConfigureRedisAction configureRedisAction() {
+//        return ConfigureRedisAction.NO_OP;
+//    }
 
 }

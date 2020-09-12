@@ -1,4 +1,4 @@
-package com.sherlock.gmall.seckill.to;
+package com.sherlock.common.to;
 
 import com.sherlock.common.vo.SkuInfoVo;
 import lombok.Data;

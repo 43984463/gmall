@@ -42,7 +42,6 @@ import com.sherlock.gmall.order.vo.PayAsyncVo;
 import com.sherlock.gmall.order.vo.PayVo;
 import com.sherlock.gmall.order.vo.SubmitOrderResponseVo;
 import feign.RequestInterceptor;
-import io.seata.spring.annotation.GlobalTransactional;
 import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
