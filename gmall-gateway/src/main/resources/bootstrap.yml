@@ -12,3 +12,8 @@ spring:
           data-id: gateway.yaml
           group: dev
           refresh: true
+
+    sentinel:
+      transport:
+        dashboard: 127.0.0.1:8080 #Sentinel控制台的访问地址
+        port: 8719  #Sentinel和自己服务整合需要的端口

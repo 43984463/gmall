@@ -2,6 +2,7 @@ package com.sherlock.gmall.product.feign;
 
 import com.sherlock.common.constants.GmallConstant;
 import com.sherlock.common.utils.R;
+import com.sherlock.gmall.product.feign.fallback.SeckillFeignServiceCallBack;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @date 2020/9/13 1:18
  * @Description:
  */
-@FeignClient(GmallConstant.GMALL_SECKILL)
+@FeignClient(value = GmallConstant.GMALL_SECKILL, fallback = SeckillFeignServiceCallBack.class)
 public interface SeckillFeignService {
 
     @GetMapping("/sku/seckill/{skuId}")

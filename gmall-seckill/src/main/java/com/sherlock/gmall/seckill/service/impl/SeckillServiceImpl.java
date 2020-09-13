@@ -1,5 +1,9 @@
 package com.sherlock.gmall.seckill.service.impl;
 
+import com.alibaba.csp.sentinel.Entry;
+import com.alibaba.csp.sentinel.SphU;
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
@@ -78,34 +82,45 @@ public class SeckillServiceImpl implements SeckillService {
         }
     }
 
+    public List<SecKillSkuRedisTo> seckillSkusBlockHandler(BlockException b){
+        log.info("使用注解之后调用的熔断方法， 异常信息 {}", b);
+        return null;
+    }
+
     /**
      * 获取当前可以参与的秒杀商品的信息
      *
      * @return
      */
+    @SentinelResource(value = "getCurrentSeckillSkus", blockHandler = "seckillSkusBlockHandler")
     @Override
     public List<SecKillSkuRedisTo> getCurrentSeckillSkus() {
         // 1、获取当前时间的所有秒杀场次
-        long time = new Date().getTime();
-        Set<String> keys = redisTemplate.keys(GmallSeckillConstant.SESSIONS_CACHE_PREFIX + "*");
-        for (String key : keys) {
-            String replace = key.replace(GmallSeckillConstant.SESSIONS_CACHE_PREFIX, "");
-            String[] split = replace.split("_");
-            Long start = Long.parseLong(split[0]);
-            Long end = Long.parseLong(split[1]);
-            if (time >= start && time <= end) {
-                // 获取当前场次需要的所有商品信息
-                List<String> range = redisTemplate.opsForList().range(key, -100, 100);
-                if (!CollectionUtils.isEmpty(range)) {
-                    BoundHashOperations<String, String, String> operations = redisTemplate.boundHashOps(GmallSeckillConstant.SKUKILL_SESSIONS_CACHE_PREFIX);
-                    List<String> multiGet = operations.multiGet(range);
-                    if (!CollectionUtils.isEmpty(multiGet)) {
-                        List<SecKillSkuRedisTo> collect = multiGet.stream().map(item -> JSON.parseObject(item, SecKillSkuRedisTo.class)).collect(Collectors.toList());
-                        return collect;
+        try (Entry entry = SphU.entry("seckillSkus")){
+            long time = new Date().getTime();
+            Set<String> keys = redisTemplate.keys(GmallSeckillConstant.SESSIONS_CACHE_PREFIX + "*");
+            for (String key : keys) {
+                String replace = key.replace(GmallSeckillConstant.SESSIONS_CACHE_PREFIX, "");
+                String[] split = replace.split("_");
+                Long start = Long.parseLong(split[0]);
+                Long end = Long.parseLong(split[1]);
+                if (time >= start && time <= end) {
+                    // 获取当前场次需要的所有商品信息
+                    List<String> range = redisTemplate.opsForList().range(key, -100, 100);
+                    if (!CollectionUtils.isEmpty(range)) {
+                        BoundHashOperations<String, String, String> operations = redisTemplate.boundHashOps(GmallSeckillConstant.SKUKILL_SESSIONS_CACHE_PREFIX);
+                        List<String> multiGet = operations.multiGet(range);
+                        if (!CollectionUtils.isEmpty(multiGet)) {
+                            List<SecKillSkuRedisTo> collect = multiGet.stream().map(item -> JSON.parseObject(item, SecKillSkuRedisTo.class)).collect(Collectors.toList());
+                            return collect;
+                        }
                     }
+                    break;
                 }
-                break;
             }
+        } catch (BlockException e) {
+            log.info("alibaba Sentinel 自定义受保护资源进行熔断 Exception :", e.getMessage());
+        } finally {
         }
         return null;
     }
@@ -211,6 +226,9 @@ public class SeckillServiceImpl implements SeckillService {
     }
 
     private void saveSessionInfos(List<SeckillSessionsWithSkus> sessions) {
+        if (CollectionUtils.isEmpty(sessions)) {
+            return;
+        }
         sessions.forEach(session -> {
             Long startTime = session.getStartTime().getTime();
             Long endTime = session.getEndTime().getTime();
@@ -226,6 +244,9 @@ public class SeckillServiceImpl implements SeckillService {
     }
 
     private void saveSessionSkuInfos(List<SeckillSessionsWithSkus> sessions) {
+        if (CollectionUtils.isEmpty(sessions)) {
+            return;
+        }
         // 准备redis的hash操作
         BoundHashOperations<String, String, String> operations = redisTemplate.boundHashOps(GmallSeckillConstant.SKUKILL_SESSIONS_CACHE_PREFIX);
         sessions.forEach(session -> {

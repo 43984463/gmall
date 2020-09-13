@@ -8,6 +8,16 @@ spring:
   application:
     name: gmall-coupon
 
+  cloud:
+    nacos:
+      discovery:
+      server-addr: 120.76.60.77:9848
+
+    sentinel:
+      transport:
+        dashboard: 127.0.0.1:8080 #Sentinel控制台的访问地址
+        port: 8719  #Sentinel和自己服务整合需要的端口
+
 mybatis-plus:
   # 虽然我不知道为啥在源码和自动提示都是config-location，但是这样就报错，需要修改成config-locations(带s)
   config-locations: classpath:/mapper/**/*.xml

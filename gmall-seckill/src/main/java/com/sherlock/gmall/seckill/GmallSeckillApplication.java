@@ -148,6 +148,63 @@ package com.sherlock.gmall.seckill;
 //
 //           每天的0点、13点、18点、21点都执行一次：0 0 0,13,18,21 * * ?
 
+/**
+ *  Sentinel使用
+ *    1 、整合Sentinel
+ *       1）、导入依赖
+ *               <dependency>
+ *                  <groupId>com.alibaba.cloud</groupId>
+ *                  <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+ *              </dependency>
+ *       2）、下载Sentinel的控制台(非必须，但是推荐)
+ *       3）、配置Sentinel控制台地址信息  【spring.cloud.sentinel.transport.dashboard=127.0.0.1:8080】
+ *       4）、在控制台调整参数。【默认所以的流控设置保存在内容中，重启就没了】
+ *    2 、每个微服务都需要导入actuator 【这个版本好像自带了，是为了在Sentinel的控制台上可以实时监控，所以第二步好像暂时不需要了,  貌似是因为rabbitmq引入了， 暂时情况不明】
+ *           <dependency>
+ *              <groupId>org.springframework.boot</groupId>
+ *              <artifactId>spring-boot-starter-actuator</artifactId>
+ *          </dependency>
+ *       并配置management.endpoints.web.exposure.include=*
+ *    3、  1)、重新配置被Sentinel限制之后的返回
+ *           <dependency>
+ *              <groupId>com.alibaba.csp</groupId>
+ *              <artifactId>sentinel-web-servlet</artifactId>
+ *          </dependency>
+ *          2）、参考 {@link com.sherlock.gmall.seckill.config.SeckillSentinelConfig#SeckillSentinelConfig()}
+ *
+ *     4、 使用Sentinel来保护feign的远程调用：
+ *
+ *          熔断机制:  【调用方手动进行熔断】
+ *          先在调用放配置 feign.sentinel.enabled=true 开启sentinel对feign的支持
+ *          在调用方的@FeignClient的直接中添加 fallback 类 @FeignClient(value = GmallConstant.GMALL_SECKILL, fallback = SeckillFeignServiceCallBack.class)
+ *          @see com.sherlock.gmall.product.feign.SeckillFeignService
+ *          在 fallback 类里面实现 feign 的所有的接口并重写返回， 并将该接口添加到容器中
+ *          @see com.sherlock.gmall.product.feign.fallback.SeckillFeignServiceCallBack#getSkuSeckillInfo(java.lang.Long)
+ *          在调用方的sentinel上面设置降级策略。远程服务将会被降级处理。然后触发我们重写的callback方法
+ *
+ *          熔断机制:  【提供方手动进行熔断】
+ *          超大流量的时候，必须牺牲一些远程服务。在服务的提供方（远程服务）指定降级策略；提供方是在运行。但是却不运行自己的业务。
+ *          直接返回默认的降级数据（限流的数据）。
+ *
+ *          直接在sentinel的控制台进行熔断配置
+ *
+*       5、自定义受保护的资源
+ *       @see com.sherlock.gmall.seckill.service.impl.SeckillServiceImpl#getCurrentSeckillSkus()
+ *       基于try catch代码【随处可配置，比较灵活】
+ *       使用try catch自定义受保护的资源然后进行处理
+ *       然后在Sentinel中流控或者降级规则中进行配置，这样就可以使用了【流控规则的资源名就是Entry entry = SphU.entry("seckillSkus") 里面的 seckillSkus】
+ *
+ *       基于注解【随处可配置，比较灵活】
+ *       @SentinelResource(value = "getCurrentSeckillSkus", blockHandler = "seckillSkusBlockHandler")
+ *       可以在sentinel中配置 资源名为getCurrentSeckillSkus的限流条件
+ *       blockHandler 可以设置出问题之后的默认调用方法， 方法签名尽量保持一致， 方法名就是 seckillSkusBlockHandler
+ *
+ *      @see com.sherlock.gmall.seckill.service.impl.SeckillServiceImpl#getCurrentSeckillSkus()
+ *
+ *
+ *
+ *
+ */
 
 import com.sherlock.common.constants.GmallConstant;
 import org.springframework.boot.SpringApplication;

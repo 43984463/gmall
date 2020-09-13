@@ -69,6 +69,12 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
+        <!--Sentinel实时监控-->
+        <!--<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>-->
+
         <!--rabbitmq-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

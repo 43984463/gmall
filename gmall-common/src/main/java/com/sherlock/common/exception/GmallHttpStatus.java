@@ -9,7 +9,9 @@ public interface GmallHttpStatus extends HttpStatus {
 
     /** {@code 10001 Valid fail Exception}*/
     public static final int VALID_EXCEPTION = 10001;
-    public static final int SMS_CODE_EXCEPTION = 10002;
+    public static final int GMALL_TO_NAMY_REQUEST = 10002;
+
+    public static final int SMS_CODE_EXCEPTION = 10003;
 
     /** {@code 11000 Valid fail Exception}*/
     public static final int PRODUCT_UP_EXCEPTION = 11000;
@@ -22,4 +24,5 @@ public interface GmallHttpStatus extends HttpStatus {
     public static final int LOGINACC_PASSWORD_INVAILD_EXCEPTION = 15003;
 
     public static final int NO_STOCK_EXCEPTION = 21000;
+
 }

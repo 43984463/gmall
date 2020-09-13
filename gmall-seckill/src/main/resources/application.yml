@@ -22,6 +22,12 @@ spring:
       discovery:
         server-addr: 120.76.60.77:9848
 
+    sentinel:
+      transport:
+        dashboard: 127.0.0.1:8080 #Sentinel控制台的访问地址
+        port: 8719  #Sentinel和自己服务整合需要的端口
+
+
   session:
     store-type: redis
 
@@ -30,7 +36,6 @@ spring:
 
   thymeleaf:
     cache: false
-
   rabbitmq:
     host: 192.168.1.4
     port: 5672
@@ -49,7 +54,6 @@ spring:
           enabled: true
           max-attempts: 5 #最大重试5次
           initial-interval: 20000 #失败重试的时间间隔
-
 logging:
   level:
     com.sherlock.gmall: debug
@@ -67,3 +71,8 @@ gmall:
     maximum-pool-size: 200
     keep-alive-time: 10
 
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: '*'

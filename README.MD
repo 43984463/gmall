@@ -9,6 +9,7 @@
 ### [https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS]跨域中文讲解地址
 ### [https://open.weibo.com/wiki/%E6%8E%88%E6%9D%83%E6%9C%BA%E5%88%B6%E8%AF%B4%E6%98%8E]微博oauth2
 ### [http://seata.io/zh-cn/docs/user/quickstart.html]seata 分布式事务
+### [https://github.com/alibaba/Sentinel/wiki/%E4%BB%8B%E7%BB%8D]Sentinel 分布式系统的流量防卫兵
 
 ## tips:
 * 本地访问gmall-product时把/resources/templates/index2.html替换掉index.html

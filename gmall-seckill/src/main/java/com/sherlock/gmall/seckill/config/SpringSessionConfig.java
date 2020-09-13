@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.session.config.annotation.web.http.SpringHttpSessionConfiguration;
 import org.springframework.session.data.redis.RedisIndexedSessionRepository;
+import org.springframework.session.data.redis.config.ConfigureRedisAction;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration;
 import org.springframework.session.web.http.CookieSerializer;
@@ -51,6 +52,11 @@ public class SpringSessionConfig {
         cookieSerializer.setDomainName("gmall.com");
         cookieSerializer.setCookieName("GMALLSESSION");
         return cookieSerializer;
+    }
+
+    @Bean
+    public ConfigureRedisAction configureRedisAction() {
+        return ConfigureRedisAction.NO_OP;
     }
 
 }
