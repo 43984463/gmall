@@ -17,6 +17,16 @@ spring:
         dashboard: 127.0.0.1:8080 #Sentinel控制台的访问地址
         port: 8719  #Sentinel和自己服务整合需要的端口
 
+  #服务追踪
+  zipkin:
+    base-url: http://192.168.1.4:9411/ #zipkin服务器的地址
+    discovery-client-enabled: false #关闭服务的发现，否则springCloud会把zipkin的url当做服务名称
+    sender:
+      type: web #使用 http 方式传输数据
+  sleuth:
+    sampler:
+      probability: 1 #设置抽样采集率 1就是100% 默认0.1，即10%
+
   redis:
     host: 120.76.60.77
     port: 7379

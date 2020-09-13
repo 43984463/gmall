@@ -34,6 +34,16 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
 
+#服务追踪
+  zipkin:
+    base-url: http://192.168.1.4:9411/ #zipkin服务器的地址
+    discovery-client-enabled: false #关闭服务的发现，否则springCloud会把zipkin的url当做服务名称
+    sender:
+      type: web #使用 http 方式传输数据
+  sleuth:
+    sampler:
+      probability: 1 #设置抽样采集率 1就是100% 默认0.1，即10%
+
   thymeleaf:
     cache: false
   rabbitmq:
@@ -54,6 +64,8 @@ spring:
           enabled: true
           max-attempts: 5 #最大重试5次
           initial-interval: 20000 #失败重试的时间间隔
+
+
 logging:
   level:
     com.sherlock.gmall: debug
