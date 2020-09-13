@@ -1,8 +1,7 @@
-package com.sherlock.gmall.order.config;
+package com.sherlock.gmall.seckill.config;
 
 import com.sherlock.common.constants.GmallConstant;
 import com.sherlock.common.constants.GmallOrderConstant;
-import com.sherlock.common.constants.GmallSeckillConstant;
 import com.sherlock.common.constants.GmallWareConstant;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Exchange;
@@ -24,7 +23,7 @@ import java.util.Map;
  * MQ中如果有就不会再重新创建
  */
 @Configuration
-public class OrderMQConfig {
+public class SeckillMQConfig {
 
     /**
      *    死信队列
@@ -111,31 +110,6 @@ public class OrderMQConfig {
                 Binding.DestinationType.QUEUE,
                 GmallOrderConstant.ORDER_EVENT_EXCHANGE,
                 GmallOrderConstant.ORDER_RELEASE_OTHER_ROUTING_KEY_NAME,
-                null);
-    }
-
-
-    /**
-     *  普通队列
-     *  秒杀信息的队列
-     * @return
-     */
-    @Bean
-    public Queue orderSeckillOrderQueue(){
-        return new Queue(GmallSeckillConstant.ORDER_SECKILL_ORDER_QUEUE_NAME, true, false, false);
-    }
-
-    /**
-     *
-     *  订单秒杀队列的绑定关系
-     * @return
-     */
-    @Bean
-    public Binding orderSeckillOrderBinding(){
-        return new Binding(GmallWareConstant.STOCK_RELEASE_QUEUE_NAME,
-                Binding.DestinationType.QUEUE,
-                GmallOrderConstant.ORDER_EVENT_EXCHANGE,
-                GmallSeckillConstant.ORDER_SECKILL_ROUTING_KEY_NAME,
                 null);
     }
 }

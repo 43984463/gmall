@@ -2,18 +2,26 @@ package com.sherlock.gmall.seckill.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.sherlock.common.constants.GmallOrderConstant;
 import com.sherlock.common.constants.GmallSeckillConstant;
 import com.sherlock.common.exception.GmallHttpStatus;
 import com.sherlock.common.to.SecKillSkuRedisTo;
+import com.sherlock.common.to.mq.SeckillOrderTo;
 import com.sherlock.common.utils.R;
+import com.sherlock.common.vo.MemberRespVo;
 import com.sherlock.common.vo.SkuInfoVo;
 import com.sherlock.gmall.seckill.feign.CouponFeignService;
 import com.sherlock.gmall.seckill.feign.ProductFeignService;
+import com.sherlock.gmall.seckill.interceptor.LoginUserInterceptor;
 import com.sherlock.gmall.seckill.service.SeckillService;
 import com.sherlock.gmall.seckill.vo.SeckillSessionsWithSkus;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.redisson.api.RSemaphore;
 import org.redisson.api.RedissonClient;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundHashOperations;
@@ -25,6 +33,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -48,6 +57,9 @@ public class SeckillServiceImpl implements SeckillService {
 
     @Autowired
     private RedissonClient redissonClient;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @Override
     public void uploadSeckillSkuLatest3Days() {
@@ -120,6 +132,80 @@ public class SeckillServiceImpl implements SeckillService {
                     return redisTo;
                 }
             }
+        }
+        return null;
+    }
+
+    @Override
+    public String kill(String killId, String randomToken, Integer num) {
+
+        MemberRespVo memberRespVo = LoginUserInterceptor.loginUser.get();
+
+        // 获取当前秒杀商品的详细信息
+        BoundHashOperations<String, String, String> operations = redisTemplate.boundHashOps(GmallSeckillConstant.SKUKILL_SESSIONS_CACHE_PREFIX);
+        String killSku = operations.get(killId);
+        if (StringUtils.isBlank(killSku)) {
+            // 没有获取到秒杀商品的信息
+            return null;
+        } else {
+            SecKillSkuRedisTo skuRedisTo = JSON.parseObject(killSku, SecKillSkuRedisTo.class);
+            // 1、校验合法性
+            // 秒杀时间
+            long now = new Date().getTime();
+            long startTime = skuRedisTo.getStartTime();
+            long endTime = skuRedisTo.getEndTime();
+            if (now >= startTime && now <= endTime) {
+                // 2、校验秒杀商品的随机码
+                String randomCode = skuRedisTo.getRandomCode();
+                String redisSkuKey = skuRedisTo.getPromotionSessionId() + "_" + skuRedisTo.getSkuId();
+                if (randomCode.equals(randomToken) && redisSkuKey.equals(killId)) {
+                    //3、验证购物数量是否超出限制
+                    if (num <= skuRedisTo.getSeckillLimit().intValue()) {
+                        // 4、验证这个人是不是已经买过了。秒杀成功就在redis中站位  userId_SessionId_skuId
+                        String hasKillKey = memberRespVo.getId() + "_" + redisSkuKey;
+                        // 设置自动过期，活动完成时间 - 当前时间
+                        Boolean absent = redisTemplate.opsForValue().setIfAbsent(hasKillKey, num.toString(), endTime - now, TimeUnit.MILLISECONDS);
+                        if (absent) {
+                            // 说明没买过
+                            RSemaphore semaphore = redissonClient.getSemaphore(GmallSeckillConstant.SKU_STOCK_SEMAPHORE_PREFIX + randomToken);
+                            try {
+                                // 只尝试100毫秒进行尝试获取信号量
+                                // 或者直接走代码  能获取到就获取，获取不到就直接返回
+                                boolean acquire = semaphore.tryAcquire(num, 100, TimeUnit.MILLISECONDS);
+                                if (acquire) {
+                                    // 秒杀成功 发送消息给MQ说明下单成功
+                                    String timeId = IdWorker.getTimeId();
+                                    SeckillOrderTo seckillOrderTo = new SeckillOrderTo();
+                                    seckillOrderTo.setOrderSn(timeId);
+                                    seckillOrderTo.setPromotionSessionId(skuRedisTo.getPromotionSessionId());
+                                    seckillOrderTo.setNum(num);
+                                    seckillOrderTo.setSeckillPrice(skuRedisTo.getSeckillPrice());
+                                    seckillOrderTo.setSkuId(skuRedisTo.getSkuId());
+                                    seckillOrderTo.setMumberId(memberRespVo.getId());
+
+                                    // com.sherlock.gmall.order.config.OrderMQConfig.orderSeckillOrderQueue
+
+                                    rabbitTemplate.convertAndSend(GmallOrderConstant.ORDER_EVENT_EXCHANGE, GmallSeckillConstant.ORDER_SECKILL_ROUTING_KEY_NAME,seckillOrderTo, new CorrelationData(timeId));
+                                    return timeId;
+                                }
+                            } catch (InterruptedException e) {
+                                log.info("获取信号量失败, {}", e.getMessage());
+                                return null;
+                            }
+
+                        } else {
+                            // 已经买过了
+                            return null;
+                        }
+                    }
+                } else {
+                    return null;
+                }
+            } else {
+                // 过了秒杀期
+                return null;
+            }
+
         }
         return null;
     }

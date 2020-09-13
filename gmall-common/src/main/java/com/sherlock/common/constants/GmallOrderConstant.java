@@ -30,7 +30,6 @@ public abstract class GmallOrderConstant {
     public static final String ORDER_RELEASE_OTHER_ROUTING_KEY_NAME = "order.release.other.#";
     public static final String ORDER_RELEASE_OTHER_ROUTING_KEY = "order.release.other";
 
-
     public static final int X_MESSAGE_TTL_TIME = 1000 * 60 * 1;
 
     // 订单自动收货时间

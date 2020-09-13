@@ -1,0 +1,55 @@
+package com.sherlock.gmall.order.rabbitListener;
+
+import com.rabbitmq.client.Channel;
+import com.sherlock.common.constants.GmallConstant;
+import com.sherlock.common.constants.GmallSeckillConstant;
+import com.sherlock.common.to.mq.SeckillOrderTo;
+import com.sherlock.gmall.order.entity.OrderEntity;
+import com.sherlock.gmall.order.service.OrderService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.RabbitHandler;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+
+/**
+ * @auther Sherlock
+ * @date 2020/9/13 15:32
+ * @Description:
+ */
+@Component
+@Slf4j
+@RabbitListener(queues = GmallSeckillConstant.ORDER_SECKILL_ORDER_QUEUE_NAME)
+public class OrderSeckillListener {
+
+    private final String className = this.getClass().getName();
+
+    @Autowired
+    private OrderService orderService;
+
+    /**
+     * 订单秒杀
+     *
+     * @param seckillOrderTo
+     * @param message
+     * @param channel
+     */
+    @RabbitHandler
+    public void handleOrderClose(SeckillOrderTo seckillOrderTo, Message message, Channel channel) throws IOException {
+        log.info("OrderCloseListener hand Order Close, {}", seckillOrderTo);
+        // 获取不到 CorrelationId
+        log.info("message.getMessageProperties().getCorrelationId(), {}", message.getMessageProperties().getCorrelationId());
+        // 可以获取 CorrelationId
+        log.info("{} CorrelationId, {}", className, message.getMessageProperties().getHeaders().get(GmallConstant.SPRING_RETURNED_MESSAGE_CORRELATION));
+        try {
+            orderService.createSeckillOrder(seckillOrderTo);
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+        } catch (Exception e) {
+            channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);
+        }
+    }
+
+}

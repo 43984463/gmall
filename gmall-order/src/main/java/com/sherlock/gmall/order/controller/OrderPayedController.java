@@ -1,4 +1,4 @@
-package com.sherlock.gmall.order.rabbitListener;
+package com.sherlock.gmall.order.controller;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.internal.util.AlipaySignature;
@@ -23,7 +23,7 @@ import java.util.Map;
  */
 @RestController
 @Slf4j
-public class OrderPayedListener {
+public class OrderPayedController {
 
     @Autowired
     private OrderService orderService;

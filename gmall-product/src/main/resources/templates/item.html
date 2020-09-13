@@ -286,9 +286,16 @@
 									</div>
 								</form>
 							</div>
-							<div id="addToCart"  style="cursor:pointer;"  canClick="1" th:attr="skuId=${skuInfo.info.skuId}"  class="box-btns-two">
+							<div id="addToCart" th:if="${skuInfo.secKillSkuRedisTo == null || (#dates.createNow().getTime() < skuInfo.secKillSkuRedisTo.startTime || #dates.createNow().getTime() > skuInfo.secKillSkuRedisTo.endTime)}"
+								 style="cursor:pointer;"  canClick="1" th:attr="skuId=${skuInfo.info.skuId}"  class="box-btns-two">
 
 								加入购物车
+
+							</div>
+							<div id="seckillA" th:if="${skuInfo.secKillSkuRedisTo != null && (#dates.createNow().getTime() >= skuInfo.secKillSkuRedisTo.startTime && #dates.createNow().getTime() <= skuInfo.secKillSkuRedisTo.endTime)}"
+								 style="cursor:pointer;"  canClick="1" th:attr="skuId=${skuInfo.info.skuId}, sessionId=${skuInfo.secKillSkuRedisTo.promotionSessionId}, code=${skuInfo.secKillSkuRedisTo.randomCode}"  class="box-btns-two">
+
+								立即抢购
 
 							</div>
 						</div>
@@ -1079,6 +1086,22 @@
 			var num = $("#numInput").val();
 			var skuId = $(this).attr("skuId");
 			location.href = "http://cart.gmall.com/addToCart?skuId=" + skuId + "&num=" + num;
+		})
+
+		/**
+		 * 抢购商品,需要先保证登录了
+		 */
+		$("#seckillA").click(function () {
+			var isLogin = [[${session.loginUser != null}]];
+			if (isLogin) {
+				var killId = this.attr("sessionId") + this.attr("skuId");
+				var key = this.attr("code");
+				var num = ("#numInput").val();
+				location.href = "http://seckill.gmall.com/kill?killId="+killId+"&key="+key+"&num="+num;
+			} else {
+				alert("请先登录再抢购");
+			}
+			return false;
 		})
 	</script>
 

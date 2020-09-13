@@ -12,6 +12,7 @@ import com.sherlock.common.exception.GmallHttpStatus;
 import com.sherlock.common.exception.NoStockException;
 import com.sherlock.common.to.SkuHasStockVo;
 import com.sherlock.common.to.mq.OrderTo;
+import com.sherlock.common.to.mq.SeckillOrderTo;
 import com.sherlock.common.utils.PageUtils;
 import com.sherlock.common.utils.Query;
 import com.sherlock.common.utils.R;
@@ -362,6 +363,29 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
     @Override
     public void updateOrderStatus(String outTradeNo, Integer code) {
         orderDao.updateOrderStatus(outTradeNo, code);
+    }
+
+    @Override
+    public void createSeckillOrder(SeckillOrderTo seckillOrderTo) {
+        // 保存订单信息
+        OrderEntity orderEntity = new OrderEntity();
+
+        orderEntity.setOrderSn(seckillOrderTo.getOrderSn());
+        orderEntity.setMemberId(seckillOrderTo.getMumberId());
+        orderEntity.setStatus(GmallOrderConstant.OrderStatusEnum.CREATE_NEW.getCode());
+        orderEntity.setPayAmount(seckillOrderTo.getSeckillPrice().multiply(new BigDecimal(seckillOrderTo.getNum())));
+        save(orderEntity);
+
+        // TODO 设置订单项收货信息还有+运费
+        // 保存订单项
+        OrderItemEntity orderItemEntity = new OrderItemEntity();
+        orderItemEntity.setOrderSn(seckillOrderTo.getOrderSn());
+        orderItemEntity.setRealAmount(seckillOrderTo.getSeckillPrice().multiply(new BigDecimal(seckillOrderTo.getNum())));
+        orderItemEntity.setSkuQuantity(seckillOrderTo.getNum());
+
+        // TODO 设置订单项的sku信息和spu信息
+        productFeignService.getSpuInfoBySkuId(seckillOrderTo.getSkuId());
+        orderItemService.save(orderItemEntity);
     }
 
 

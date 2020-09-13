@@ -152,12 +152,13 @@ package com.sherlock.gmall.seckill;
 import com.sherlock.common.constants.GmallConstant;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @EnableFeignClients(GmallConstant.GMALL_SECKILL_BASEPATH + GmallConstant.FEIGN)
 @EnableDiscoveryClient
-@SpringBootApplication
+@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 public class GmallSeckillApplication {
 
     public static void main(String[] args) {

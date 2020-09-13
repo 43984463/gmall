@@ -1,6 +1,7 @@
 package com.sherlock.gmall.order.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.sherlock.common.to.mq.SeckillOrderTo;
 import com.sherlock.common.utils.PageUtils;
 import com.sherlock.gmall.order.entity.OrderEntity;
 import com.sherlock.gmall.order.vo.OrderConfirmVo;
@@ -38,5 +39,7 @@ public interface OrderService extends IService<OrderEntity> {
     String handPayResult(PayAsyncVo vo);
 
     void updateOrderStatus(String outTradeNo, Integer code);
+
+    void createSeckillOrder(SeckillOrderTo seckillOrderTo);
 }
 
