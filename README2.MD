@@ -375,6 +375,10 @@ netstat -aon|findstr 80
 ```text
 tasklist|findstr 19796
 ```
+ping 端口
+```text
+telnet 120.76.60.77 9848
+```
 
 ##主键生成问题 seata导致mybatis plus配置失效 需要设置所有的 com.sherlock.gmall.order.config.MySeataConfig.sqlSessionFactory  其他属性待设置
 com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration#sqlSessionFactory()
@@ -395,3 +399,5 @@ SHOW VARIABLES WHERE variable_name like '%tx_isolation%'
 
 业务service层数据异常之后回滚，但是数据库的主键还是会自增，因为这个ID是保存在内存中
 ```
+
+##zipkin docker安装 docker run -d -p 9411:9411 openzipkin/zipkin
