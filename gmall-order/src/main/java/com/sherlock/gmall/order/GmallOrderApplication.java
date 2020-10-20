@@ -222,15 +222,63 @@ package com.sherlock.gmall.order;
  *
  *          使用场景：这个扩展点非常有用 ，无论是写中间件和业务中，都能利用这个特性。比如对实现了某一类接口的bean在各个生命期间进行收集，或者对某个类型的bean进行统一的设值等等。
  *
- *          1、实例化----实例化的过程是一个创建Bean的过程，即调用Bean的构造函数，单例的Bean放入单例池中   -> InstantiationAwareBeanPostProcessor的接口起作用
+ *          1、实例化----实例化的过程是一个创建Bean的过程，即调用Bean的构造函数，单例的Bean放入单例池中   -> InstantiationAwareBeanPostProcessor的接口起作用  先于BeanPostProcessor执行
  *
  *          2、初始化----初始化的过程是一个赋值的过程，即调用Bean的setter，设置Bean的属性 -> BeanPostProcessor的接口起作用
  *
- *          @see org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#createBean(java.lang.String, org.springframework.beans.factory.support.RootBeanDefinition, java.lang.Object[])
- *          //  Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
- * 			    Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
+ *          postProcessBeforeInstantiation 一定执行, postProcessAfterInitialization 一定执行.
  *
  *
+ *          @see org.springframework.beans.factory.BeanFactory#getBean(java.lang.String) 从容器中获取bean 如果获取不到就创建bean
+ *              @see org.springframework.beans.factory.support.AbstractBeanFactory#getBean(java.lang.String)
+ *                  @see org.springframework.beans.factory.support.AbstractBeanFactory#doGetBean(java.lang.String, java.lang.Class, java.lang.Object[], boolean)
+ *
+ *                      // Create bean instance.
+ * 				        if (mbd.isSingleton()) {
+ * 				        	sharedInstance = getSingleton(beanName, () -> {
+ * 				        		try {
+ * 				        			return createBean(beanName, mbd, args);
+ *                              }
+ * 				        		catch (BeansException ex) {
+ * 				        			// Explicitly remove instance from singleton cache: It might have been put there
+ * 				        			// eagerly by the creation process, to allow for circular reference resolution.
+ * 				        			// Also remove any beans that received a temporary reference to the bean.
+ * 				        			destroySingleton(beanName);
+ * 				        			throw ex;
+ *                                }
+ *                          });
+ * 				        	bean = getObjectForBeanInstance(sharedInstance, name, beanNamd);
+ * 				        }
+ *
+ *                      @see org.springframework.beans.factory.support.AbstractBeanFactory#createBean(java.lang.String, org.springframework.beans.factory.support.RootBeanDefinition, java.lang.Object[])
+ *                          @see org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#createBean(java.lang.String, org.springframework.beans.factory.support.RootBeanDefinition, java.lang.Object[])
+ *                              @see org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#resolveBeforeInstantiation(java.lang.String, org.springframework.beans.factory.support.RootBeanDefinition)
+ *
+ *                      AOP功能就是在这里判断的(生成代理对象)
+ *                      //  Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
+ * 			                Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
+ * 			            调用接口方法：
+ * 			            @see org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor#postProcessBeforeInstantiation(java.lang.Class, java.lang.String)
+ * 			            @see org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor#postProcessAfterInitialization(java.lang.Object, java.lang.String)
+ *
+ *                      try {
+ *
+ *                           如果可以通过AOP或者其他的InstantiationAwareBeanPostProcessor生成对象， 即 bean ！= null 就直接返回这个对象，如果对象为空则继续执行代码创建bean
+ *
+ * 		                	// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
+ * 		                	Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
+ * 		                	if (bean != null) {
+ * 		                		return bean;
+ *                          }
+ *                      }
+ * 		                catch (Throwable ex) {
+ * 		                	throw new BeanCreationException(mbdToUse.getResourceDescription(), beanName,
+ * 		                			"BeanPostProcessor before instantiation of bean failed", ex);
+ * 		                }
+ *
+ *                     @see org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#doCreateBean(java.lang.String, org.springframework.beans.factory.support.RootBeanDefinition, java.lang.Object[])
+ *                     给bean填充属性等
+ *                     @see org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#populateBean(java.lang.String, org.springframework.beans.factory.support.RootBeanDefinition, org.springframework.beans.BeanWrapper)
  *
  *
  *
