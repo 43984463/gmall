@@ -257,9 +257,29 @@ package com.sherlock.gmall.order;
  *                      AOP功能就是在这里判断的(生成代理对象)
  *                      //  Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
  * 			                Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
- * 			            调用接口方法：
- * 			            @see org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor#postProcessBeforeInstantiation(java.lang.Class, java.lang.String)
- * 			            @see org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor#postProcessAfterInitialization(java.lang.Object, java.lang.String)
+ *
+ *                      @Nullable
+ * 	                    protected Object resolveBeforeInstantiation(String beanName, RootBeanDefinition mbd) {
+ * 	                    	Object bean = null;
+ * 	                    	if (!Boolean.FALSE.equals(mbd.beforeInstantiationResolved)) {
+ * 	                    		// Make sure bean class is actually resolved at this point.
+ * 	                    		if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
+ * 	                    			Class<?> targetType = determineTargetType(beanName, mbd);
+ * 	                    			if (targetType != null) {
+ * 	                    	          @see org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor#postProcessBeforeInstantiation(java.lang.Class, java.lang.String)
+ * 	                    	          如果生成对象(通过代理等方式)，则直接调用 BeanPostProcessor#postProcessAfterInitialization 对bean进行属性的填充
+ * 	                    				bean = applyBeanPostProcessorsBeforeInstantiation(targetType, beanName);
+ * 	                    			  @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object, java.lang.String)
+ * 	                    				if (bean != null) {
+ * 	                    					bean = applyBeanPostProcessorsAfterInitialization(beanName);
+ * 	                    				}
+ * 	                    			}
+ * 	                    		}
+ * 	                    		mbd.beforeInstantiationResolved = (bean != null);
+ * 	                    	}
+ *                         return bean;
+ * 	                    }
+ *
  *
  *                      try {
  *
@@ -276,8 +296,8 @@ package com.sherlock.gmall.order;
  * 		                			"BeanPostProcessor before instantiation of bean failed", ex);
  * 		                }
  *
+ *                      创建bean对象实例
  *                     @see org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#doCreateBean(java.lang.String, org.springframework.beans.factory.support.RootBeanDefinition, java.lang.Object[])
- *                     给bean填充属性等
  *                     @see org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#populateBean(java.lang.String, org.springframework.beans.factory.support.RootBeanDefinition, org.springframework.beans.BeanWrapper)
  *
  *
