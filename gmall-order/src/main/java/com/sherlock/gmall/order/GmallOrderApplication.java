@@ -219,6 +219,7 @@ package com.sherlock.gmall.order;
  *             ** postProcessPropertyValues：bean已经实例化完成，在属性注入时阶段触发，@Autowired,@Resource等注解原理基于此方法实现
  *             ** postProcessBeforeInitialization：初始化bean之前，相当于把bean注入spring上下文之前
  *             ** postProcessAfterInitialization：初始化bean之后，相当于把bean注入spring上下文之后
+ *             @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet() bean初始化之后调用
  *
  *          使用场景：这个扩展点非常有用 ，无论是写中间件和业务中，都能利用这个特性。比如对实现了某一类接口的bean在各个生命期间进行收集，或者对某个类型的bean进行统一的设值等等。
  *
@@ -267,8 +268,8 @@ package com.sherlock.gmall.order;
  * 	                    			Class<?> targetType = determineTargetType(beanName, mbd);
  * 	                    			if (targetType != null) {
  * 	                    	          @see org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor#postProcessBeforeInstantiation(java.lang.Class, java.lang.String)
- * 	                    	          如果生成对象(通过代理等方式)，则直接调用 BeanPostProcessor#postProcessAfterInitialization 对bean进行属性的填充
  * 	                    				bean = applyBeanPostProcessorsBeforeInstantiation(targetType, beanName);
+ * 	                    	          如果生成对象(通过代理等方式)，则直接调用 BeanPostProcessor#postProcessAfterInitialization 对bean进行属性的填充
  * 	                    			  @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object, java.lang.String)
  * 	                    				if (bean != null) {
  * 	                    					bean = applyBeanPostProcessorsAfterInitialization(beanName);
@@ -298,7 +299,81 @@ package com.sherlock.gmall.order;
  *
  *                      创建bean对象实例
  *                     @see org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#doCreateBean(java.lang.String, org.springframework.beans.factory.support.RootBeanDefinition, java.lang.Object[])
- *                     @see org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#populateBean(java.lang.String, org.springframework.beans.factory.support.RootBeanDefinition, org.springframework.beans.BeanWrapper)
+ *                          bean实例创建之后进行，创建后的接口调用，对bean进行修改 InstantiationAwareBeanPostProcessor#postProcessAfterInstantiation
+ *                          @see org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#populateBean(java.lang.String, org.springframework.beans.factory.support.RootBeanDefinition, org.springframework.beans.BeanWrapper)
+ *
+ *                      调用
+ *                      @see org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor#postProcessAfterInstantiation(java.lang.Object, java.lang.String)
+ *                      // Give any InstantiationAwareBeanPostProcessors the opportunity to modify the
+ * 	                	// state of the bean before properties are set. This can be used, for example,
+ * 	                	// to support styles of field injection.
+ * 	                	if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
+ * 	                		for (BeanPostProcessor bp : getBeanPostProcessors()) {
+ * 	                			if (bp instanceof InstantiationAwareBeanPostProcessor) {
+ * 	                				InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
+ * 	                				if (!ibp.postProcessAfterInstantiation(bw.getWrappedInstance(), beanName)) {
+ * 	                					return;
+ * 	                				}
+ * 	                			}
+ * 	                		}
+ * 	                	}
+ *
+ *                      接下来调用
+ *                          InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
+ * 					        PropertyValues pvsToUse = ibp.postProcessProperties(pvs, bw.getWrappedInstance(), beanName);
+ * 					        获取所有需要注入的属性
+ *                          @see org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor#postProcessProperties(org.springframework.beans.PropertyValues, java.lang.Object, java.lang.String)
+ *                              应用于bean的属性上
+ *                              @see org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#applyPropertyValues(java.lang.String, org.springframework.beans.factory.config.BeanDefinition, org.springframework.beans.BeanWrapper, org.springframework.beans.PropertyValues)
+ *
+ *                      @see org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#doCreateBean(java.lang.String, org.springframework.beans.factory.support.RootBeanDefinition, java.lang.Object[])
+ *                              exposedObject = initializeBean(beanName, exposedObject, mbd);
+ *                              @see org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#initializeBean(java.lang.String, java.lang.Object, org.springframework.beans.factory.support.RootBeanDefinition)
+ *
+ *                              执行beanPostProcessor的初始化前置方法
+ *                              wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
+ *                              @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessBeforeInitialization(java.lang.Object, java.lang.String)
+ *
+ *                              执行bean的初始化方法
+ *                              invokeInitMethods(beanName, wrappedBean, mbd);
+ *                              @see org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#invokeInitMethods(java.lang.String, java.lang.Object, org.springframework.beans.factory.support.RootBeanDefinition)
+ *                              在这个方法里面执行bean初始化之后的方法：
+ *                                  通过实现 InitializingBean/DisposableBean 接口来定制初始化之后/销毁之前的操作方法；
+ *                                  通过 <bean> 元素的 init-method/destroy-method属性指定初始化之后 /销毁之前调用的操作方法；
+ *                                  在指定方法上加上@PostConstruct 或@PreDestroy注解来制定该方法是在初始化之后还是销毁之前调用。
+ *                                  @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+ *
+ *
+ *                              执行beanPostProcessor的初始化后置方法
+ *                              wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
+ *                              @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object, java.lang.String)
+ *
+ *          (五)、
+ *              接口方法：
+ *              @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
+ *              @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
+ *                  ----->
+ *                  @see org.springframework.context.support.ApplicationContextAwareProcessor
+ *              可以获取到 BeanFactory 或者 ApplicationContext， 在实现了接口的类中定义一个属性去接收框架传递的 BeanFactory 或者 ApplicationContext， 然后可以在需要的时候使用。
+ *              使用场景为，你可以在bean实例化之后，但还未初始化之前，拿到 BeanFactory，在这个时候，可以对每个bean作特殊化的定制。也或者可以把BeanFactory拿到进行缓存，日后使用。
+ *
+ *          (六)、
+ *              接口方法：
+ *              @see org.springframework.beans.factory.BeanNameAware#setBeanName(java.lang.String)
+ *              触发点在bean的初始化之前，也就是postProcessBeforeInitialization之前
+ *              使用场景为：用户可以扩展这个点，在初始化bean之前拿到spring容器中注册的的beanName，来自行修改这个beanName的值。
+ *
+ *          (七)、
+ *              接口方法：
+ *              @see org.springframework.beans.factory.FactoryBean
+ *              FactoryBean是一个工厂Bean，可以生成某一个类型Bean实例，它最大的一个作用是：可以让我们自定义Bean的创建过程。
+ *              BeanFactory是Spring容器中的一个基本类也是很重要的一个类，在BeanFactory中可以创建和管理Spring容器中的Bean，它对于Bean的创建有一个统一的流程。
+ *              主要作用：
+ *              创建比较复杂的bean， 例如动态代理生成的bean。
+ *              在获取的时候可以获取到该工厂bean，调用getBean方法， 需要添加前缀 {@link org.springframework.beans.factory.BeanFactory#FACTORY_BEAN_PREFIX}；
+ *              这个工厂bean会创建复杂bean并加入容器。
+ *
+ *
  *
  *
  *
