@@ -372,17 +372,63 @@ package com.sherlock.gmall.order;
  *              创建比较复杂的bean， 例如动态代理生成的bean。
  *              在获取的时候可以获取到该工厂bean，调用getBean方法， 需要添加前缀 {@link org.springframework.beans.factory.BeanFactory#FACTORY_BEAN_PREFIX}；
  *              这个工厂bean会创建复杂bean并加入容器。
+ *          (八)、
+ *              接口方法：
+ *              @see org.springframework.beans.factory.SmartInitializingSingleton#afterSingletonsInstantiated()
+ *              SmartInitializingSingleton中只有一个接口afterSingletonsInstantiated()，
+ *              其作用是是 在spring容器管理的所有单例对象（非懒加载对象）初始化完成之后调用的回调接口
+ *              调用点：
+ *               @see org.springframework.boot.SpringApplication#run(java.lang.String...) -->
+ *                    @see org.springframework.boot.SpringApplication#refreshContext(org.springframework.context.ConfigurableApplicationContext)
+ *                         @see org.springframework.boot.SpringApplication#refresh(org.springframework.context.ApplicationContext)
+ *                              @see org.springframework.context.support.AbstractApplicationContext#refresh()  --> finishBeanFactoryInitialization(beanFactory);
+ *                                   @see org.springframework.context.support.AbstractApplicationContext#finishBeanFactoryInitialization(org.springframework.beans.factory.config.ConfigurableListableBeanFactory)
+ *                                   // 实例化所有剩下的非懒加载的单例bean
+ *                                   // Instantiate all remaining (non-lazy-init) singletons.
+ * 		                             beanFactory.preInstantiateSingletons();
+ *                                   @see org.springframework.beans.factory.support.DefaultListableBeanFactory#preInstantiateSingletons()
  *
+ *                                   在spring容器管理的所有单例对象（非懒加载对象）初始化完成之后调用的回调接口
+ *                                   @see org.springframework.beans.factory.SmartInitializingSingleton#afterSingletonsInstantiated()
+ *                                  // Trigger post-initialization callback for all applicable beans...
+ * 	                            	for (String beanName : beanNames) {
+ * 	                            		Object singletonInstance = getSingleton(beanName);
+ * 	                            		if (singletonInstance instanceof SmartInitializingSingleton) {
+ * 	                            			final SmartInitializingSingleton smartSingleton = (SmartInitializingSingleton) singletonInstance;
+ * 	                            			if (System.getSecurityManager() != null) {
+ * 	                            				AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
+ * 	                            					smartSingleton.afterSingletonsInstantiated();
+ * 	                            					return null;
+ * 	                            				}, getAccessControlContext());
+ * 	                            			}
+ * 	                            			else {
+ * 	                            				smartSingleton.afterSingletonsInstantiated();
+ * 	                            			}
+ * 	                            		}
+ * 	                            	}
  *
+ *          (九)、
+ *              接口方法：
+ *              @see org.springframework.boot.ApplicationRunner#run(org.springframework.boot.ApplicationArguments)
+ *              @see org.springframework.boot.CommandLineRunner#run(java.lang.String...)
+ *              调用点：
+ *              @see org.springframework.boot.SpringApplication#run(java.lang.String...)
+ *                  callRunners(context, applicationArguments);
+ *                  @see org.springframework.boot.SpringApplication#callRunners(org.springframework.context.ApplicationContext, org.springframework.boot.ApplicationArguments)
  *
+ *              触发时机为整个项目启动完毕后，自动执行。如果有多个CommandLineRunner 或者 ApplicationRunner，可以利用@Order来进行排序。
+ *              可以在这时候执行一些sql文件或者定时任务什么的
  *
+ *          (十)、
+ *              接口方法：
+ *              @see org.springframework.beans.factory.DisposableBean#destroy()
+ *              调用bean的 {@link org.springframework.context.annotation.Bean#destroyMethod()}
  *
- *
- *
- *
- *
- *
- *
+ *          (十一)、
+ *              spring和springboot的事件发布
+ *              接口方法：
+ *              @see org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
+ *              @see org.springframework.boot.SpringApplicationRunListener
  */
 
 import com.sherlock.common.constants.GmallConstant;
