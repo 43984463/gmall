@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import com.sherlock.common.Annotation.GmallMapping;
+import com.sherlock.gmall.coupon.service.TestSpringTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -32,6 +33,9 @@ import com.sherlock.common.utils.R;
 public class CouponController {
 
     @Autowired
+    private TestSpringTransactionalService testSpringTransactionalService;
+
+    @Autowired
     private CouponService couponService;
 
     @Value("${coupon.user.userName}")
@@ -39,6 +43,11 @@ public class CouponController {
 
     @Value("${coupon.user.userAge}")
     private Integer userAge;
+
+    @RequestMapping("/spring/Transactional")
+    public void testSpringTransactional() {
+        testSpringTransactionalService.saveSpringTest1();
+    }
 
     /**
      * 返回远程测试接口

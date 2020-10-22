@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/context/spring-aop.xsd 
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/context/spring-tx.xsd">
+
+
+    <!-- 包扫描、只要标注了@Controller、@Service、@Repository，@Component -->
+    <!--<context:component-scan base-package="com.sherlock.gmall" use-default-filters="false"></context:component-scan>-->
+
+    <!--定义一个bean-->
+    <bean id="person" class="com.sherlock.gmall.test.Person">
+        <property name="age" value="18"></property>
+        <property name="name" value="小明"></property>
+    </bean>
 
 </beans>

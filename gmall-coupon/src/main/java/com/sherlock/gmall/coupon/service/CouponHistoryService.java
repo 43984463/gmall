@@ -16,5 +16,17 @@ import java.util.Map;
 public interface CouponHistoryService extends IService<CouponHistoryEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void saveCouponHistoryRequired();
+
+    void saveCouponHistoryRequiredException();
+
+    void saveCouponHistoryRequiresNew();
+
+    void saveCouponHistoryRequiresNewException();
+
+    void saveCouponHistoryNested();
+
+    void saveCouponHistoryNestedException();
 }
 
