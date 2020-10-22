@@ -1,11 +1,13 @@
 package com.sherlock.gmall.order.dao;
 
-import com.sherlock.gmall.order.entity.OrderEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.log4j.Log4j;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +38,16 @@ public class main {
         list.add(test7);
         list.add(test8);
         Map<String, Double> collect = list.stream().collect(Collectors.groupingBy(Test::getId, Collectors.summingDouble(test -> test.getValue().doubleValue())));
-        System.out.println(collect);
+        //System.out.println(collect);
+
+
+        DateTimeFormatter yyyymMdd = DateTimeFormatter.ofPattern("YYYYMMdd");
+        //System.out.println(yyyymMdd.format(LocalDate.now()));
+
+
+        String ss = "Hello";
+        String[] split = ss.split("");
+        System.out.println(split.toString());
     }
 }
 

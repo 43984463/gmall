@@ -33,6 +33,7 @@
         <module>gmall-sso-client2</module>
         <module>gmall-cart</module>
         <module>gmall-seckill</module>
+        <module>gmall-spring-annotation</module>
     </modules>
     <packaging>pom</packaging>
 
