@@ -1,4 +1,5 @@
 package com.sherlock.test;
+import com.sherlock.gmall.bean.Boss;
 import com.sherlock.gmall.bean.Car;
 import com.sherlock.gmall.config.MainConfigOfAutowired;
 import com.sherlock.gmall.dao.BookDao;
@@ -18,10 +19,10 @@ public class IOCTest_Autowired {
 		BookDao bean = applicationContext.getBean(BookDao.class);
 		System.out.println(bean);
 		
-//		Boss boss = applicationContext.getBean(Boss.class);
-//		System.out.println(boss);
-//		Car car = applicationContext.getBean(Car.class);
-//		System.out.println(car);
+		Boss boss = applicationContext.getBean(Boss.class);
+		System.out.println(boss);
+		Car car = applicationContext.getBean(Car.class);
+		System.out.println(car);
 //
 //		Color color = applicationContext.getBean(Color.class);
 //		System.out.println(color);

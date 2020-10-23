@@ -1,5 +1,7 @@
 package com.sherlock.gmall.config;
 
+import com.sherlock.gmall.bean.Car;
+import com.sherlock.gmall.bean.Color;
 import com.sherlock.gmall.dao.BookDao;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -49,7 +51,7 @@ import org.springframework.context.annotation.Primary;
  *
  **/
 @ComponentScan({"com.sherlock.gmall.service","com.sherlock.gmall.dao",
-        "com.sherlock.gmall.controller"})
+        "com.sherlock.gmall.controller", "com.sherlock.gmall.bean"})
 @Configuration
 public class MainConfigOfAutowired {
 
@@ -61,4 +63,15 @@ public class MainConfigOfAutowired {
         return bookDao;
     }
 
+    /**
+     * @Bean标注的方法创建对象的时候，方法参数的值从容器中获取
+     * @param car
+     * @return
+     */
+    @Bean
+    public Color color(Car car){
+        Color color = new Color();
+        color.setCar(car);
+        return color;
+    }
 }
