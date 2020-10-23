@@ -1,7 +1,5 @@
 package com.sherlock.gmall.config;
 
-import com.sherlock.gmall.test.Person;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.ComponentScans;
@@ -38,9 +36,9 @@ import org.springframework.context.annotation.FilterType;
 public class MainConfig {
 
     //给容器中注册一个Bean;类型为返回值的类型，id默认是用方法名作为id
-    @Bean("person")
-    public Person person01(){
-        return new Person("lisi", 20);
-    }
+//    @Bean("person")
+//    public Person person01(){
+//        return new Person("lisi", 20);
+//    }
 
 }

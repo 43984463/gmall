@@ -1,6 +1,6 @@
 package com.sherlock.gmall;
 
-import com.sherlock.gmall.test.Person;
+import com.sherlock.gmall.bean.Person;
 import com.sherlock.gmall.config.MainConfig;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;

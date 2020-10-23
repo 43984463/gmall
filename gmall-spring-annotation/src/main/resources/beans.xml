@@ -14,7 +14,7 @@
     <!--<context:component-scan base-package="com.sherlock.gmall" use-default-filters="false"></context:component-scan>-->
 
     <!--定义一个bean-->
-    <bean id="person" class="com.sherlock.gmall.test.Person">
+    <bean id="person" class="com.sherlock.gmall.bean.Person">
         <property name="age" value="18"></property>
         <property name="name" value="小明"></property>
     </bean>

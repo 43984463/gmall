@@ -1,4 +1,4 @@
-package com.sherlock.gmall.test;
+package com.sherlock.gmall.bean;
 
 /**
  * @Author xueshuai
