@@ -1,11 +1,8 @@
 package com.sherlock.test;
 
-import com.sherlock.gmall.bean.Blue;
-import com.sherlock.gmall.bean.Color;
-import com.sherlock.gmall.bean.ColorFactoryBean;
+import com.sherlock.gmall.bean.Person;
 import com.sherlock.gmall.config.MainConfig;
 import com.sherlock.gmall.config.MainConfig2;
-import com.sherlock.gmall.bean.Person;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -20,7 +17,7 @@ import java.util.Map;
  */
 public class IOCTest {
 
-    private void  printBeans(ApplicationContext applicationContext){
+    private void printBeans(ApplicationContext applicationContext){
         System.out.println("===================================打印当前IOC容器中所有的bean===================================");
         System.out.println("===================================打印当前IOC容器中所有的bean的数量"+applicationContext.getBeanDefinitionCount()+"===================================");
         String[] beanDefinitionNames = applicationContext.getBeanDefinitionNames();
