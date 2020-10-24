@@ -255,7 +255,6 @@ package com.sherlock.gmall.order;
  *                          @see org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#createBean(java.lang.String, org.springframework.beans.factory.support.RootBeanDefinition, java.lang.Object[])
  *                              @see org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#resolveBeforeInstantiation(java.lang.String, org.springframework.beans.factory.support.RootBeanDefinition)
  *
- *                      AOP功能就是在这里判断的(生成代理对象)
  *                      //  Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
  * 			                Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
  *
@@ -284,7 +283,7 @@ package com.sherlock.gmall.order;
  *
  *                      try {
  *
- *                           如果可以通过AOP或者其他的InstantiationAwareBeanPostProcessor生成对象， 即 bean ！= null 就直接返回这个对象，如果对象为空则继续执行代码创建bean
+ *                           如果可以通过InstantiationAwareBeanPostProcessor生成对象， 即 bean ！= null 就直接返回这个对象，如果对象为空则继续执行代码创建bean
  *
  * 		                	// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
  * 		                	Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
