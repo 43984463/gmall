@@ -24,6 +24,15 @@ public class RedissonConfig {
     @Value("${spring.redis.password}")
     private String redisPassword;
 
+    @Value("${spring.redis.host}")
+    private String redisHost;
+
+    @Value("${spring.redis.port}")
+    private String redisPort;
+
+    private final static String REDIS_PREFIX = "redis://";
+    private final static String COLON = ":";
+
     /**
      * 集群模式
      * @return
@@ -53,7 +62,8 @@ public class RedissonConfig {
         // 单节点模式并且设置连接地址
         Config config = new Config();
         config.useSingleServer()
-                .setAddress("redis://120.76.60.77:7379")
+                //.setAddress("redis://192.168.1.4:6379")
+                .setAddress(REDIS_PREFIX + redisHost + COLON + redisPort)
                 // redis连接密码
                 .setPassword(redisPassword);
         RedissonClient redisson = Redisson.create(config);

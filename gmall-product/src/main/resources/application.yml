@@ -4,10 +4,10 @@ server:
 spring:
   datasource:
     username: root
-    password: sherlock
+    password: root
     #password: root
-    url: jdbc:mysql://120.76.60.77:2061/gmall_pms?characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
-    #url: jdbc:mysql://127.0.0.1:3306/gmall_pms?characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    #url: jdbc:mysql://120.76.60.77:2061/gmall_pms?characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://127.0.0.1:3306/gmall_pms?characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
     ###################以下为druid增加的配置###########################
     # 合并多个DruidDataSource的监控数据
@@ -47,24 +47,20 @@ spring:
       query-timeout: 10000 #查询超时时间
       # default-transaction-isolation: #默认隔离级别
   cloud:
-    nacos:
-      discovery:
-        server-addr: 120.76.60.77:9848
-
     sentinel:
       transport:
         dashboard: 127.0.0.1:8080 #Sentinel控制台的访问地址
         port: 8719  #Sentinel和自己服务整合需要的端口
 
   #服务追踪
-  zipkin:
-    base-url: http://192.168.1.4:9411/ #zipkin服务器的地址
-    discovery-client-enabled: false #关闭服务的发现，否则springCloud会把zipkin的url当做服务名称
-    sender:
-      type: web #使用 http 方式传输数据
-  sleuth:
-    sampler:
-      probability: 1 #设置抽样采集率 1就是100% 默认0.1，即10%
+#  zipkin:
+#    base-url: http://192.168.1.4:9411/ #zipkin服务器的地址
+#    discovery-client-enabled: false #关闭服务的发现，否则springCloud会把zipkin的url当做服务名称
+#    sender:
+#      type: web #使用 http 方式传输数据
+#  sleuth:
+#    sampler:
+#      probability: 1 #设置抽样采集率 1就是100% 默认0.1，即10%
 
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
@@ -72,9 +68,9 @@ spring:
     cache: false
   # redis相关信息配置
   redis:
-    host: 120.76.60.77
+    host: 192.168.1.4
     password: sherlock
-    port: 7379
+    port: 6379
     timeout: 1000 #超时时间(毫秒)
     jedis:
       pool:

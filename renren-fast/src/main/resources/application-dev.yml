@@ -3,10 +3,10 @@ spring:
         type: com.alibaba.druid.pool.DruidDataSource
         druid:
             driver-class-name: com.mysql.cj.jdbc.Driver
-            url: jdbc:mysql://120.76.60.77:2061/gmall_admin?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-            #url: jdbc:mysql://127.0.0.1:3306/gmall_admin?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+            #url: jdbc:mysql://120.76.60.77:2061/gmall_admin?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+            url: jdbc:mysql://127.0.0.1:3306/gmall_admin?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
             username: root
-            password: sherlock
+            password: root
             #password: root
             initial-size: 10
             max-active: 100

@@ -2,13 +2,13 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 120.76.60.77:9848
+        server-addr: 127.0.0.1:8848
       config:
-        server-addr: 120.76.60.77:9848
-        namespace: b6ce7e34-5113-4572-8823-7b5ffe200f8e
+        server-addr: 127.0.0.1:8848
+        namespace: fb565d30-de49-4a86-8813-25d10c9bafc7
         group: dev
-        file-extension: properties
+        file-extension: yaml
         extension-configs[0]:
-          data-id: renren.properties
+          data-id: renren.yaml
           group: dev
           refresh: true

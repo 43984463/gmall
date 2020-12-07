@@ -40,10 +40,6 @@ spring:
   application:
     name: renren-fast
   cloud:
-    nacos:
-      discovery:
-        server-addr: 120.76.60.77:9848
-
     sentinel:
       transport:
         dashboard: 127.0.0.1:8080 #Sentinel控制台的访问地址
