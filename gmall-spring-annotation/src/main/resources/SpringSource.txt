@@ -2,7 +2,7 @@ Spring容器的refresh()【创建刷新】;
 1、prepareRefresh()刷新前的预处理;
 	1）、initPropertySources()初始化一些属性设置;子类自定义个性化的属性设置方法；
 	2）、getEnvironment().validateRequiredProperties();检验属性的合法等
-	3）、earlyApplicationEvents= new LinkedHashSet<ApplicationEvent>();保存容器中的一些早期的事件；
+	3）、earlyApplicationEvents= new LinkedHashSet<ApplicationEvent>();保存容器中的一些早期的事件(使用linkedHashSet是为了保证加入的顺序性)；
 2、obtainFreshBeanFactory();获取BeanFactory；
 	1）、refreshBeanFactory();刷新【创建】BeanFactory；
 			创建了一个this.beanFactory = new DefaultListableBeanFactory();
