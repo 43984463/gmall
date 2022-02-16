@@ -227,7 +227,7 @@ package com.sherlock.gmall.order;
  *
  *          2、初始化----初始化的过程是一个赋值的过程，即调用Bean的setter，设置Bean的属性 -> BeanPostProcessor的接口起作用
  *
- *          postProcessBeforeInstantiation 一定执行, postProcessAfterInitialization 一定执行.
+ *          postProcessBeforeInstantiation 一定执行, postProcessAfterInitialization 不一定执行.
  *
  *
  *          @see org.springframework.beans.factory.BeanFactory#getBean(java.lang.String) 从容器中获取bean 如果获取不到就创建bean
