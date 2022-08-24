@@ -288,6 +288,9 @@ com.sherlock.gmall.product.service.impl.CategoryServiceImpl
 com.sherlock.gmall.product.config.SpringCacheConfig
 com.sherlock.gmall.product.web.IndexController
 
+redis使用lua脚本原子性删除key
+com.sherlock.gmall.order.service.impl.OrderServiceImpl#submitOrder
+
 redis设置序列化机制
 com.sherlock.gmall.auth.config.SpringSessionConfig#springSessionDefaultRedisSerializer()
 
